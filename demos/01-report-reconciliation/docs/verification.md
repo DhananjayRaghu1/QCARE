@@ -1,5 +1,7 @@
 # Verification record — 4 October 2026
 
+**Subsequent live comparison:** [two actual Codex investigations](codex-comparison.md) are now recorded: repo-only 50.476 seconds, documents 95.180 seconds. The proposed document-backed patch passed 11 independent checks and 5 baseline tests. The complete new-demo suite now has 42 passing tests. The initial Claude block and initial 40-test results below remain a historical record; they do not imply the later Codex runs were blocked.
+
 ## Executed locally
 
 Environment: macOS, managed CPython 3.12.10, locked dependencies. An initial attempt with the machine's Anaconda 3.12.2 crashed while importing `readline` during pytest startup; the demo pins the managed interpreter used for the successful runs. No application workaround was introduced for that environment problem.

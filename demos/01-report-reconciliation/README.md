@@ -83,7 +83,7 @@ The recorded fixture checks are:
 
 The workflow also passes all ten case-level checks for decision, total, affected rows and required source IDs. These are ten hand-authored synthetic cases, not a representative test population. The two arithmetic controls are **not coding-assistant baselines**. Their missing citations are not evidence that an AI or analyst would fail.
 
-[Recorded results](recordings/controls.json), [regression results](recordings/regression.json), and [verification notes](docs/verification.md) preserve what was actually executed. New live Claude comparisons were **blocked by an unauthenticated client**; no new model execution, speedup or employee-productivity result is claimed. The [older controller results](../01-controller-capacity/policy-aware/docs/comparison-results.md) remain intact, including their limitations.
+[Recorded results](recordings/controls.json), [regression results](recordings/regression.json), and [verification notes](docs/verification.md) preserve what was actually executed. Live Claude comparisons were **blocked by an unauthenticated client**. A subsequent [actual two-run Codex comparison](docs/codex-comparison.md) found that business documents enabled a justified, tested patch, while repo-only correctly asked for clarification. The document run took longer: 95.2 seconds versus 50.5 seconds. No speedup or employee-productivity result is claimed. The [older controller results](../01-controller-capacity/policy-aware/docs/comparison-results.md) remain intact, including their limitations.
 
 ## Optional live agent comparison
 

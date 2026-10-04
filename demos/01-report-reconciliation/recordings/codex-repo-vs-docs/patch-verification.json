@@ -1,0 +1,116 @@
+{
+  "provenance": "actual_independent_execution_of_model_proposed_code",
+  "proposed_code_sha256": "b8000753662ef877260e0b523962328c75fd7ddd3bd6aff4d7d171a57fabbeed",
+  "checks_sha256": "f0e6f6c2f440c52c7544f915656c5820becc873b91d728eae044054a3e664509",
+  "independent": {
+    "checks": {
+      "mixed_schema_report": {
+        "passed": true,
+        "expected_contributions": [
+          100000,
+          -20000,
+          5000,
+          50000,
+          -10000
+        ],
+        "actual_contributions": [
+          100000,
+          -20000,
+          5000,
+          50000,
+          -10000
+        ],
+        "actual_total_cents": 125000
+      },
+      "signed_negative_return": {
+        "passed": true,
+        "expected_contributions": [
+          -20000
+        ],
+        "actual_contributions": [
+          -20000
+        ],
+        "actual_total_cents": -20000
+      },
+      "signed_positive_reversal": {
+        "passed": true,
+        "expected_contributions": [
+          5000
+        ],
+        "actual_contributions": [
+          5000
+        ],
+        "actual_total_cents": 5000
+      },
+      "magnitude_return": {
+        "passed": true,
+        "expected_contributions": [
+          -10000
+        ],
+        "actual_contributions": [
+          -10000
+        ],
+        "actual_total_cents": -10000
+      },
+      "signed_sale": {
+        "passed": true,
+        "expected_contributions": [
+          100000
+        ],
+        "actual_contributions": [
+          100000
+        ],
+        "actual_total_cents": 100000
+      },
+      "offsetting_row_errors": {
+        "passed": true,
+        "expected_contributions": [
+          100000,
+          -10000,
+          10000
+        ],
+        "actual_contributions": [
+          100000,
+          -10000,
+          10000
+        ],
+        "actual_total_cents": 100000
+      },
+      "excluded_transfer": {
+        "passed": true,
+        "expected_contributions": [
+          0
+        ],
+        "actual_contributions": [
+          0
+        ],
+        "actual_total_cents": 0
+      },
+      "outside_posted_month": {
+        "passed": true,
+        "expected_contributions": [
+          0
+        ],
+        "actual_contributions": [
+          0
+        ],
+        "actual_total_cents": 0
+      },
+      "reject_negative_magnitude": {
+        "passed": true
+      },
+      "reject_unapproved_schema": {
+        "passed": true
+      },
+      "reject_unknown_feed": {
+        "passed": true
+      }
+    },
+    "passed": 11,
+    "total": 11
+  },
+  "baseline_tests": {
+    "exit_code": 0,
+    "output": "test_excluded_transfer (test_existing.ExistingBehavior.test_excluded_transfer) ... ok\ntest_integer_cents (test_existing.ExistingBehavior.test_integer_cents) ... ok\ntest_positive_return (test_existing.ExistingBehavior.test_positive_return) ... ok\ntest_posted_month (test_existing.ExistingBehavior.test_posted_month) ... ok\ntest_sale (test_existing.ExistingBehavior.test_sale) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.000s\n\nOK\n"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "sha256": "f0e6f6c2f440c52c7544f915656c5820becc873b91d728eae044054a3e664509",
+  "check_count": 11,
+  "hidden_from_model": true,
+  "scope": "schema normalization, unchanged filtering, invalid/unknown inputs"
+}

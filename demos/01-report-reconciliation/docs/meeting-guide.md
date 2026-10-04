@@ -28,7 +28,7 @@ If engineers ask about test strength, show DH-310: two row errors cancel, so a m
 
 ## 8–10 min: Explain the feasible architecture and ask for a real case
 
-“The calculation and rule checks are deterministic. The rules here were normalized by hand from synthetic documents. An assistant can gather evidence, invoke this workflow and explain the next step. We have tested the fixtures; we have not established time savings or run a fresh authenticated model comparison in this revision.”
+“The calculation and rule checks in this walkthrough are deterministic, using rules normalized by hand from synthetic documents. We also ran two fresh Codex investigations without this calculator. Repo-only found the likely fix but needed the sign convention confirmed. With business documents, it produced a justified patch that passed independent checks. That run took longer, so we have not established time savings.” See the [actual comparison](codex-comparison.md).
 
 Ask for one recently resolved discrepancy that crossed teams. Reconstruct the actual ticket, data, documents, decisions, handoffs, time spent and final resolution. Agree who can confirm the authoritative rule and whether the same case recurs. Do not assume they need an agent before understanding that process.
 

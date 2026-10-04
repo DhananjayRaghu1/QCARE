@@ -1,0 +1,49 @@
+{
+  "condition": "repo_only",
+  "status": "completed",
+  "errors": [],
+  "packet": {
+    "decision": "needs_clarification",
+    "current_total_cents": 155000,
+    "justified_total_cents": null,
+    "diagnosis": "All five rows qualify under the deployed configuration. app/report.py negates every RETURN amount, regardless of feed or schema version. Reproduced contributions are A-1: 100000, A-2: 20000, A-3: -5000, A-4: 50000, A-5: -10000, totaling 155000 cents\u201440000 above the customer claim. Subtracting every return's absolute amount produces 115000, but that rule is undocumented. Preserving signed v1 amounts while subtracting v2 return magnitudes instead produces 125000, because A-3 contributes +5000. Neither interpretation is established by the supplied evidence. All five existing tests pass, but none covers v1 rows or negative RETURN amounts. The current calculation is established; its business correctness and a replacement total remain unresolved.",
+    "next_action": "Resolve the RETURN sign convention before changing the report. The smallest next step is the clarification below; no files were edited and no replacement implementation is justified yet.",
+    "sources": [
+      "issue.json: DH-301 supplies the 115000-cent claim, deployed posted_on/SALE/RETURN configuration, standard profile, and five ATLAS rows spanning schema versions 1 and 2. It supplies no spreadsheet reconciliation or sign convention.",
+      "app/report.py: contributions filters by configured month and kinds, negates every RETURN, and otherwise preserves amounts; total sums those contributions. Read-only reproduction returned 155000 cents.",
+      "tests/test_existing.py: all five tests passed using PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v. Coverage includes sales, positive returns, excluded transfers, posted-month filtering, and integer cents; all fixtures use schema version 2.",
+      "README.md: describes validated source rows and integer USD cents, and explicitly cautions that baseline tests may not establish every business requirement. No RETURN sign semantics are documented.",
+      "app/__init__.py: empty; provides no additional behavior or requirements."
+    ],
+    "open_questions": [
+      "For ATLAS schema versions 1 and 2 under standard net_sales, are RETURN amounts signed contributions to preserve or magnitudes to subtract regardless of sign? Specifically, what should A-2 (-20000, v1) and A-3 (+5000, v1) contribute, and can a positive v1 RETURN represent a reversal that increases net sales?"
+    ],
+    "proposed_report_py": null,
+    "regression_tests": [
+      "After clarification, assert the required contributions for negative v1 RETURN A-2, positive v1 RETURN A-3, and positive v2 RETURN A-5.",
+      "Add a mixed-version test using the issue rows, checking every row's inclusion and contribution and the total derived from confirmed semantics.",
+      "Cover any additional valid RETURN sign cases by schema version, and retain the existing sale, filtering, and integer-cent tests."
+    ]
+  },
+  "elapsed_seconds": 50.476,
+  "exit_code": 0,
+  "working_directory": "<trial-workspace>",
+  "usage": [
+    {
+      "input_tokens": 62104,
+      "cached_input_tokens": 46976,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2452,
+      "reasoning_output_tokens": 863
+    }
+  ],
+  "trace_audit": {
+    "command_count": 5,
+    "outside_evidence_reads_observed": false,
+    "model_identity": "Requested gpt-6-astra from the user configuration; JSONL does not independently report a resolved backend model ID.",
+    "warnings": [
+      "CLI warned that skip_host_skill_discovery is under development.",
+      "Client stderr recorded an unspecified sandbox violation; every task command exited successfully."
+    ]
+  }
+}

@@ -31,7 +31,9 @@ The earlier controller example did not establish productivity improvement. Its b
 
 The new problem makes business context materially change the answer. A reproducible regression rejects both the original implementation and the tempting fix, while a prepared reference passes. The approved-rule workflow passes all ten synthetic case checks, including three cases that must stop and one where row errors cancel in the total.
 
-**This demonstrates verified behavior on these fixtures, not a measured productivity gain.** The default workflow uses deterministic software and hand-authored structured rules. An LLM is optional for retrieving evidence and explaining the result; it is not required for the calculation. The new live Claude comparison was blocked by missing client authentication, and no new model run is claimed.
+**This demonstrates verified behavior on these fixtures, not a measured productivity gain.** The default workflow uses deterministic software and hand-authored structured rules. An LLM is optional for retrieving evidence and explaining the result; it is not required for the calculation.
+
+A subsequent [actual Codex comparison](demos/01-report-reconciliation/docs/codex-comparison.md) ran the same case with and without prose business documents. Repo-only took **50.5 seconds**, found $1,250 as a possibility, and appropriately asked for the missing rule. With documents took **95.2 seconds**, established $1,250 and proposed code that passed **11 independent checks plus 5 baseline tests**. The benefit was resolving uncertainty and completing a justified proposal; there was no demonstrated speedup. The separate Claude comparison remains blocked by missing Claude authentication.
 
 Read the [verification record](demos/01-report-reconciliation/docs/verification.md), [implementation scope](demos/01-report-reconciliation/README.md), and [evaluation protocol](demos/01-report-reconciliation/docs/evaluation-protocol.md). A future pilot should measure time to an accepted decision, errors, handoffs, human review and setup/maintenance costs on real representative cases.
 
