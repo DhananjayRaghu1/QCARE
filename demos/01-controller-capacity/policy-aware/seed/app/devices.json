@@ -1,0 +1,14 @@
+{
+  "DEV-101": {
+    "model": "PRO",
+    "firmware": "3.4.0"
+  },
+  "DEV-102": {
+    "model": "PRO",
+    "firmware": "3.1.0"
+  },
+  "DEV-103": {
+    "model": "LEGACY",
+    "firmware": "1.9.0"
+  }
+}

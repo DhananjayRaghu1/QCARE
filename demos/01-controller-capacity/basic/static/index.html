@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Inspect a saved developer context packet and its synthetic source evidence.">
+  <title>Developer onramping · Workflow lab</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="Workflow lab home"><span class="brand-mark" aria-hidden="true">↗</span>workflow lab <span class="brand-sub">/ developer onramping</span></a><span class="top-note">Synthetic practice application</span></header>
+  <main>
+    <section class="hero"><p class="eyebrow">TICKET → CONTEXT → FIRST INVESTIGATION</p><h1>Start with the right context.</h1><p>A concise map of the code, company decisions and open questions behind a developer's next task.</p></section>
+    <nav class="tabs" aria-label="Viewer sections"><button class="tab active" data-panel="packet-panel" aria-current="page">Context packet</button><button class="tab" data-panel="evidence-panel">Explore source records</button></nav>
+    <div id="global-error" class="error hidden" role="alert"></div>
+    <section id="packet-panel" class="panel" aria-label="Saved context packet">
+      <div class="run-toolbar"><div><label for="run-select">Saved output</label><select id="run-select" disabled><option>Loading saved runs…</option></select></div><button id="refresh-runs" class="button button-subtle">Refresh outputs <span aria-hidden="true">↻</span></button></div>
+      <div id="run-notice" class="run-notice" aria-live="polite">Read-only viewer · saved outputs are replayed here; the agent runs in your terminal.</div>
+      <div id="run-meta" class="run-meta hidden"></div>
+      <div id="packet-empty" class="empty-state"><strong>Loading saved packets…</strong><span>No model calls are started by this viewer.</span></div>
+      <div id="packet-layout" class="packet-layout hidden">
+        <article id="packet" class="packet-card" aria-labelledby="packet-title"></article>
+        <aside id="source-inspector" class="source-inspector" aria-labelledby="source-title"><p class="eyebrow">INSPECT THE EVIDENCE</p><h2 id="source-title">Open a citation</h2><p class="muted">Select a numbered reference in the packet to read its checked source excerpt.</p><div id="source-content"></div><p class="source-footnote">Citation checks verify the source and line range. Review whether the excerpt supports the claim.</p></aside>
+      </div>
+    </section>
+    <section id="evidence-panel" class="panel hidden" aria-labelledby="evidence-title">
+      <div class="section-heading"><div><p class="eyebrow">SIX SYNTHETIC COMPANY RECORDS</p><h2 id="evidence-title">Fetch a ticket. Search its context.</h2></div></div>
+      <div class="evidence-layout">
+        <article class="ticket-shell"><div class="card-topline"><span class="pill">Exact fetch</span><span class="muted">Known record ID</span></div><form id="ticket-form" class="ticket-form"><label class="sr-only" for="ticket-id">Ticket ID</label><input id="ticket-id" name="id" value="AG-1423" maxlength="64" required><button class="button button-subtle" type="submit">Fetch</button></form><div id="ticket-error" class="error hidden" role="alert"></div><div id="ticket-content" aria-live="polite"><p class="muted">Fetch a ticket to inspect the incoming task.</p></div></article>
+        <article class="search-shell"><div class="card-topline"><span class="pill">Ranked search</span><span class="muted">External knowledge</span></div><form id="search-form"><label for="search-query">What context do you need?</label><div class="search-input-row"><input id="search-query" name="q" value="scheduling execution path and ownership" maxlength="2000" required><button id="search-submit" class="button button-primary" type="submit">Search</button></div><div class="search-controls"><label for="search-mode">Retrieval</label><select id="search-mode" name="mode"><option value="hybrid">Hybrid · BM25 + MiniLM</option><option value="bm25">BM25 · keywords</option><option value="semantic">MiniLM · semantic</option></select></div></form><p class="explanation">Ranking scores are not confidence probabilities. Missing embeddings produce an unavailable result.</p><div id="search-error" class="error hidden" role="alert"></div><div class="search-result-header"><strong id="search-caption">Search the fixture</strong><span id="search-mode-label" class="muted"></span></div><div id="search-results" aria-live="polite"></div></article>
+      </div>
+    </section>
+    <footer><span>Class concepts, explored in a new prototype.</span><span>Saved outputs · read-only loopback viewer</span></footer>
+  </main>
+</body>
+</html>
