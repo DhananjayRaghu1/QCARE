@@ -15,6 +15,8 @@ uv run python demo.py live
 
 Open [the live investigation UI](http://127.0.0.1:8768/). Each **Run investigation** click starts a fresh Claude Code session using your existing Claude login. Sign in with `claude auth login` if needed. No API key is required when your Claude subscription supports the client. The page shows real tool calls and results as the CLI emits them, the model's final answer, elapsed time, reported model and cost, and a downloadable run record. Stop cancels the subprocess. No automatic retries or precomputed substitute answers.
 
+Each ticket has a plain-language title, customer situation, decision to investigate and explanation of why it matters. The page shows both starting amounts in dollars, explains what the difference means, and includes reporting terminology plus transaction dates and deployed settings. Start with DH-301, then compare the two raw modes. These reader guides exist only in the browser page; they are not added to model prompts or task files. Run history is filtered to the selected ticket, and completed answers are labeled with their saved time.
+
 | Live mode | What the model receives |
 | --- | --- |
 | **Raw · repo only** | The customer issue, extracted application code, neutral README and five baseline tests; ordinary file and shell tools |
