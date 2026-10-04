@@ -25,7 +25,7 @@ The two recordings contain actual model-generated regressions and patches, follo
 | 3–6 min | Recorded real reproduction, actual patch, passing regression | The agent added a test against the real service before fixing it. The runner captured the failure and then the passing result. |
 | 6–7 min | Independent verification | Older Pro and Legacy behavior still reject excess zones; numeric version ordering and metadata errors are checked. |
 | 7–8 min | Recorded AG-1424 packet | DEV-102 has Pro 3.1.0. Its rejection is expected. Do not promise a software fix or invent an upgrade procedure. |
-| 8–10 min | Unsafe control result, then a recent-ticket discovery question | An all-Pro-50 patch passes the visible example but violates older-device policy. Ask where their team reconstructs these distinctions today. |
+| 8–10 min | [Baseline](baseline-comparison.md) `recall` run, then a recent-ticket discovery question | Same model without the policy: given only the ticket, it stops and asks for the limit. Given an engineer's from-memory "Pro supports 50," it ships a green, tested patch that lets DEV-102 save 30 zones (32/34). Ask where their team reconstructs these distinctions today. |
 
 Run the live investigation from a second terminal:
 

@@ -88,4 +88,16 @@ uv run python demo.py investigate AG-1423 --workspace my-comparison-tools --cont
 
 All receive the same ticket, code, and registry. `repo` has no company documents; `provided` receives the five documents directly; `tools` retrieves them through MCP. Keep client settings and actual model consistent. Record time, retries, evidence support, conclusions, and unknowns. Correct uncertainty without an external policy is acceptable. The direct-document condition distinguishes having information from automatically finding it; none of these small runs establishes company-wide productivity gains.
 
+### Baseline: Claude without the knowledge layer
+
+`baseline` gives Claude Code the ticket in an isolated git copy, with everyday developer tools and no policy, MCP, or handoff. The independent checker then grades the result. Choose `--style ticket` (full ticket), `quick` (customer report and "fix it"), or `recall` (adds an engineer's from-memory "Pro supports 50 now").
+
+```sh
+uv run python demo.py prepare --name my-baseline --state seed
+uv run python demo.py baseline --workspace my-baseline --style recall --timeout 280
+uv run python demo.py verify --workspace my-baseline
+```
+
+In six recorded runs, Claude without the policy either stopped and asked for the PRO limit (`ticket`, `quick`: 30/34) or shipped `PRO: 50` for every Pro device (`recall`: 32/34). The policy-aware rehearsals passed 34/34. See [baseline comparison](docs/baseline-comparison.md).
+
 Optional hybrid retrieval requires `uv sync --locked --extra semantic` and already cached MiniLM weights. Set `POLICY_DEMO_MODEL_CACHE` to their cache directory if needed, then select `--mode hybrid`. Retrieval does not download weights and returns `unavailable` when the explicit mode cannot run. BM25 is the default meeting path.

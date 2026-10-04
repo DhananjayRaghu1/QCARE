@@ -7,7 +7,7 @@ Two customers report that saving 30 zones fails. A Pro controller on firmware 3.
 | Policy-aware | Ticket investigation, a real failing regression, a policy-consistent patch, and independent compatibility checks | [Instructions](policy-aware/README.md) |
 | Basic | Developer orientation with code and retrieved engineering history | [Instructions](basic/README.md) |
 
-The policy-aware variant is the main presentation. The basic variant is preserved as an earlier experiment: its repository-only Claude run found the simple defect in 34.08 seconds; the augmented run took 72.63 seconds and added useful history and ownership. [Comparison and limits](basic/docs/historical-comparison.md).
+The policy-aware variant is the main presentation. Its [baseline comparison](policy-aware/docs/baseline-comparison.md) runs the same model without the knowledge layer: it either stalls for the requirement or, given an engineer's half-remembered rule, ships a patch that breaks older-firmware devices. The basic variant is preserved as an earlier experiment: its repository-only Claude run found the simple defect in 34.08 seconds; the augmented run took 72.63 seconds and added useful history and ownership. [Comparison and limits](basic/docs/historical-comparison.md).
 
 Run each variant from its own directory with `uv sync --locked` and `uv run python ...`. They have independent environments and fixtures. Reset by preparing a fresh named workspace; keep prior results for comparison.
 

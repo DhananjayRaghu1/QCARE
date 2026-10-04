@@ -7,11 +7,13 @@ from datetime import datetime, timezone
 import difflib
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import uuid
 import xml.etree.ElementTree as ET
@@ -285,8 +287,10 @@ def run_pytest(workspace: Path, paths: list[str] | None = None) -> dict:
             return {"exit_code": -1, "output": "Pytest timed out", "cases": [], "passed": 0, "failed": 0, "errors": 1, "skipped": 0}
 
 
-def capacity_probe(workspace: Path) -> dict:
-    result = subprocess.run([sys.executable, "-c", "import json; from app.api import create_schedule; r=create_schedule({'controller_id':'DEV-101','zones':list(range(1,31))}); print(json.dumps({'status_code':r.status_code,'body':r.body}))"],
+def capacity_probe(workspace: Path, controller: str = "DEV-101") -> dict:
+    if controller not in {"DEV-101", "DEV-102"}:
+        raise ValueError("Unknown probe controller")
+    result = subprocess.run([sys.executable, "-c", f"import json; from app.api import create_schedule; r=create_schedule({{'controller_id':'{controller}','zones':list(range(1,31))}}); print(json.dumps({{'status_code':r.status_code,'body':r.body}}))"],
         cwd=workspace, capture_output=True, text=True, timeout=10)
     if result.returncode:
         raise RuntimeError("Reported case could not execute")
@@ -401,6 +405,94 @@ def coding(workspace: Path, phase: str, timeout: int = 180, model: str | None = 
         "source_snapshot_before": before, "source_snapshot_after": tree_snapshot(workspace)}, execution)
 
 
+def ticket_prompt(style: str) -> str:
+    ticket = (ROOT / SOURCES["AG-1423"]).read_text()
+    if style == "ticket":
+        return "This customer ticket was assigned to you. Fix it in this repository.\n\n" + ticket
+    # What a developer typically pastes: the customer's report and reproduction, then "fix it".
+    sections = re.findall(r"## (?:Reported behavior|Reproduction)\n\n(.*?)\n(?=\n## |\Z)", ticket, re.S)
+    if len(sections) != 2:
+        raise ValueError("Ticket sections changed")
+    request = "Customer bug on DEV-101. Please fix it.\n\n" + "\n\n".join(sections) + "\n"
+    if style == "recall":
+        # A busy engineer's true-but-incomplete memory of AG-981: the 50-zone limit is firmware-gated.
+        request += "\nFYI: Pro controllers support up to 50 zones now; the schedule editor was updated for that last month.\n"
+    return request
+
+
+def isolated_copy(workspace: Path) -> Path:
+    """A plain git checkout outside the demo tree, so ../knowledge and the checker are not nearby."""
+    directory = Path(tempfile.mkdtemp(prefix="schedule-service-")).resolve()
+    for name in ("app", "tests", "pyproject.toml"):
+        source = workspace / name
+        if source.exists():
+            (shutil.copytree if source.is_dir() else shutil.copyfile)(source, directory / name)
+    environment = {**os.environ, "GIT_AUTHOR_NAME": "dev", "GIT_AUTHOR_EMAIL": "dev@example.invalid",
+                   "GIT_COMMITTER_NAME": "dev", "GIT_COMMITTER_EMAIL": "dev@example.invalid"}
+    for command in (["git", "init", "-q"], ["git", "add", "-A"], ["git", "commit", "-q", "-m", "Schedule service"]):
+        subprocess.run(command, cwd=directory, check=True, capture_output=True, env=environment)
+    return directory
+
+
+def baseline(workspace: Path, timeout: int = 180, model: str | None = None, style: str = "quick") -> dict:
+    """Repo-only control: a developer's request and everyday tools, without policy, MCP, or handoff."""
+    started = time.monotonic()
+    before = tree_snapshot(workspace)
+    metadata = {"phase": "baseline", "ticket_id": "AG-1423", "context": "repo", "prompt_style": style, "status": "failed",
+                "agent_run": False, "claim_review": "not_applicable", "problems": [], "model": None}
+    execution, trace, tests, probes, patch, prompt, isolated = None, {}, {}, {}, "", "", None
+    try:
+        meta = workspace_meta(workspace)
+        if meta["state"] != "seed" or any(meta["runs"].values()) or hashes(before) != meta["initial_hashes"]:
+            raise ValueError("The control needs a fresh, untouched seed workspace")
+        client = client_preflight()
+        if not client.get("authenticated"):
+            raise RuntimeError("Claude Code is not authenticated")
+        prompt = ticket_prompt(style)
+        isolated = isolated_copy(workspace)
+        metadata["agent_run"] = True
+        execution = execute_client(client_command(client, isolated, "baseline", "repo", "bm25", model=model), prompt, isolated, timeout)
+        trace = collect_trace(execution["lines"], isolated, {"sources": {}}, "baseline", "repo")
+        metadata["problems"] = invocation_problems(execution, trace)
+        metadata["model"] = trace["model"]
+        # Bring back only application and test code; the registry stays the workspace's own.
+        for directory in ("app", "tests"):
+            shutil.rmtree(workspace / directory)
+            shutil.copytree(isolated / directory, workspace / directory, ignore=shutil.ignore_patterns("__pycache__"))
+        (workspace / "app/devices.json").write_text(before["app/devices.json"])
+        after = tree_snapshot(workspace)
+        if hashes(tree_snapshot(isolated)).get("app/devices.json") != meta["initial_hashes"].get("app/devices.json"):
+            metadata["problems"].append("Agent changed the device registry; the original was restored")
+        if knowledge_hashes() != meta["knowledge_hashes"]:
+            metadata["problems"].append("Company documents changed")
+        tests = run_pytest(workspace)
+        # The consequence the ticket alone cannot reveal: AG-1424's older-firmware device.
+        for controller in ("DEV-101", "DEV-102"):
+            try:
+                probes[controller] = capacity_probe(workspace, controller)
+            except (RuntimeError, ValueError, subprocess.TimeoutExpired) as error:
+                probes[controller] = {"status_code": None, "body": {"error": str(error)}}
+        for path in sorted(set(before) | set(after)):
+            if before.get(path) != after.get(path):
+                patch += "".join(difflib.unified_diff(before.get(path, "").splitlines(keepends=True), after.get(path, "").splitlines(keepends=True), fromfile="before/" + path, tofile="after/" + path))
+        metadata["status"] = "success" if not metadata["problems"] else "partial"
+    except Exception as error:
+        metadata["problems"].append(f"{type(error).__name__}: {error}")
+    finally:
+        if isolated:
+            shutil.rmtree(isolated, ignore_errors=True)
+    metadata.update(elapsed_seconds=round(time.monotonic() - started, 2), source_hashes_before=hashes(before),
+                    source_hashes_after=hashes(tree_snapshot(workspace)))
+    bundle = {"metadata": metadata, "packet": None, "evidence": {"sources": {}}, "prompt": prompt,
+        "tools": trace.get("tools", []), "test_results": tests, "probes": probes, "patch": patch,
+        "response": (trace.get("result") or {}).get("result", ""),
+        "source_snapshot_before": before, "source_snapshot_after": tree_snapshot(workspace)}
+    if isolated:
+        text = json.dumps(bundle).replace(str(isolated), "<isolated-repo>")
+        bundle = json.loads(text.replace(str(isolated).removeprefix("/private"), "<isolated-repo>"))
+    return save_bundle(workspace, bundle, execution)
+
+
 def verify(workspace: Path) -> dict:
     started = time.monotonic()
     before = tree_snapshot(workspace)
@@ -422,7 +514,10 @@ def verify(workspace: Path) -> dict:
         problems.append("Independent policy checks failed")
     meta = workspace_meta(workspace)
     current = hashes(tree_snapshot(workspace))
-    protected = {path: value for path, value in meta["initial_hashes"].items() if path.startswith("tests/") or path == "app/devices.json"}
+    # A baseline developer may edit tests; the registry stays protected for every workflow.
+    baseline_run = bool(meta["runs"].get("baseline"))
+    protected = {path: value for path, value in meta["initial_hashes"].items()
+                 if (path.startswith("tests/") and not baseline_run) or path == "app/devices.json"}
     try:
         red = latest(workspace, "reproduce")
         if red["metadata"]["status"] == "success":
@@ -544,7 +639,7 @@ def main() -> int:
     prepared = commands.add_parser("prepare", help="Fresh workspace; reset by choosing another name")
     prepared.add_argument("--name", required=True)
     prepared.add_argument("--state", choices=["seed", "reference", "unsafe-pro-50"], default="seed")
-    for name in ("preflight", "investigate", "reproduce", "fix", "verify", "report", "export"):
+    for name in ("preflight", "investigate", "reproduce", "fix", "baseline", "verify", "report", "export"):
         sub = commands.add_parser(name)
         if name == "investigate":
             sub.add_argument("ticket_id", choices=["AG-1423", "AG-1424"])
@@ -552,9 +647,13 @@ def main() -> int:
         if name in {"preflight", "investigate"}:
             sub.add_argument("--context", choices=["repo", "provided", "tools"], default="tools")
             sub.add_argument("--mode", choices=["bm25", "hybrid"], default="bm25")
-        if name in {"investigate", "reproduce", "fix"}:
+        if name in {"investigate", "reproduce", "fix", "baseline"}:
             sub.add_argument("--timeout", type=int, default=180)
             sub.add_argument("--model", help="Run-scoped model override; global settings stay intact")
+        if name == "baseline":
+            sub.add_argument("--style", choices=["quick", "recall", "ticket"], default="quick",
+                             help="quick: the customer's report plus 'fix it'; recall: plus an engineer's from-memory "
+                                  "note that Pro supports 50; ticket: the full triage ticket")
         if name == "export":
             sub.add_argument("--name", required=True)
     playing = commands.add_parser("replay")
@@ -593,6 +692,16 @@ def main() -> int:
                 print(bundle["patch"])
             for problem in bundle["metadata"]["problems"]:
                 print(f"  {problem}")
+        elif args.command == "baseline":
+            bundle = baseline(workspace, args.timeout, args.model, args.style)
+            print(bundle.get("response", ""))
+            if bundle.get("patch"):
+                print(bundle["patch"])
+            for controller, probe in bundle.get("probes", {}).items():
+                print(f"{controller} with 30 zones: HTTP {probe['status_code']} {probe['body'].get('code', '')}")
+            for problem in bundle["metadata"]["problems"]:
+                print(f"  {problem}")
+            print("Grade the patch with: demo.py verify --workspace " + workspace.name)
         elif args.command == "verify":
             bundle = verify(workspace)
             visible, checks = bundle["test_results"]["visible"], bundle["test_results"]["acceptance"]

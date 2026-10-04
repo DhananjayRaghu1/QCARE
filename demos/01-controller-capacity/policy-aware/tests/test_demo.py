@@ -378,3 +378,62 @@ def test_bundle_replay_does_not_depend_on_current_checkout(workspace):
     replay = demo.replay(run["metadata"]["run_id"])
     assert replay["packet"]["citations"][0]["excerpt"].startswith("def validate")
     assert validate_packet(replay["packet"], replay["evidence"])["status"] == "valid"
+
+
+def baseline_ready(workspace, monkeypatch, mutate=None):
+    client_mock(monkeypatch)
+    monkeypatch.setattr(demo, "SOURCES", {"AG-1423": "ticket.md"})
+    (demo.ROOT / "ticket.md").write_text("# AG-1423\n\n## Reported behavior\n\nDEV-101 rejects 30 zones.\n\n"
+        "## Reproduction\n\nSubmit 30 zones.\n\n## Triage request\n\nUse the approved requirements.\n")
+    isolated = []
+    prompts = []
+    def execute(command, prompt, cwd, timeout):
+        prompts.append(prompt)
+        isolated.append(cwd)
+        assert not (cwd / "CLAUDE.md").exists() and not (cwd / "workspace.json").exists() and (cwd / ".git").is_dir()
+        if mutate:
+            mutate(cwd)
+        return execution()
+    monkeypatch.setattr(demo, "execute_client", execute)
+    monkeypatch.setattr(demo, "collect_trace", lambda *args: successful_trace())
+    monkeypatch.setattr(demo, "run_pytest", lambda *args: {"exit_code": 0, "cases": [{"name": "t"}], "passed": 1, "failed": 0, "errors": 0, "skipped": 0, "output": ""})
+    monkeypatch.setattr(demo, "capacity_probe", lambda path, controller="DEV-101": {"status_code": 201, "body": {"controller_id": controller}})
+    return prompts, isolated
+
+
+def test_baseline_gets_only_the_ticket_and_records_its_patch(workspace, monkeypatch):
+    prompts, isolated = baseline_ready(workspace, monkeypatch, lambda cwd: (cwd / "app/validator.py").write_text("limit = 50\n"))
+    bundle = demo.baseline(workspace)
+    assert bundle["metadata"]["status"] == "success", bundle["metadata"]["problems"]
+    assert bundle["metadata"]["context"] == "repo"
+    assert "DEV-101 rejects 30 zones" in prompts[0] and "Submit 30 zones" in prompts[0] and "approved" not in prompts[0]
+    assert "+limit = 50" in bundle["patch"] and (workspace / "app/validator.py").read_text() == "limit = 50\n"
+    assert set(bundle["probes"]) == {"DEV-101", "DEV-102"}
+    assert not isolated[0].exists() and not workspace.resolve().is_relative_to(isolated[0])
+
+
+def test_baseline_ticket_style_sends_the_full_ticket(workspace, monkeypatch):
+    prompts, _ = baseline_ready(workspace, monkeypatch)
+    demo.baseline(workspace, style="ticket")
+    assert "Use the approved requirements." in prompts[0]
+
+
+def test_baseline_recall_style_adds_the_engineers_incomplete_memory(workspace, monkeypatch):
+    prompts, _ = baseline_ready(workspace, monkeypatch)
+    demo.baseline(workspace, style="recall")
+    assert "Pro controllers support up to 50 zones" in prompts[0] and "firmware" not in prompts[0]
+
+
+def test_baseline_reports_registry_edits(workspace, monkeypatch):
+    baseline_ready(workspace, monkeypatch, lambda cwd: (cwd / "app/devices.json").write_text("{}\n"))
+    bundle = demo.baseline(workspace)
+    assert bundle["metadata"]["status"] == "partial"
+    assert "Agent changed the device registry; the original was restored" in bundle["metadata"]["problems"]
+    assert (workspace / "app/devices.json").read_text() != "{}\n"
+
+
+def test_baseline_requires_untouched_seed(workspace, monkeypatch):
+    prompts, _ = baseline_ready(workspace, monkeypatch)
+    (workspace / "app/validator.py").write_text("limit = 50\n")
+    bundle = demo.baseline(workspace)
+    assert bundle["metadata"]["status"] == "failed" and not prompts

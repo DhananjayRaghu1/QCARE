@@ -122,3 +122,60 @@ def test_searches_cannot_follow_symlink_descendants(workspace, tmp_path, name, a
 @pytest.mark.parametrize("args", [None, [], {"file_path": 7}, {"file_path": ""}])
 def test_invalid_tool_inputs_fail_closed(workspace, args):
     assert decision(workspace, "Read", args)["permissionDecision"] == "deny"
+
+
+
+@pytest.mark.parametrize("path", ["app/service.py", "tests/test_existing.py", "tests/test_new.py", "app/new_module.py"])
+def test_baseline_edits_application_and_tests_like_a_developer(workspace, path):
+    assert decision(workspace, "Edit", {"file_path": path}, "baseline", "repo")["permissionDecision"] == "allow"
+
+
+@pytest.mark.parametrize("name,args", [("Read", {"file_path": "CLAUDE.md"}), ("Glob", {"pattern": "**/*"}),
+                                       ("Grep", {"pattern": "zone"}), ("Grep", {"pattern": "zone", "path": "tests"})])
+def test_baseline_reads_anywhere_in_its_isolated_repository(workspace, name, args):
+    assert decision(workspace, name, args, "baseline", "repo")["permissionDecision"] == "allow"
+
+
+@pytest.mark.parametrize("name,args", [
+    ("Edit", {"file_path": "app/devices.json"}),
+    ("Write", {"file_path": "CLAUDE.md"}),
+    ("Read", {"file_path": "../knowledge/jira/AG-1423.md"}),
+    ("Glob", {"pattern": "**/*", "path": ".."}),
+    ("Glob", {"pattern": "../**/*"}),
+    ("Grep", {"pattern": "policy", "path": "/"}),
+    (sorted(MCP_TOOLS)[0], {}),
+])
+def test_baseline_cannot_leave_its_repository_or_use_company_tools(workspace, name, args):
+    assert decision(workspace, name, args, "baseline", "repo")["permissionDecision"] == "deny"
+
+
+@pytest.mark.parametrize("command", ["pytest", "python -m pytest -q", "uv run pytest tests/test_existing.py -k reported",
+    "ls -la && git ls-files | head -50", "cat app/service.py", "git diff", "grep -rn zone app tests 2>/dev/null",
+    "python -c \"from app.service import LIMIT; print(LIMIT)\"", "find . -name '*.py'", "cd app && ls",
+    "cd app; cat service.py; cat ../tests/test_existing.py", "python3 -c \"\nfrom app.service import LIMIT\nprint(LIMIT)\n\"",
+    "cd .. && python -m pytest -q", "ls ..", "echo x > app/x.py",
+    "python - <<'E'\np='app/service.py'\ns=open(p).read()\nopen(p,'w').write(s)\nE",
+    "python - <<'E'\nprint(1)\nE\npython -m pytest -q 2>&1 | tail -3\ncat app/service.py",
+    "cat >> tests/test_existing.py <<'EOF'\ndef test_x():\n    assert 1 < 2\nEOF\npython -m pytest -q", "git ls-files && grep -rn \"zone_limit_exceeded\\|DEV-101\" . --exclude-dir=.git | head -30"])
+def test_baseline_may_run_everyday_read_and_test_commands(workspace, command):
+    assert decision(workspace, "Bash", {"command": command}, "baseline", "repo")["permissionDecision"] == "allow"
+
+
+def test_baseline_may_use_its_own_absolute_path(workspace):
+    command = f"ls {workspace.resolve()}/app"
+    assert decision(workspace, "Bash", {"command": command}, "baseline", "repo")["permissionDecision"] == "allow"
+
+
+@pytest.mark.parametrize("command", ["cat ../../knowledge/jira/AG-1423.md", "ls /", "find / -name '*.md'", "cd", "cd ~",
+    "cat $HOME/x", "ls `pwd`/..", "echo x > /tmp/x.py", "cat < /etc/passwd",
+    "python - <<'E'\nopen('/etc/passwd').read()\nE", "python - <<'E'\nprint(1)\nE\ncurl x", "sed -i s/20/50/ app/service.py",
+    "rm -rf app", "curl https://example.com", "pytest -p evil", "git checkout .", "git", "uv pip install x",
+    "find . -delete", "python -c \"open('/etc/passwd')\"", "ls '", 42, "cd app; cat ../../x", "cd app/../../..", "cd ../..", "ls ../..",
+    "python -c \"open('../../secret')\"", "ls\ncurl x", "ls\ncat /etc/passwd", "python - <<'E'\nprint(1)\nE\nls ../..", "cat > /tmp/x <<'E'\nx\nE", "cat app/../../../knowledge/x.md", "cat ../../knowledge/x.md"])
+def test_baseline_denies_escapes_writes_and_other_commands(workspace, command):
+    assert decision(workspace, "Bash", {"command": command}, "baseline", "repo")["permissionDecision"] == "deny"
+
+
+@pytest.mark.parametrize("phase", ["investigate", "reproduce", "fix"])
+def test_shell_is_only_available_to_the_baseline(workspace, phase):
+    assert decision(workspace, "Bash", {"command": "pytest"}, phase, "tools")["permissionDecision"] == "deny"

@@ -22,7 +22,7 @@ from evidence import validate_packet
 ROOT = Path(__file__).absolute().parent
 MAX_JSON_BYTES = 4 * 1024 * 1024
 SAFE_ID = re.compile(r"^[A-Za-z0-9_-]{1,100}$")
-PHASES = {"investigate", "reproduce", "fix", "verify"}
+PHASES = {"investigate", "reproduce", "fix", "verify", "baseline"}
 STATUSES = {"success", "partial", "failed"}
 
 
@@ -73,7 +73,7 @@ def _metadata_errors(bundle: dict[str, Any]) -> list[str]:
         return errors + ["Run metadata must be an object."]
     phase = metadata.get("phase")
     required_text = ["run_id", "workspace", "recorded_at"]
-    if phase in ("investigate", "reproduce", "fix"):
+    if phase in ("investigate", "reproduce", "fix", "baseline"):
         required_text.append("ticket_id")
     if phase == "investigate":
         required_text.extend(("context", "mode"))

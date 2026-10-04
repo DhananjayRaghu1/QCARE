@@ -35,7 +35,7 @@ For AG-1423, compare `repo`, `provided`, and `tools` in fresh seed workspaces us
 
 ## Observed results — 2026-10-04
 
-The final local suite passed **312 tests** (`.venv/bin/python -m pytest -q`). This includes authored-event parser checks, failure/timeout handling, source verification, permissions, application states, MCP/retrieval, and viewer/replay tests. These local checks supplement the actual executions below.
+The final local suite passed **312 tests** at rehearsal time (388 after the [baseline control](baseline-comparison.md) was added) (`.venv/bin/python -m pytest -q`). This includes authored-event parser checks, failure/timeout handling, source verification, permissions, application states, MCP/retrieval, and viewer/replay tests. These local checks supplement the actual executions below.
 
 Every recorded model phase used actual model `claude-sonnet-5-5`. Both rehearsals used the same initial seed and device registry, with BM25/MCP investigation. Elapsed time includes the phase's orchestration; validation attempts refer to evidence packet attempts, not separate full rehearsals.
 

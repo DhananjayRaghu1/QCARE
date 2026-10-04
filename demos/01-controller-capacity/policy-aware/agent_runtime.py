@@ -113,7 +113,7 @@ def client_command(client: dict, workspace: Path, phase: str, context: str, mode
         "env": {"ONRAMP_RETRIEVAL_MODE": mode}}}} if context == "tools" else {"mcpServers": {}}
     hook = " ".join(shlex.quote(x) for x in [sys.executable, str(ROOT / "guard.py"), str(workspace), phase, context])
     settings = {"hooks": {"PreToolUse": [{"matcher": ".*", "hooks": [{"type": "command", "command": hook, "timeout": 10}]}]}}
-    native = "Read,Glob,Grep" + (",Write,Edit" if phase != "investigate" else "")
+    native = "Read,Glob,Grep" + (",Write,Edit" if phase != "investigate" else "") + (",Bash" if phase == "baseline" else "")
     allowed = native + (("," + ",".join(sorted(MCP_TOOLS))) if context == "tools" else "")
     command = [client["executable"], "--print", "--output-format", "stream-json", "--verbose",
         "--no-session-persistence", "--setting-sources", "", "--settings", json.dumps(settings),
@@ -228,6 +228,8 @@ def collect_trace(lines: list[str], workspace: Path, evidence: dict, phase: str,
     permitted = {"Read", "Glob", "Grep", "StructuredOutput"} | (MCP_TOOLS if context == "tools" else set())
     if phase != "investigate":
         permitted |= {"Write", "Edit"}
+    if phase == "baseline":
+        permitted.add("Bash")
     for line in lines:
         try:
             event = json.loads(line)

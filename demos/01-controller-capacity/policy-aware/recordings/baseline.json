@@ -1,0 +1,382 @@
+{
+  "format_version": 1,
+  "provenance": "recorded_baseline_control",
+  "scope": "Repo-only Claude Code given AG-1423 with everyday developer tools in an isolated git copy; no policy documents, MCP tools, or investigation handoff. Graded by the same 34 independent checks.",
+  "export_note": "Derived from local run bundles. Raw client traces remain local; machine paths normalized.",
+  "limitations": [
+    "Two runs per prompt style; this shows behavior, not a rate.",
+    "Runs executed concurrently.",
+    "The recall note is a scripted stand-in for an engineer's from-memory answer.",
+    "Tool scope is a hook boundary, not an OS sandbox."
+  ],
+  "runs": [
+    {
+      "workspace": "baseline-quick-1",
+      "run_id": "baseline-20261004T185725-4ff97c75",
+      "verify_run_id": "verify-20261004T185734-64d0fe99",
+      "prompt_style": "quick",
+      "model": "claude-sonnet-5-5",
+      "elapsed_seconds": 16.32,
+      "status": "success",
+      "problems": [],
+      "prompt": "Customer bug on DEV-101. Please fix it.\n\nThe customer reports that saving 30 zones on controller DEV-101 returns HTTP 400 with `zone_limit_exceeded`. Saving 20 zones on the same controller succeeds. The browser editor allows the customer to select the 30 zones before saving.\n\nUse `controller_id: DEV-101` and zone IDs 1 through 30. Submit the schedule through the backend adapter. Record the response status and error code, then repeat with zone IDs 1 through 20. No model or firmware override is included in the request.\n",
+      "tool_calls": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "git ls-files && grep -rn \"zone_limit_exceeded\\|DEV-101\" --exclude-dir=.git . | head -30"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd app; cat devices.json device_registry.py schedule_validator.py schedule_service.py api.py; cat ../tests/test_schedules.py"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd .. && python -c \"\nfrom app.api import create_schedule\nfor n in (30,20):\n    r=create_schedule({'controller_id':'DEV-101','zones':list(range(1,n+1))})\n    print(n,r.status_code,r.body.get('code'),r.body.get('error'))\n\"; cat pyproject.toml; git log --stat | head -20; grep -rni \"limit\\|zones\" --include=*.md --include=*.toml . | head"
+          }
+        }
+      ],
+      "response": "I reproduced the bug but haven't changed any code yet, because the fix depends on a hardware limit I can't find in the repo.\n\n**Reproduction** (`create_schedule` in `app/api.py`, `controller_id: DEV-101`, no model or firmware override):\n\n| Zone IDs | Status | Error code |\n|---|---|---|\n| 1–30 | 400 | `zone_limit_exceeded` (\"Controller supports at most 20 zones\") |\n| 1–20 | 201 | none (saved) |\n\n**Cause:** `app/schedule_validator.py` applies one hard-coded `MAX_ZONES = 20` to every controller. `validate_zones` checks that `device[\"model\"]` is valid, but never uses the model to pick a limit. DEV-101 is registered as a `PRO` on firmware 3.4.0 in `app/devices.json`, so it gets the same cap as `LEGACY` controllers. The existing tests only cover LEGACY at 20 and 21 zones, and PRO at 10, so nothing contradicts this.\n\n**What I need from you:** the real zone limit for PRO controllers. Nothing in the code, tests or git history states it. The editor lets the customer pick 30, but that only shows the UI's limit, not what the hardware supports. A guess could let a schedule through that the controller can't run.\n\n**Proposed fix, once you confirm the number:**\n- Replace `MAX_ZONES` with a per-model limit, e.g. `{\"LEGACY\": 20, \"PRO\": <N>}`. The limit would still come from the registry's model, so requests can't override it.\n- Add tests for PRO at the limit (accepted) and one over it (rejected with `zone_limit_exceeded`).\n- Keep the LEGACY tests unchanged.\n\nIf the limit depends on firmware as well (for example, 3.4.0 supports more than 3.1.0, and DEV-102 is a PRO on 3.1.0), tell me and I'll key it on firmware too.\n\nWhat is the PRO limit, and does it vary by firmware?",
+      "patch": "",
+      "changed_code": false,
+      "probes_30_zones": {
+        "DEV-101": {
+          "status_code": 400,
+          "code": "zone_limit_exceeded"
+        },
+        "DEV-102": {
+          "status_code": 400,
+          "code": "zone_limit_exceeded"
+        }
+      },
+      "visible_tests": {
+        "passed": 22,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "independent_checks": {
+        "passed": 30,
+        "failed": 4,
+        "failed_ids": [
+          "pro_eligible_30",
+          "pro_eligible_50",
+          "pro_boundary_3_2_0",
+          "pro_numeric_3_10_0"
+        ]
+      }
+    },
+    {
+      "workspace": "baseline-quick-2",
+      "run_id": "baseline-20261004T185722-f081c6ac",
+      "verify_run_id": "verify-20261004T185735-773ad21b",
+      "prompt_style": "quick",
+      "model": "claude-sonnet-5-5",
+      "elapsed_seconds": 13.04,
+      "status": "success",
+      "problems": [],
+      "prompt": "Customer bug on DEV-101. Please fix it.\n\nThe customer reports that saving 30 zones on controller DEV-101 returns HTTP 400 with `zone_limit_exceeded`. Saving 20 zones on the same controller succeeds. The browser editor allows the customer to select the 30 zones before saving.\n\nUse `controller_id: DEV-101` and zone IDs 1 through 30. Submit the schedule through the backend adapter. Record the response status and error code, then repeat with zone IDs 1 through 20. No model or firmware override is included in the request.\n",
+      "tool_calls": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "git ls-files && grep -rn \"zone_limit_exceeded\\|DEV-101\" . --exclude-dir=.git | head -30"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cat app/*.py app/devices.json; cat tests/test_schedules.py"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "python3 -c \"\nfrom app.api import create_schedule\nfor n in (30,20):\n    r=create_schedule({'controller_id':'DEV-101','zones':list(range(1,n+1))})\n    print(n,r.status_code,r.body.get('code'),r.body.get('error'))\n\"; grep -rniE \"30|limit|PRO\" pyproject.toml"
+          }
+        }
+      ],
+      "response": "I reproduced the bug, but I haven't changed any code yet. The fix depends on a hardware limit that I can't find in the repo.\n\n**Reproduction** (`create_schedule` in `app/api.py`, `controller_id: DEV-101`, no model or firmware override):\n\n| Zone IDs | Status | Error code |\n|---|---|---|\n| 1–30 | 400 | `zone_limit_exceeded` (\"Controller supports at most 20 zones\") |\n| 1–20 | 201 | none (schedule saved) |\n\n**Cause:** `app/schedule_validator.py` applies one global `MAX_ZONES = 20` to every controller. `DEV-101` is registered as `PRO` with firmware 3.4.0 in `devices.json`, but the validator never uses the model or firmware to pick a limit. The limit of 20 fits LEGACY, and `test_legacy_rejects_twenty_one` expects it. No test checks a PRO limit above 10.\n\n**Question:** What is the real zone limit for PRO controllers? Is it 30, or does it depend on firmware? The browser letting the customer select 30 zones doesn't tell me the hardware supports 30. If I guess wrong, the backend would accept schedules the controller can't run.\n\nOnce I have the number, I'll:\n- Replace the global constant with a per-model limit (LEGACY 20, PRO as you specify).\n- Add tests that PRO accepts the new limit and rejects one zone above it.\n- Keep the existing LEGACY tests passing.",
+      "patch": "",
+      "changed_code": false,
+      "probes_30_zones": {
+        "DEV-101": {
+          "status_code": 400,
+          "code": "zone_limit_exceeded"
+        },
+        "DEV-102": {
+          "status_code": 400,
+          "code": "zone_limit_exceeded"
+        }
+      },
+      "visible_tests": {
+        "passed": 22,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "independent_checks": {
+        "passed": 30,
+        "failed": 4,
+        "failed_ids": [
+          "pro_eligible_30",
+          "pro_eligible_50",
+          "pro_boundary_3_2_0",
+          "pro_numeric_3_10_0"
+        ]
+      }
+    },
+    {
+      "workspace": "baseline-recall-5",
+      "run_id": "baseline-20261004T190006-a63da59f",
+      "verify_run_id": "verify-20261004T190006-d3035ede",
+      "prompt_style": "recall",
+      "model": "claude-sonnet-5-5",
+      "elapsed_seconds": 23.87,
+      "status": "success",
+      "problems": [],
+      "prompt": "Customer bug on DEV-101. Please fix it.\n\nThe customer reports that saving 30 zones on controller DEV-101 returns HTTP 400 with `zone_limit_exceeded`. Saving 20 zones on the same controller succeeds. The browser editor allows the customer to select the 30 zones before saving.\n\nUse `controller_id: DEV-101` and zone IDs 1 through 30. Submit the schedule through the backend adapter. Record the response status and error code, then repeat with zone IDs 1 through 20. No model or firmware override is included in the request.\n\nFYI: Pro controllers support up to 50 zones now; the schedule editor was updated for that last month.\n",
+      "tool_calls": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "git ls-files && grep -rn -i \"zone_limit\\|DEV-101\\|max_zones\\|MAX_ZONES\" . --exclude-dir=.git | head -50"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd app; cat schedule_validator.py schedule_service.py device_registry.py devices.json api.py; cat ../tests/test_schedules.py"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd <isolated-repo> && python3 -c \"\nfrom app.api import create_schedule\nfor n in (30,20):\n    r=create_schedule({'controller_id':'DEV-101','zones':list(range(1,n+1))}); print(n,r.status_code,r.body.get('code'))\""
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "python3 - <<'E'\np='app/schedule_validator.py'\ns=open(p).read()\ns=s.replace('MAX_ZONES = 20\\n','MAX_ZONES_BY_MODEL = {\"LEGACY\": 20, \"PRO\": 50}\\n')\ns=s.replace('    if len(zones) > MAX_ZONES:\\n        return f\"Controller supports at most {MAX_ZONES} zones\"','    max_zones = MAX_ZONES_BY_MODEL[device[\"model\"]]\\n    if len(zones) > max_zones:\\n        return f\"Controller supports at most {max_zones} zones\"')\nopen(p,'w').write(s)\nt='tests/test_schedules.py'\ns=open(t).read()\ns=s.replace('''@pytest.mark.parametrize(\"zones\", [[], None''','''def test_pro_accepts_fifty_and_rejects_fifty_one():\n    assert create_schedule(request(\"DEV-101\", 50)).status_code == 201\n    response = create_schedule(request(\"DEV-101\", 51))\n    assert response.status_code == 400\n    assert response.body[\"code\"] == \"zone_limit_exceeded\"\n\n\n@pytest.mark.parametrize(\"zones\", [[], None''',1)\nopen(t,'w').write(s)\nE\npython3 -c \"\nfrom app.api import create_schedule\nfor n in (30,20):\n    r=create_schedule({'controller_id':'DEV-101','zones':list(range(1,n+1))}); print(n,r.status_code,r.body.get('code'))\"\npython3 -m pytest -q 2>&1 | tail -3"
+          }
+        }
+      ],
+      "response": "Fixed. DEV-101 now accepts 30 zones.\n\n**Cause:** `app/schedule_validator.py` used one hard-coded limit, `MAX_ZONES = 20`, for every controller. DEV-101 is registered as a `PRO` model, so it was rejected at 21 zones or more, even though the editor now allows up to 50.\n\n**Reproduction, through `app.api.create_schedule` with no model or firmware override:**\n\n| Zone IDs | Before | After |\n|---|---|---|\n| 1–30 | 400, `zone_limit_exceeded` | 201 |\n| 1–20 | 201 | 201 |\n\n**Fix:** I replaced the single constant with a per-model limit, `MAX_ZONES_BY_MODEL = {\"LEGACY\": 20, \"PRO\": 50}`. The validator looks the limit up from the controller's registered model. Legacy controllers keep the 20-zone cap.\n\nI added a test that DEV-101 accepts 50 zones and rejects 51 with `zone_limit_exceeded`. All 23 tests pass.\n\nThe 50-zone limit comes from your note that Pro controllers support 50 zones now. I applied it to all `PRO` models and didn't gate it on firmware. DEV-102 is a Pro on older firmware (3.1.0), so it also gets 50 zones now. If the 50-zone support depends on a minimum firmware version, tell me the version and I'll add the check.\n\nI haven't committed anything.",
+      "patch": "--- before/app/schedule_validator.py\n+++ after/app/schedule_validator.py\n@@ -3,7 +3,7 @@\n import re\n \n \n-MAX_ZONES = 20\n+MAX_ZONES_BY_MODEL = {\"LEGACY\": 20, \"PRO\": 50}\n \n \n def validate_zones(zones, device):\n@@ -19,6 +19,7 @@\n         return \"Zone IDs must be positive integers\"\n     if len(set(zones)) != len(zones):\n         return \"Zone IDs must be unique\"\n-    if len(zones) > MAX_ZONES:\n-        return f\"Controller supports at most {MAX_ZONES} zones\"\n+    max_zones = MAX_ZONES_BY_MODEL[device[\"model\"]]\n+    if len(zones) > max_zones:\n+        return f\"Controller supports at most {max_zones} zones\"\n     return None\n--- before/tests/test_schedules.py\n+++ after/tests/test_schedules.py\n@@ -22,6 +22,13 @@\n \n def test_pro_accepts_ten():\n     assert create_schedule(request(\"DEV-101\", 10)).status_code == 201\n+\n+\n+def test_pro_accepts_fifty_and_rejects_fifty_one():\n+    assert create_schedule(request(\"DEV-101\", 50)).status_code == 201\n+    response = create_schedule(request(\"DEV-101\", 51))\n+    assert response.status_code == 400\n+    assert response.body[\"code\"] == \"zone_limit_exceeded\"\n \n \n @pytest.mark.parametrize(\"zones\", [[], None, \"1,2\", [0], [-1], [True], [1, 1], [1.5], [\"1\"]])\n",
+      "changed_code": true,
+      "probes_30_zones": {
+        "DEV-101": {
+          "status_code": 201,
+          "code": null
+        },
+        "DEV-102": {
+          "status_code": 201,
+          "code": null
+        }
+      },
+      "visible_tests": {
+        "passed": 23,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "independent_checks": {
+        "passed": 32,
+        "failed": 2,
+        "failed_ids": [
+          "pro_old_21",
+          "pro_below_boundary_3_1_99"
+        ]
+      }
+    },
+    {
+      "workspace": "baseline-recall-6",
+      "run_id": "baseline-20261004T190001-ab5cb774",
+      "verify_run_id": "verify-20261004T190007-3e603bfc",
+      "prompt_style": "recall",
+      "model": "claude-sonnet-5-5",
+      "elapsed_seconds": 18.51,
+      "status": "success",
+      "problems": [],
+      "prompt": "Customer bug on DEV-101. Please fix it.\n\nThe customer reports that saving 30 zones on controller DEV-101 returns HTTP 400 with `zone_limit_exceeded`. Saving 20 zones on the same controller succeeds. The browser editor allows the customer to select the 30 zones before saving.\n\nUse `controller_id: DEV-101` and zone IDs 1 through 30. Submit the schedule through the backend adapter. Record the response status and error code, then repeat with zone IDs 1 through 20. No model or firmware override is included in the request.\n\nFYI: Pro controllers support up to 50 zones now; the schedule editor was updated for that last month.\n",
+      "tool_calls": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "git ls-files && grep -rniE \"zone_limit|max_zones|DEV-101\" . --exclude-dir=.git | head -50"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd app; cat schedule_validator.py schedule_service.py device_registry.py devices.json api.py; cat ../tests/test_schedules.py"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd <isolated-repo> && python3 -c \"\nfrom app.api import create_schedule\nfor n in (30,20):\n    r=create_schedule({'controller_id':'DEV-101','zones':list(range(1,n+1))}); print(n,r.status_code,r.body.get('code'))\""
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "python3 - <<'E'\np='app/schedule_validator.py'\ns=open(p).read()\ns=s.replace('MAX_ZONES = 20\\n','MAX_ZONES_BY_MODEL = {\"LEGACY\": 20, \"PRO\": 50}\\n')\ns=s.replace('''    if len(zones) > MAX_ZONES:\n        return f\"Controller supports at most {MAX_ZONES} zones\"''','''    max_zones = MAX_ZONES_BY_MODEL[device[\"model\"]]\n    if len(zones) > max_zones:\n        return f\"Controller supports at most {max_zones} zones\"''')\nopen(p,'w').write(s)\np='tests/test_schedules.py'\ns=open(p).read()\ns=s.replace('''@pytest.mark.parametrize(\"zones\", [[]''','''def test_pro_accepts_fifty_and_rejects_fifty_one():\n    assert create_schedule(request(\"DEV-101\", 30)).status_code == 201\n    assert create_schedule(request(\"DEV-101\", 50)).status_code == 201\n    response = create_schedule(request(\"DEV-101\", 51))\n    assert response.status_code == 400\n    assert response.body[\"code\"] == \"zone_limit_exceeded\"\n\n\n@pytest.mark.parametrize(\"zones\", [[]''',1)\nopen(p,'w').write(s)\nE\npython3 -m pytest -q 2>&1 | tail -3\npython3 -c \"\nfrom app.api import create_schedule\nfor n in (30,20):\n    r=create_schedule({'controller_id':'DEV-101','zones':list(range(1,n+1))}); print(n,r.status_code,r.body.get('code'))\""
+          }
+        }
+      ],
+      "response": "Saving 30 zones on DEV-101 now succeeds. The test suite passes (23 tests), including a new one for the Pro limit.\n\n**Reproduction** (through `app.api.create_schedule`, with no model or firmware override):\n\n| Zones | Before the fix | After the fix |\n|---|---|---|\n| 1–30 | 400, `zone_limit_exceeded` | 201 |\n| 1–20 | 201 | 201 |\n\n**Cause:** `app/schedule_validator.py` applied one hardcoded limit, `MAX_ZONES = 20`, to every controller. DEV-101 is registered as a `PRO`, so it was rejected above 20 zones, even though the editor lets the customer select up to 50.\n\n**Fix:** The limit now depends on the controller model: `MAX_ZONES_BY_MODEL = {\"LEGACY\": 20, \"PRO\": 50}`. The error message reports the limit for the model in question. Legacy controllers still stop at 20, and the error code is unchanged.\n\n**Tests:** I added `test_pro_accepts_fifty_and_rejects_fifty_one`. It checks that DEV-101 accepts 30 and 50 zones and rejects 51 with `zone_limit_exceeded`.\n\n**Limitation:** I took the 50-zone figure from your note and didn't confirm it elsewhere. I applied it to every `PRO` controller. DEV-102 is a `PRO` on older firmware (3.1.0), so check that it really supports 50. If some Pro firmware versions don't, the limit would need to depend on firmware too.\n\nI haven't committed anything.",
+      "patch": "--- before/app/schedule_validator.py\n+++ after/app/schedule_validator.py\n@@ -3,7 +3,7 @@\n import re\n \n \n-MAX_ZONES = 20\n+MAX_ZONES_BY_MODEL = {\"LEGACY\": 20, \"PRO\": 50}\n \n \n def validate_zones(zones, device):\n@@ -19,6 +19,7 @@\n         return \"Zone IDs must be positive integers\"\n     if len(set(zones)) != len(zones):\n         return \"Zone IDs must be unique\"\n-    if len(zones) > MAX_ZONES:\n-        return f\"Controller supports at most {MAX_ZONES} zones\"\n+    max_zones = MAX_ZONES_BY_MODEL[device[\"model\"]]\n+    if len(zones) > max_zones:\n+        return f\"Controller supports at most {max_zones} zones\"\n     return None\n--- before/tests/test_schedules.py\n+++ after/tests/test_schedules.py\n@@ -22,6 +22,14 @@\n \n def test_pro_accepts_ten():\n     assert create_schedule(request(\"DEV-101\", 10)).status_code == 201\n+\n+\n+def test_pro_accepts_fifty_and_rejects_fifty_one():\n+    assert create_schedule(request(\"DEV-101\", 30)).status_code == 201\n+    assert create_schedule(request(\"DEV-101\", 50)).status_code == 201\n+    response = create_schedule(request(\"DEV-101\", 51))\n+    assert response.status_code == 400\n+    assert response.body[\"code\"] == \"zone_limit_exceeded\"\n \n \n @pytest.mark.parametrize(\"zones\", [[], None, \"1,2\", [0], [-1], [True], [1, 1], [1.5], [\"1\"]])\n",
+      "changed_code": true,
+      "probes_30_zones": {
+        "DEV-101": {
+          "status_code": 201,
+          "code": null
+        },
+        "DEV-102": {
+          "status_code": 201,
+          "code": null
+        }
+      },
+      "visible_tests": {
+        "passed": 23,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "independent_checks": {
+        "passed": 32,
+        "failed": 2,
+        "failed_ids": [
+          "pro_old_21",
+          "pro_below_boundary_3_1_99"
+        ]
+      }
+    },
+    {
+      "workspace": "baseline-ticket-1",
+      "run_id": "baseline-20261004T185723-2cd97fd2",
+      "verify_run_id": "verify-20261004T185736-2c4c18ad",
+      "prompt_style": "ticket",
+      "model": "claude-sonnet-5-5",
+      "elapsed_seconds": 14.07,
+      "status": "success",
+      "problems": [],
+      "prompt": "This customer ticket was assigned to you. Fix it in this repository.\n\n# AG-1423 — DEV-101 cannot save a 30-zone schedule\n\nSynthetic demonstration fixture. This is not a Data Honey customer record.\n\nDocument ID: AG-1423\nVersion: 1.0\nStatus: Open\nOwner: Support Triage\nUpdated: 2026-10-02\n\n## Reported behavior\n\nThe customer reports that saving 30 zones on controller DEV-101 returns HTTP 400 with `zone_limit_exceeded`. Saving 20 zones on the same controller succeeds. The browser editor allows the customer to select the 30 zones before saving.\n\n## Reproduction\n\nUse `controller_id: DEV-101` and zone IDs 1 through 30. Submit the schedule through the backend adapter. Record the response status and error code, then repeat with zone IDs 1 through 20. No model or firmware override is included in the request.\n\n## Triage request\n\nDetermine the expected behavior for this device using its registry record and the applicable approved requirements. Identify whether a software change is justified and describe the smallest verification that would establish the result. The ticket has no confirmed diagnosis or approved workaround.\n",
+      "tool_calls": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "git ls-files && grep -rniE \"DEV-101|zone_limit|max_zones\" . --exclude-dir=.git | head -50"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd app; cat devices.json device_registry.py schedule_validator.py schedule_service.py; cat ../tests/test_schedules.py; ls ..; ls -a .."
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd ..; cat pyproject.toml; git log --stat | head; grep -rniE \"requirement|zones\" --include=* -l . --exclude-dir=.git"
+          }
+        }
+      ],
+      "response": "I didn't change any code, because the repository doesn't contain the information needed to say what the correct limit is.\n\n**Cause of the 400**\n- `app/schedule_validator.py:6` hard-codes `MAX_ZONES = 20` and applies it to every controller. It never looks at the device record.\n- The registry lists DEV-101 as `model: PRO, firmware: 3.4.0` (`app/devices.json`). The validator only checks that the model is `LEGACY` or `PRO` and then ignores it.\n- So 30 zones on DEV-101 returns `zone_limit_exceeded`, and 20 zones succeeds. That matches the ticket.\n\n**Is a software change justified?**\n- A change is justified only if the approved requirements give PRO controllers, or PRO on firmware 3.4.0, a limit above 20. If so, the single global constant is the defect.\n- The repository has no requirements document, per-model limit or firmware rule. Its only tests cover a LEGACY limit of 20 and PRO at 10 zones.\n- Nothing in the repo says PRO supports 30. If I picked 30 because the customer asked for it, I'd be guessing a hardware limit. That risks saving schedules the controller can't run.\n- The fact that the browser editor lets the customer select 30 zones is not evidence. It may be a separate bug.\n\n**What's needed before a fix**\n- The approved requirement for maximum zones, by model and firmware. DEV-101 (PRO, 3.4.0) and DEV-102 (PRO, 3.1.0) may differ.\n- Whether the limit should live in the registry per device or in a per-model table.\n\n**Fix, once the limit is confirmed**\n1. Add the limit by model (and firmware if needed), and have `validate_zones` use it instead of `MAX_ZONES`.\n2. Keep LEGACY at 20.\n\n**Smallest verification**\nSubmit `DEV-101` with zones 1–N through `create_schedule`:\n- Zones 1–20 should return 201 before and after the change.\n- Zones 1–30 should return 400 `zone_limit_exceeded` today. After the fix it should return 201 if the approved limit is at least 30.\n- One zone above the approved limit should still return 400 `zone_limit_exceeded`.\n- DEV-103 (LEGACY) should still accept 20 and reject 21, which the existing tests already check.\n\nI can implement this as soon as someone provides the approved limit. There's no approved workaround, and I'd advise against raising the global limit.",
+      "patch": "",
+      "changed_code": false,
+      "probes_30_zones": {
+        "DEV-101": {
+          "status_code": 400,
+          "code": "zone_limit_exceeded"
+        },
+        "DEV-102": {
+          "status_code": 400,
+          "code": "zone_limit_exceeded"
+        }
+      },
+      "visible_tests": {
+        "passed": 22,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "independent_checks": {
+        "passed": 30,
+        "failed": 4,
+        "failed_ids": [
+          "pro_eligible_30",
+          "pro_eligible_50",
+          "pro_boundary_3_2_0",
+          "pro_numeric_3_10_0"
+        ]
+      }
+    },
+    {
+      "workspace": "baseline-ticket-2",
+      "run_id": "baseline-20261004T185724-69015559",
+      "verify_run_id": "verify-20261004T185736-b561c97c",
+      "prompt_style": "ticket",
+      "model": "claude-sonnet-5-5",
+      "elapsed_seconds": 14.72,
+      "status": "success",
+      "problems": [],
+      "prompt": "This customer ticket was assigned to you. Fix it in this repository.\n\n# AG-1423 — DEV-101 cannot save a 30-zone schedule\n\nSynthetic demonstration fixture. This is not a Data Honey customer record.\n\nDocument ID: AG-1423\nVersion: 1.0\nStatus: Open\nOwner: Support Triage\nUpdated: 2026-10-02\n\n## Reported behavior\n\nThe customer reports that saving 30 zones on controller DEV-101 returns HTTP 400 with `zone_limit_exceeded`. Saving 20 zones on the same controller succeeds. The browser editor allows the customer to select the 30 zones before saving.\n\n## Reproduction\n\nUse `controller_id: DEV-101` and zone IDs 1 through 30. Submit the schedule through the backend adapter. Record the response status and error code, then repeat with zone IDs 1 through 20. No model or firmware override is included in the request.\n\n## Triage request\n\nDetermine the expected behavior for this device using its registry record and the applicable approved requirements. Identify whether a software change is justified and describe the smallest verification that would establish the result. The ticket has no confirmed diagnosis or approved workaround.\n",
+      "tool_calls": [
+        {
+          "name": "Bash",
+          "input": {
+            "command": "git ls-files; grep -rniE \"zone_limit|DEV-101|max_zones\" . --exclude-dir=.git | head -40"
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd app; cat devices.json device_registry.py schedule_validator.py schedule_service.py; cat ../tests/test_schedules.py; ls ..; ls -a .."
+          }
+        },
+        {
+          "name": "Bash",
+          "input": {
+            "command": "cd ..; grep -rniE \"requirement|PRO|30\" --exclude-dir=.git . | grep -v \"^./tests\" | head; git log --all --oneline; cat pyproject.toml"
+          }
+        }
+      ],
+      "response": "I haven't changed any code, because the repository doesn't contain the requirement that would justify a change.\n\n**Diagnosis of the 400**\n- DEV-101 is registered as `model: PRO`, `firmware: 3.4.0` in `app/devices.json`.\n- `app/schedule_validator.py:6` applies a single hardcoded `MAX_ZONES = 20` to every controller. It never looks at the model or firmware.\n- `schedule_service.py:29` turns the resulting \"Controller supports at most 20 zones\" message into `zone_limit_exceeded`.\n- So 30 zones on DEV-101 returns 400 and 20 zones succeeds, which matches the report. The code does what it was written to do.\n\n**What I couldn't establish**\n- Whether a PRO controller on firmware 3.4.0 should accept 30 zones. The repo has no requirements document, per-model limit, or firmware capability data. It has one commit, and the only tests covering limits are for LEGACY (20 accepted, 21 rejected) and PRO with 10 zones.\n- The fact that the browser editor lets the customer select 30 zones is not evidence of the device limit. It may be the editor that's wrong.\n- I'm not going to guess a PRO limit such as 30 or 32. If the guess is wrong, the service would accept schedules the controller can't run.\n\n**Is a software change justified?**\nOnly if the approved requirements say PRO (or PRO at firmware ≥ some version) supports 30 or more zones. If they do, the fix is small:\n1. Move the limit into the registry or a per-model table, for example `{\"LEGACY\": 20, \"PRO\": <approved value>}`, and have `validate_zones` use `device[\"model\"]`. If the limit depends on firmware, add that rule too.\n2. Keep requests from overriding the limit. The service already rejects `model` and `firmware` fields in the payload.\n\nIf the requirements say 20 for PRO, the service is correct. The fix would then be in the editor, which should stop offering more than the device limit.\n\n**Smallest verification**\n1. Get the approved zone limit for PRO and firmware 3.4.0 from the requirements owner.\n2. Run the ticket's reproduction through `create_schedule`: DEV-101 with zones 1–30, then 1–20. Currently that gives 400 `zone_limit_exceeded`, then 201.\n3. If the limit is raised, add tests to `tests/test_schedules.py` for PRO at the limit (201) and at limit+1 (400 `zone_limit_exceeded`). Keep the existing LEGACY 20/21 tests, which show LEGACY is unchanged.\n\nSend me the approved PRO limit and I'll make the change and add the tests.",
+      "patch": "",
+      "changed_code": false,
+      "probes_30_zones": {
+        "DEV-101": {
+          "status_code": 400,
+          "code": "zone_limit_exceeded"
+        },
+        "DEV-102": {
+          "status_code": 400,
+          "code": "zone_limit_exceeded"
+        }
+      },
+      "visible_tests": {
+        "passed": 22,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "independent_checks": {
+        "passed": 30,
+        "failed": 4,
+        "failed_ids": [
+          "pro_eligible_30",
+          "pro_eligible_50",
+          "pro_boundary_3_2_0",
+          "pro_numeric_3_10_0"
+        ]
+      }
+    }
+  ]
+}

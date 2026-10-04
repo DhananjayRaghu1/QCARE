@@ -18,6 +18,8 @@ uv run python demo.py replay rehearsal-2
 uv run python demo.py viewer --port 8766
 ```
 
+A [baseline comparison](demos/01-controller-capacity/policy-aware/docs/baseline-comparison.md) gives the same model only the ticket and normal developer tools: it stops to ask for the requirement, or follows an engineer's incomplete memory into a patch that fails two older-firmware checks.
+
 Two actual Claude rehearsals are included: both captured a real failing regression, an agent patch, 23 passing visible tests, all 34 independent checks, and the older-device ticket's expected rejection. Open [the local viewer](http://127.0.0.1:8766/) and select `rehearsal-2`. Replay requires no Claude login or model request. Read the [verification results](demos/01-controller-capacity/policy-aware/docs/verification.md) and [citation review](demos/01-controller-capacity/policy-aware/docs/claim-review.md); human claim review remains pending.
 
 Follow the policy-aware README to run your own fresh rehearsal and fair comparisons. Live agent phases require an authenticated Claude Code client and send the listed synthetic context to its configured provider. Prepared control states and samples are explicitly labeled; they do not count as Claude execution.
