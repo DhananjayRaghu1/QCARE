@@ -1,0 +1,194 @@
+[
+  {
+    "id": "2026-10-04_report-reconciliation_preflight_blocked",
+    "date": "2026-10-04",
+    "demo": "report-reconciliation",
+    "kind": "preflight",
+    "status": "blocked",
+    "provenance": "live-model",
+    "models": [],
+    "conditions": [
+      "provided",
+      "retrieval",
+      "workflow"
+    ],
+    "headline": "Live comparison planned (30 trials) but blocked: Claude Code 2.1.186 not authenticated; zero model requests.",
+    "metrics": {
+      "planned_trials": 30,
+      "model_requests": 0
+    },
+    "cost_usd": null,
+    "human_review": "not-applicable",
+    "tags": null,
+    "path": "runs/2026-10-04_report-reconciliation_preflight_blocked"
+  },
+  {
+    "id": "2026-10-04_report-reconciliation_live-comparison_opus-5-5",
+    "date": "2026-10-04",
+    "demo": "report-reconciliation",
+    "kind": "live-comparison",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "conditions": [
+      "provided",
+      "retrieval",
+      "workflow"
+    ],
+    "headline": "30/30 correct decisions, totals and rows; conditions indistinguishable on this fixture; all 3 strict failures are citation scoring, not wrong answers.",
+    "metrics": {
+      "trials": 30,
+      "substantively_correct": 30,
+      "provided_accepted": 10,
+      "retrieval_accepted": 9,
+      "workflow_accepted": 8,
+      "provided_median_s": 7.77,
+      "retrieval_median_s": 11.86,
+      "workflow_median_s": 9.47,
+      "provided_avg_cost_usd": 0.059,
+      "retrieval_avg_cost_usd": 0.091,
+      "workflow_avg_cost_usd": 0.069,
+      "retrieval_avg_tool_calls": 6.3,
+      "workflow_avg_tool_calls": 3.2
+    },
+    "cost_usd": 2.19,
+    "human_review": "pending",
+    "tags": [
+      "opus-5-5",
+      "first-live-run"
+    ],
+    "path": "runs/2026-10-04_report-reconciliation_live-comparison_opus-5-5"
+  },
+  {
+    "id": "2026-10-04_report-reconciliation_controls",
+    "date": "2026-10-04",
+    "demo": "report-reconciliation",
+    "kind": "controls",
+    "status": "completed",
+    "provenance": "deterministic",
+    "models": [],
+    "conditions": [
+      "deployed_arithmetic",
+      "force_returns_negative",
+      "policy_workflow"
+    ],
+    "headline": "Approved-rule workflow 10/10 cases; current code 4/7 totals and -abs() fix 3/7 totals, 0/3 stops; DH-301 regression fails/fails/passes.",
+    "metrics": {
+      "policy_workflow_complete": 10,
+      "deployed_known_totals": 4,
+      "naive_known_totals": 3,
+      "known_total_count": 7,
+      "stop_count": 3
+    },
+    "cost_usd": null,
+    "human_review": "not-applicable",
+    "tags": [
+      "fixture-check"
+    ],
+    "path": "runs/2026-10-04_report-reconciliation_controls"
+  },
+  {
+    "id": "2026-10-04_controller-capacity-policy_rehearsal_sonnet-5-5",
+    "date": "2026-10-04",
+    "demo": "controller-capacity-policy",
+    "kind": "rehearsal",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-sonnet-5-5"
+    ],
+    "conditions": [
+      "tools"
+    ],
+    "headline": "Two full ticket-to-fix rehearsals (investigation, failing regression, agent patch, verification) with MCP policy tools.",
+    "metrics": {
+      "rehearsals": 2
+    },
+    "cost_usd": null,
+    "human_review": "pending",
+    "tags": [
+      "meeting-fallback"
+    ],
+    "path": "runs/2026-10-04_controller-capacity-policy_rehearsal_sonnet-5-5"
+  },
+  {
+    "id": "2026-10-04_controller-capacity-policy_live-comparison_sonnet-5-5",
+    "date": "2026-10-04",
+    "demo": "controller-capacity-policy",
+    "kind": "live-comparison",
+    "status": "partial",
+    "provenance": "live-model",
+    "models": [
+      "claude-sonnet-5-5"
+    ],
+    "conditions": [
+      "repo",
+      "provided",
+      "tools"
+    ],
+    "headline": "6 development attempts on AG-1423: with policy (provided or MCP) all found the 30-zone mismatch; repo-only correctly reported insufficient evidence. Not a controlled benchmark.",
+    "metrics": {
+      "attempts": 6,
+      "repo_attempts": 3,
+      "repo_partial": 2,
+      "provided_success": 1,
+      "tools_success": 2
+    },
+    "cost_usd": null,
+    "human_review": "pending",
+    "tags": [
+      "development-observations"
+    ],
+    "path": "runs/2026-10-04_controller-capacity-policy_live-comparison_sonnet-5-5"
+  },
+  {
+    "id": "2026-10-04_controller-capacity-policy_controls",
+    "date": "2026-10-04",
+    "demo": "controller-capacity-policy",
+    "kind": "controls",
+    "status": "completed",
+    "provenance": "deterministic",
+    "models": [],
+    "conditions": [
+      "reference",
+      "unsafe_all_pro_50"
+    ],
+    "headline": "Independent policy checks: reference 34/34; unsafe all-Pro-50 passes all 23 visible tests but fails 2/34 (DEV-102 on firmware 3.1.x).",
+    "metrics": {
+      "reference_passed": 34,
+      "unsafe_passed": 32,
+      "policy_cases": 34,
+      "visible_tests": 23
+    },
+    "cost_usd": null,
+    "human_review": "not-applicable",
+    "tags": null,
+    "path": "runs/2026-10-04_controller-capacity-policy_controls"
+  },
+  {
+    "id": "2026-10-04_controller-capacity-basic_historical-comparison_sonnet-5-5",
+    "date": "2026-10-04",
+    "demo": "controller-capacity-basic",
+    "kind": "historical-comparison",
+    "status": "completed",
+    "provenance": "historical",
+    "models": [
+      "claude-sonnet-5-5"
+    ],
+    "conditions": [
+      "augmented",
+      "repo-only"
+    ],
+    "headline": "Repo-only found the same capability bug in 34 s vs 73 s augmented; extra context added ownership/history, not speed. Two runs only.",
+    "metrics": {
+      "augmented_model_s": 72.63,
+      "repo_only_model_s": 34.08
+    },
+    "cost_usd": null,
+    "human_review": "done",
+    "tags": null,
+    "path": "runs/2026-10-04_controller-capacity-basic_historical-comparison_sonnet-5-5"
+  }
+]

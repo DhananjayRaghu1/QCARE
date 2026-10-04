@@ -68,7 +68,7 @@ def reproduce():
             runs["reference"]["exit_code"] == 0}
 
 
-def benchmark(name, repeats=1, seed=20261004, timeout=180, budget=0.5, plan_only=False):
+def benchmark(name, repeats=1, seed=20261004, timeout=180, budget=0.5, plan_only=False, model=None):
     import agent
     if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}", name):
         raise ValueError("Use a new simple run name (letters, numbers, underscores or hyphens)")
@@ -79,7 +79,7 @@ def benchmark(name, repeats=1, seed=20261004, timeout=180, budget=0.5, plan_only
     runs = []
     result = {"status": "planned", "plan": schedule, "runs": runs, "model_requests_attempted": 0}
     if not plan_only:
-        client = agent.preflight()
+        client = agent.preflight(model)
         result["client"] = client
         if not client["authenticated"]:
             result["status"] = "blocked"
@@ -119,7 +119,8 @@ def main():
     doc.add_argument("document_id", choices=sorted(documents()))
     controls = sub.add_parser("controls")
     controls.add_argument("--output", type=Path)
-    sub.add_parser("preflight")
+    check = sub.add_parser("preflight")
+    check.add_argument("--model")
     regression = sub.add_parser("reproduce")
     regression.add_argument("--output", type=Path)
     present = sub.add_parser("present")
@@ -129,6 +130,7 @@ def main():
     run.add_argument("--context", choices=("provided", "retrieval", "workflow"), required=True)
     run.add_argument("--timeout", type=float, default=180)
     run.add_argument("--budget", type=float, default=0.5)
+    run.add_argument("--model", help="Override the Claude settings model, e.g. claude-opus-5-5")
     comparison = sub.add_parser("benchmark")
     comparison.add_argument("--name", required=True)
     comparison.add_argument("--repeats", type=int, default=1)
@@ -136,6 +138,7 @@ def main():
     comparison.add_argument("--timeout", type=float, default=180)
     comparison.add_argument("--budget", type=float, default=0.5)
     comparison.add_argument("--plan-only", action="store_true")
+    comparison.add_argument("--model", help="Override the Claude settings model, e.g. claude-opus-5-5")
     args = parser.parse_args()
     if args.command in {"case", "run"}:
         data = get_case(args.case_id) if args.command == "case" else reconcile(args.case_id)["report"]
@@ -165,15 +168,16 @@ def main():
         return int(not result["passed"])
     elif args.command == "preflight":
         import agent
-        print(json.dumps({"recorded_at": datetime.now(timezone.utc).isoformat(), "claude": agent.preflight(),
+        print(json.dumps({"recorded_at": datetime.now(timezone.utc).isoformat(), "claude": agent.preflight(args.model),
                           "snapshot_hashes": snapshot_hashes(), "offline_workflow_available": True}, indent=2))
     elif args.command == "agent":
         import agent
-        result = agent.run_agent(args.case_id, args.context, timeout=args.timeout, budget=args.budget)
+        result = agent.run_agent(args.case_id, args.context, timeout=args.timeout, budget=args.budget,
+                                 client=agent.preflight(args.model))
         print(json.dumps(result, indent=2))
         return 0 if result["status"] == "completed" and result["acceptance"]["passed"] else 3
     elif args.command == "benchmark":
-        return benchmark(args.name, args.repeats, args.seed, args.timeout, args.budget, args.plan_only)
+        return benchmark(args.name, args.repeats, args.seed, args.timeout, args.budget, args.plan_only, args.model)
     return 0
 
 
