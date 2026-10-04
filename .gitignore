@@ -1,0 +1,11 @@
+**/.venv/
+**/.models/
+**/__pycache__/
+**/.pytest_cache/
+**/*.pyc
+**/workspaces/
+**/demo-workspaces/
+**/artifacts/
+**/.mcp.json
+**/.claude/
+.DS_Store

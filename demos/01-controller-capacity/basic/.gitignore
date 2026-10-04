@@ -1,0 +1,11 @@
+.venv/
+.uv-cache/
+.models/
+__pycache__/
+.pytest_cache/
+*.pyc
+artifacts/
+demo-workspaces/
+.mcp.json
+.claude/
+.DS_Store
