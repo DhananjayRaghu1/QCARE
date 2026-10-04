@@ -1,0 +1,427 @@
+[
+  {
+    "id": "DH-301",
+    "title": "Mixed export versions and a return reversal",
+    "customer": "NORTHSTAR",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "NORTHSTAR asks us to investigate 2026-09 net sales. Their spreadsheet shows 115000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 115000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "A-1",
+        "amount_cents": 100000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "1",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "A-2",
+        "amount_cents": -20000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "1",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "A-3",
+        "amount_cents": 5000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "1",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "A-4",
+        "amount_cents": 50000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "A-5",
+        "amount_cents": 10000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      }
+    ],
+    "report_profile": "standard"
+  },
+  {
+    "id": "DH-302",
+    "title": "Customer addendum changes the reporting month",
+    "customer": "BLUEBIRD",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "BLUEBIRD asks us to investigate 2026-09 net sales. Their spreadsheet shows 40000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 40000,
+    "deployed_config": {
+      "date_basis": "invoice_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "B-1",
+        "amount_cents": 40000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-08-31",
+        "posted_on": "2026-09-03"
+      },
+      {
+        "id": "B-2",
+        "amount_cents": 60000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-28",
+        "posted_on": "2026-10-02"
+      }
+    ],
+    "report_profile": "bluebird"
+  },
+  {
+    "id": "DH-303",
+    "title": "Customer request is still pending approval",
+    "customer": "NORTHSTAR",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "NORTHSTAR asks us to investigate 2026-09 net sales. Their spreadsheet shows 110000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 110000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "C-1",
+        "amount_cents": 100000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "C-2",
+        "amount_cents": 20000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "C-3",
+        "amount_cents": 30000,
+        "kind": "TRANSFER",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      }
+    ],
+    "report_profile": "standard"
+  },
+  {
+    "id": "DH-304",
+    "title": "An export has no approved format contract",
+    "customer": "NORTHSTAR",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "NORTHSTAR asks us to investigate 2026-09 net sales. Their spreadsheet shows 80000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 80000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "D-1",
+        "amount_cents": 100000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "3",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "D-2",
+        "amount_cents": 20000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "3",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      }
+    ],
+    "report_profile": "standard"
+  },
+  {
+    "id": "DH-305",
+    "title": "Two approved customer rules conflict",
+    "customer": "CEDAR",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "CEDAR asks us to investigate 2026-09 net sales. Their spreadsheet shows 60000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 60000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "B-1",
+        "amount_cents": 40000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-08-31",
+        "posted_on": "2026-09-03"
+      },
+      {
+        "id": "B-2",
+        "amount_cents": 60000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-28",
+        "posted_on": "2026-10-02"
+      }
+    ],
+    "report_profile": "cedar"
+  },
+  {
+    "id": "DH-306",
+    "title": "A newer document does not apply retroactively",
+    "customer": "NORTHSTAR",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "NORTHSTAR asks us to investigate 2026-09 net sales. Their spreadsheet shows 60000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 60000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "B-1",
+        "amount_cents": 40000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-08-31",
+        "posted_on": "2026-09-03"
+      },
+      {
+        "id": "B-2",
+        "amount_cents": 60000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-28",
+        "posted_on": "2026-10-02"
+      }
+    ],
+    "report_profile": "standard"
+  },
+  {
+    "id": "DH-307",
+    "title": "October configuration was not migrated",
+    "customer": "NORTHSTAR",
+    "metric": "net_sales",
+    "month": "2026-10",
+    "currency": "USD",
+    "ticket": "NORTHSTAR asks us to investigate 2026-10 net sales. Their spreadsheet shows 60000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 60000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "G-1",
+        "amount_cents": 40000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-30",
+        "posted_on": "2026-10-01"
+      },
+      {
+        "id": "G-2",
+        "amount_cents": 60000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-10-02",
+        "posted_on": "2026-10-02"
+      }
+    ],
+    "report_profile": "standard"
+  },
+  {
+    "id": "DH-308",
+    "title": "Negative magnitude is invalid source data",
+    "customer": "NORTHSTAR",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "NORTHSTAR asks us to investigate 2026-09 net sales. Their spreadsheet shows 80000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 80000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "H-1",
+        "amount_cents": 100000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "H-2",
+        "amount_cents": -20000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "2",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      }
+    ],
+    "report_profile": "standard"
+  },
+  {
+    "id": "DH-309",
+    "title": "A signed return reversal increases net sales",
+    "customer": "NORTHSTAR",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "NORTHSTAR asks us to investigate 2026-09 net sales. Their spreadsheet shows 80000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 80000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "I-1",
+        "amount_cents": 90000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "1",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "I-2",
+        "amount_cents": 10000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "1",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      }
+    ],
+    "report_profile": "standard"
+  },
+  {
+    "id": "DH-310",
+    "title": "Equal and opposite row errors hide in the total",
+    "customer": "NORTHSTAR",
+    "metric": "net_sales",
+    "month": "2026-09",
+    "currency": "USD",
+    "ticket": "NORTHSTAR asks us to investigate 2026-09 net sales. Their spreadsheet shows 100000 cents. Explain any discrepancy before changing the report.",
+    "customer_claim_cents": 100000,
+    "deployed_config": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "rows": [
+      {
+        "id": "J-1",
+        "amount_cents": 100000,
+        "kind": "SALE",
+        "feed": "ATLAS",
+        "schema_version": "1",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "J-2",
+        "amount_cents": -10000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "1",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      },
+      {
+        "id": "J-3",
+        "amount_cents": 10000,
+        "kind": "RETURN",
+        "feed": "ATLAS",
+        "schema_version": "1",
+        "invoice_on": "2026-09-15",
+        "posted_on": "2026-09-15"
+      }
+    ],
+    "report_profile": "standard"
+  }
+]

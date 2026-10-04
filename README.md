@@ -1,25 +1,43 @@
-# Agentic SDLC demos
+# Business context → a justified next action
 
-Local, synthetic prototypes for discussing how application code, company decisions, and customer configuration can support a developer's next action. These fixtures are not Data Honey's product or customer records. Our class introduced some of the concepts; these demos were built afterward to explore them.
+Local, synthetic demos for discovering where code, business documents, Jira history and customer configuration can help a team make better decisions. These are prototypes for discussion, not Data Honey's product or customer records.
 
-## Start with demo 1
+## Demo 1: Which total can we defend?
 
-[Controller capacity](demos/01-controller-capacity/README.md) contains two independent variants:
+**Start with [customer-report reconciliation](demos/01-report-reconciliation/README.md).** The application reports **$1,550** and the customer expects **$1,150**. Approved reporting rules and two export contracts show that **both are wrong: the correct total is $1,250**.
 
-- [Policy-aware](demos/01-controller-capacity/policy-aware/README.md): two similar support tickets lead to different decisions. The workflow gathers evidence, captures a failing regression, fixes eligible devices, and checks compatibility independently.
-- [Basic](demos/01-controller-capacity/basic/README.md): the original task-onramping prototype, preserved with its [historical comparison](demos/01-controller-capacity/basic/docs/historical-comparison.md). Repository-only found the same defect faster; added context supplied ownership and history, with citation limitations.
-
-Use Python 3.12 and [uv](https://docs.astral.sh/uv/). Each variant owns its dependencies; run commands inside its directory:
+A tempting `-abs()` fix matches the customer but mishandles a return reversal. The workflow identifies the affected rows, cites the applicable sources and recommends a schema-specific repair. Other cases produce a customer explanation, a configuration correction, or an explicit stop when evidence is missing or conflicting. A pending Jira request does not silently become approved policy.
 
 ```sh
-cd demos/01-controller-capacity/policy-aware
+cd demos/01-report-reconciliation
 uv sync --locked
-uv run python demo.py replay rehearsal-2
-uv run python demo.py viewer --port 8766
+uv run python demo.py present
 ```
 
-Two actual Claude rehearsals are included: both captured a real failing regression, an agent patch, 23 passing visible tests, all 34 independent checks, and the older-device ticket's expected rejection. Open [the local viewer](http://127.0.0.1:8766/) and select `rehearsal-2`. Replay requires no Claude login or model request. Read the [verification results](demos/01-controller-capacity/policy-aware/docs/verification.md) and [citation review](demos/01-controller-capacity/policy-aware/docs/claim-review.md); human claim review remains pending.
+Open the generated `artifacts/presentation.html` in a browser. The interactive walkthrough runs offline and includes ten cases with expandable business/Jira source snapshots. For terminal output and verification:
 
-Follow the policy-aware README to run your own fresh rehearsal and fair comparisons. Live agent phases require an authenticated Claude Code client and send the listed synthetic context to its configured provider. Prepared control states and samples are explicitly labeled; they do not count as Claude execution.
+```sh
+uv run python demo.py run DH-301
+uv run python demo.py reproduce
+uv run python demo.py controls
+uv run python -m pytest -q
+```
 
-The repository contains no credentials, virtual environments, embedding weights, or private raw traces. Generated workspaces and run artifacts stay local.
+Use the [10-minute meeting script](demos/01-report-reconciliation/docs/meeting-guide.md) to connect the demonstration to discovery. The scope is one support discrepancy → a reviewable decision and next action. Ask how the team currently finds the relevant evidence, decides which source governs, and validates the outcome.
+
+## What changed, and what we can claim
+
+The earlier controller example did not establish productivity improvement. Its basic repository-only run found the simple defect faster than the run with extra context. Two successful policy-aware rehearsals showed that the workflow could execute, but two runs—and comparisons with evolving prompts—do not support a productivity estimate.
+
+The new problem makes business context materially change the answer. A reproducible regression rejects both the original implementation and the tempting fix, while a prepared reference passes. The approved-rule workflow passes all ten synthetic case checks, including three cases that must stop and one where row errors cancel in the total.
+
+**This demonstrates verified behavior on these fixtures, not a measured productivity gain.** The default workflow uses deterministic software and hand-authored structured rules. An LLM is optional for retrieving evidence and explaining the result; it is not required for the calculation. The new live Claude comparison was blocked by missing client authentication, and no new model run is claimed.
+
+Read the [verification record](demos/01-report-reconciliation/docs/verification.md), [implementation scope](demos/01-report-reconciliation/README.md), and [evaluation protocol](demos/01-report-reconciliation/docs/evaluation-protocol.md). A future pilot should measure time to an accepted decision, errors, handoffs, human review and setup/maintenance costs on real representative cases.
+
+## Earlier controller demos, preserved
+
+- [Policy-aware controller capacity](demos/01-controller-capacity/policy-aware/README.md): two actual recorded Claude rehearsals, failing regressions, agent patches, compatibility checks and documented citation limitations.
+- [Basic developer onramping](demos/01-controller-capacity/basic/README.md): the original prototype and its [historical comparison](demos/01-controller-capacity/basic/docs/historical-comparison.md), where repository-only was faster.
+
+Their original recordings remain unchanged. Each demo has its own dependencies and environment. Generated workspaces, virtual environments and private traces remain local and ignored.

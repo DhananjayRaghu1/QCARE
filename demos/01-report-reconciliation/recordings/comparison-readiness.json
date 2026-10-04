@@ -1,0 +1,207 @@
+{
+  "status": "blocked",
+  "plan": {
+    "format_version": 1,
+    "seed": 20261004,
+    "repeats": 1,
+    "snapshot_hashes": {
+      "cases": "36294d86205cfce6b1588b844cf80383c985bdbb6d2666aa0eb0b4c9b7f1b281",
+      "documents": "b3d5c01c9c07d73669ca6fa026beec968b128cd6321d66caf4e0fdc208dc34ac",
+      "application": "e54ec3d4c774f448557a383d888a9ef2292ad971121f186c00021ad4bc0cc261"
+    },
+    "oracle_sha256": "507f75cb5295fdfc70482b3439f0d16a82217465d72b13cce1b10019795336ca",
+    "protocol_sha256": "8330e65e1e69a7bffb5ccba6fd6f462028a21ab9f224ba961250db6a33f245cf",
+    "trials": [
+      {
+        "repeat": 1,
+        "case_id": "DH-307",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-307",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-307",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-309",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-309",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-309",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-306",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-306",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-306",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-302",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-302",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-302",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-308",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-308",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-308",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-310",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-310",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-310",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-304",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-304",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-304",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-305",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-305",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-305",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-301",
+        "condition": "workflow"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-301",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-301",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-303",
+        "condition": "provided"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-303",
+        "condition": "retrieval"
+      },
+      {
+        "repeat": 1,
+        "case_id": "DH-303",
+        "condition": "workflow"
+      }
+    ],
+    "policy": "Sequential fresh sessions; rotated condition order; no retries or successful-run filtering. Repetitions are not independent business cases."
+  },
+  "runs": [],
+  "model_requests_attempted": 0,
+  "client": {
+    "installed": true,
+    "authenticated": false,
+    "model_request_sent": false,
+    "configured_model": null,
+    "version": "2.1.186 (Claude Code)"
+  },
+  "reason": "Claude Code is not authenticated. No model request was made.",
+  "summary": {
+    "conditions": {
+      "provided": {
+        "attempts": 0,
+        "accepted": 0,
+        "failed_or_blocked": 0,
+        "median_attempt_seconds": null,
+        "total_attempt_seconds": null
+      },
+      "retrieval": {
+        "attempts": 0,
+        "accepted": 0,
+        "failed_or_blocked": 0,
+        "median_attempt_seconds": null,
+        "total_attempt_seconds": null
+      },
+      "workflow": {
+        "attempts": 0,
+        "accepted": 0,
+        "failed_or_blocked": 0,
+        "median_attempt_seconds": null,
+        "total_attempt_seconds": null
+      }
+    },
+    "actual_models": [],
+    "same_model_verified": false,
+    "productivity_estimate": null,
+    "limit": "Model wall time excludes human acquisition/review time. Synthetic fixture success and repeated calls do not estimate employee productivity."
+  }
+}

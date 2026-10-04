@@ -1,5 +1,7 @@
 # Policy-aware SDLC demo
 
+**Historical demo:** use [customer-report reconciliation](../../01-report-reconciliation/README.md) as the first meeting example. The original controller runs below are preserved as execution evidence, with no productivity claim.
+
 Two customers cannot save 30 zones. DEV-101 is a Pro controller on firmware 3.4.0: the approved policy allows 50. DEV-102 is a Pro controller on 3.1.0: its limit remains 20. The same symptom leads to a software fix for one and an expected rejection for the other.
 
 This is a synthetic prototype, not Data Honey's application or customer data. The seed code uses a global 20-zone limit. Claude investigates the ticket and approved policy, adds a real failing regression, then fixes the application. A separate checker verifies compatibility. Prepared reference and unsafe patches are labeled control fixtures.

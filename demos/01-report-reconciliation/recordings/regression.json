@@ -1,0 +1,27 @@
+{
+  "provenance": "actual_regression_execution_against_prepared_implementations",
+  "agent_runs": 0,
+  "snapshot_hashes": {
+    "cases": "36294d86205cfce6b1588b844cf80383c985bdbb6d2666aa0eb0b4c9b7f1b281",
+    "documents": "b3d5c01c9c07d73669ca6fa026beec968b128cd6321d66caf4e0fdc208dc34ac",
+    "application": "e54ec3d4c774f448557a383d888a9ef2292ad971121f186c00021ad4bc0cc261"
+  },
+  "runs": {
+    "seed": {
+      "exit_code": 1,
+      "stdout": "seed: contributions=[100000, 20000, -5000, 50000, -10000]; total_cents=155000\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"<demo>/controls/reported_case.py\", line 31, in <module>\n    check(parser.parse_args().implementation)\n  File \"<demo>/controls/reported_case.py\", line 23, in check\n    assert actual == [100000, -20000, 5000, 50000, -10000], \"signed reversals must stay positive\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: signed reversals must stay positive\n"
+    },
+    "naive": {
+      "exit_code": 1,
+      "stdout": "naive: contributions=[100000, -20000, -5000, 50000, -10000]; total_cents=115000\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"<demo>/controls/reported_case.py\", line 31, in <module>\n    check(parser.parse_args().implementation)\n  File \"<demo>/controls/reported_case.py\", line 23, in check\n    assert actual == [100000, -20000, 5000, 50000, -10000], \"signed reversals must stay positive\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: signed reversals must stay positive\n"
+    },
+    "reference": {
+      "exit_code": 0,
+      "stdout": "reference: contributions=[100000, -20000, 5000, 50000, -10000]; total_cents=125000\nPASS: row contributions and total match the approved contracts\n",
+      "stderr": ""
+    }
+  },
+  "passed": true
+}

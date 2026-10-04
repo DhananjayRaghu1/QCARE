@@ -1,0 +1,1879 @@
+{
+  "provenance": "actual_deterministic_test_execution",
+  "agent_runs": 0,
+  "recorded_at": "2026-10-04T19:13:05.240213+00:00",
+  "snapshot_hashes": {
+    "cases": "36294d86205cfce6b1588b844cf80383c985bdbb6d2666aa0eb0b4c9b7f1b281",
+    "documents": "b3d5c01c9c07d73669ca6fa026beec968b128cd6321d66caf4e0fdc208dc34ac",
+    "application": "e54ec3d4c774f448557a383d888a9ef2292ad971121f186c00021ad4bc0cc261"
+  },
+  "oracle_sha256": "507f75cb5295fdfc70482b3439f0d16a82217465d72b13cce1b10019795336ca",
+  "cases": [
+    {
+      "case_id": "DH-301",
+      "title": "Mixed export versions and a return reversal",
+      "expected": {
+        "decision": "calculation_defect",
+        "expected_total_cents": 125000,
+        "problem_rows": [
+          "A-2",
+          "A-3"
+        ],
+        "required_sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "FEED-ATLAS-2"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-301",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 155000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-301",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 115000,
+            "problem_rows": [
+              "A-2"
+            ],
+            "decision": "calculation_defect",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": false,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-301",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 155000,
+            "customer_claim_cents": 115000,
+            "expected_total_cents": 125000,
+            "decision": "calculation_defect",
+            "problem_rows": [
+              "A-2",
+              "A-3"
+            ],
+            "sources": [
+              "REPORT-STD-SEP",
+              "FEED-ATLAS-1",
+              "FEED-ATLAS-2"
+            ],
+            "ledger": [
+              {
+                "row_id": "A-1",
+                "raw_amount_cents": 100000,
+                "observed_cents": 100000,
+                "expected_cents": 100000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-1"
+              },
+              {
+                "row_id": "A-2",
+                "raw_amount_cents": -20000,
+                "observed_cents": 20000,
+                "expected_cents": -20000,
+                "difference_cents": 40000,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-1"
+              },
+              {
+                "row_id": "A-3",
+                "raw_amount_cents": 5000,
+                "observed_cents": -5000,
+                "expected_cents": 5000,
+                "difference_cents": -10000,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-1"
+              },
+              {
+                "row_id": "A-4",
+                "raw_amount_cents": 50000,
+                "observed_cents": 50000,
+                "expected_cents": 50000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-2"
+              },
+              {
+                "row_id": "A-5",
+                "raw_amount_cents": 10000,
+                "observed_cents": -10000,
+                "expected_cents": -10000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-2"
+              }
+            ],
+            "messages": [],
+            "source_snapshots": {
+              "REPORT-STD-SEP": {
+                "sha256": "ede8f00b97e7f6a5c9b2bfceadb1b800d8f0b29a5c06c44bf83aaad12688a6fc",
+                "document": {
+                  "id": "REPORT-STD-SEP",
+                  "kind": "report_policy",
+                  "title": "Standard net sales through September 2026",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-01-01",
+                  "effective_to": "2026-10-01",
+                  "scope": {
+                    "customer": "*",
+                    "metric": "net_sales",
+                    "profile": "standard"
+                  },
+                  "rules": {
+                    "date_basis": "posted_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution."
+                }
+              },
+              "FEED-ATLAS-1": {
+                "sha256": "733db9b1e3061ce0fc9cd65b528403b60f9d004dce478da9d0cf0cfb2d93f4ae",
+                "document": {
+                  "id": "FEED-ATLAS-1",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 1: signed accounting amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "1"
+                  },
+                  "rules": {
+                    "encoding": "signed"
+                  },
+                  "body": "For ATLAS schema 1, amount_cents is the signed contribution to sales. Preserve its sign for SALE and RETURN records. A negative RETURN reduces sales; a positive RETURN reverses a previous return and increases sales. Do not negate every RETURN and do not force every RETURN negative. The schema version on each row selects the contract. Amounts are integral US cents."
+                }
+              },
+              "FEED-ATLAS-2": {
+                "sha256": "7202c79f6b88bc58351e21e7702e4ab93ef26de87cda6154cf1b07aec2b89802",
+                "document": {
+                  "id": "FEED-ATLAS-2",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 2: magnitude amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "2.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "2"
+                  },
+                  "rules": {
+                    "encoding": "magnitude"
+                  },
+                  "body": "For ATLAS schema 2, amount_cents is a nonnegative magnitude. SALE increases sales and RETURN reduces sales. A negative magnitude is invalid source data: quarantine it and request a corrected export. Never silently use abs() to repair it. Schema 1 and schema 2 files coexist; the feed name alone does not determine encoding. Amounts are integral US cents."
+                }
+              }
+            },
+            "case_sha256": "4d0bbdbf910c65197f1ddadf92e884bc1e58e9a364d97cd9e1740aac98ad954a",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-STD-SEP",
+              "date_basis": "posted_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Reporting Engineering should reproduce the row errors and implement schema-specific normalization; preserve signed reversals.",
+            "delta_cents": 30000
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-302",
+      "title": "Customer addendum changes the reporting month",
+      "expected": {
+        "decision": "expected_behavior",
+        "expected_total_cents": 60000,
+        "problem_rows": [],
+        "required_sources": [
+          "REPORT-BLUEBIRD",
+          "FEED-ATLAS-2"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-302",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 60000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-302",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 60000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-302",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 60000,
+            "customer_claim_cents": 40000,
+            "expected_total_cents": 60000,
+            "decision": "expected_behavior",
+            "problem_rows": [],
+            "sources": [
+              "REPORT-BLUEBIRD",
+              "FEED-ATLAS-2"
+            ],
+            "ledger": [
+              {
+                "row_id": "B-1",
+                "raw_amount_cents": 40000,
+                "observed_cents": 0,
+                "expected_cents": 0,
+                "difference_cents": 0,
+                "included": false,
+                "reason": "outside_policy_month",
+                "policy_source": "REPORT-BLUEBIRD",
+                "feed_source": "FEED-ATLAS-2"
+              },
+              {
+                "row_id": "B-2",
+                "raw_amount_cents": 60000,
+                "observed_cents": 60000,
+                "expected_cents": 60000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-BLUEBIRD",
+                "feed_source": "FEED-ATLAS-2"
+              }
+            ],
+            "messages": [],
+            "source_snapshots": {
+              "REPORT-BLUEBIRD": {
+                "sha256": "2b5851f6bcecac8e5e6edfd7c9ea3a0e84fb17c8bbea3d8dfdcfa66b307246f0",
+                "document": {
+                  "id": "REPORT-BLUEBIRD",
+                  "kind": "report_policy",
+                  "title": "Bluebird customer reporting addendum",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Customer Reporting",
+                  "effective_from": "2026-09-01",
+                  "effective_to": null,
+                  "scope": {
+                    "customer": "BLUEBIRD",
+                    "metric": "net_sales",
+                    "profile": "bluebird"
+                  },
+                  "rules": {
+                    "date_basis": "invoice_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "Bluebird's approved addendum uses invoice_on to assign SALE and RETURN to reporting months, including September 2026. TRANSFER remains excluded. This customer-specific addendum overrides the standard posted_on definition. It does not change source sign conventions. Do not apply Bluebird's rule to Northstar."
+                }
+              },
+              "FEED-ATLAS-2": {
+                "sha256": "7202c79f6b88bc58351e21e7702e4ab93ef26de87cda6154cf1b07aec2b89802",
+                "document": {
+                  "id": "FEED-ATLAS-2",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 2: magnitude amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "2.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "2"
+                  },
+                  "rules": {
+                    "encoding": "magnitude"
+                  },
+                  "body": "For ATLAS schema 2, amount_cents is a nonnegative magnitude. SALE increases sales and RETURN reduces sales. A negative magnitude is invalid source data: quarantine it and request a corrected export. Never silently use abs() to repair it. Schema 1 and schema 2 files coexist; the feed name alone does not determine encoding. Amounts are integral US cents."
+                }
+              }
+            },
+            "case_sha256": "ae70cb3193454d5435c279365dec87a16574bc30b7fe278bf6b0b0fb23702d0a",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-BLUEBIRD",
+              "date_basis": "invoice_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Explain the applicable reporting definition and reconciliation to support; a customer discrepancy alone does not justify changing code.",
+            "delta_cents": 0
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-303",
+      "title": "Customer request is still pending approval",
+      "expected": {
+        "decision": "expected_behavior",
+        "expected_total_cents": 80000,
+        "problem_rows": [],
+        "required_sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-204"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-303",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 80000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-303",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 80000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-303",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 80000,
+            "customer_claim_cents": 110000,
+            "expected_total_cents": 80000,
+            "decision": "expected_behavior",
+            "problem_rows": [],
+            "sources": [
+              "REPORT-STD-SEP",
+              "FEED-ATLAS-2",
+              "DH-204"
+            ],
+            "ledger": [
+              {
+                "row_id": "C-1",
+                "raw_amount_cents": 100000,
+                "observed_cents": 100000,
+                "expected_cents": 100000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-2"
+              },
+              {
+                "row_id": "C-2",
+                "raw_amount_cents": 20000,
+                "observed_cents": -20000,
+                "expected_cents": -20000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-2"
+              },
+              {
+                "row_id": "C-3",
+                "raw_amount_cents": 30000,
+                "observed_cents": 0,
+                "expected_cents": 0,
+                "difference_cents": 0,
+                "included": false,
+                "reason": "excluded_record_kind",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-2"
+              }
+            ],
+            "messages": [
+              "DH-204 is pending_approval; it is not an approved reporting amendment."
+            ],
+            "source_snapshots": {
+              "REPORT-STD-SEP": {
+                "sha256": "ede8f00b97e7f6a5c9b2bfceadb1b800d8f0b29a5c06c44bf83aaad12688a6fc",
+                "document": {
+                  "id": "REPORT-STD-SEP",
+                  "kind": "report_policy",
+                  "title": "Standard net sales through September 2026",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-01-01",
+                  "effective_to": "2026-10-01",
+                  "scope": {
+                    "customer": "*",
+                    "metric": "net_sales",
+                    "profile": "standard"
+                  },
+                  "rules": {
+                    "date_basis": "posted_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution."
+                }
+              },
+              "FEED-ATLAS-2": {
+                "sha256": "7202c79f6b88bc58351e21e7702e4ab93ef26de87cda6154cf1b07aec2b89802",
+                "document": {
+                  "id": "FEED-ATLAS-2",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 2: magnitude amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "2.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "2"
+                  },
+                  "rules": {
+                    "encoding": "magnitude"
+                  },
+                  "body": "For ATLAS schema 2, amount_cents is a nonnegative magnitude. SALE increases sales and RETURN reduces sales. A negative magnitude is invalid source data: quarantine it and request a corrected export. Never silently use abs() to repair it. Schema 1 and schema 2 files coexist; the feed name alone does not determine encoding. Amounts are integral US cents."
+                }
+              },
+              "DH-204": {
+                "sha256": "4e34bd9c9086e3df974107997394a7dc61e1fb071029e9ac07c9a9b801302206",
+                "document": {
+                  "id": "DH-204",
+                  "kind": "change_request",
+                  "title": "Northstar requests transfer inclusion",
+                  "system": "jira",
+                  "status": "pending_approval",
+                  "version": "1",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-09-01",
+                  "effective_to": null,
+                  "scope": {
+                    "customer": "NORTHSTAR",
+                    "metric": "net_sales"
+                  },
+                  "rules": {},
+                  "body": "Northstar asked to include internal TRANSFER rows in net sales. Status: pending business approval. No approved contract amendment exists in this snapshot. Engineering must preserve the approved exclusion until the reporting owner approves a change. A customer request is not authorization to change the metric."
+                }
+              }
+            },
+            "case_sha256": "75b29ce4c6a0d76c0ef03f5476285fc2eb9bf2fe63cc3e48ff99f706deebc2b5",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-STD-SEP",
+              "date_basis": "posted_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Explain the applicable reporting definition and reconciliation to support; a customer discrepancy alone does not justify changing code.",
+            "delta_cents": 0
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-304",
+      "title": "An export has no approved format contract",
+      "expected": {
+        "decision": "insufficient_evidence",
+        "expected_total_cents": null,
+        "problem_rows": [],
+        "required_sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-3-DRAFT"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-304",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 80000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-304",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 80000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-304",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 80000,
+            "customer_claim_cents": 80000,
+            "expected_total_cents": null,
+            "decision": "insufficient_evidence",
+            "problem_rows": [],
+            "sources": [
+              "REPORT-STD-SEP",
+              "FEED-ATLAS-3-DRAFT"
+            ],
+            "ledger": [],
+            "messages": [
+              "No approved format contract for ATLAS schema 3; a draft does not authorize an interpretation."
+            ],
+            "source_snapshots": {
+              "REPORT-STD-SEP": {
+                "sha256": "ede8f00b97e7f6a5c9b2bfceadb1b800d8f0b29a5c06c44bf83aaad12688a6fc",
+                "document": {
+                  "id": "REPORT-STD-SEP",
+                  "kind": "report_policy",
+                  "title": "Standard net sales through September 2026",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-01-01",
+                  "effective_to": "2026-10-01",
+                  "scope": {
+                    "customer": "*",
+                    "metric": "net_sales",
+                    "profile": "standard"
+                  },
+                  "rules": {
+                    "date_basis": "posted_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution."
+                }
+              },
+              "FEED-ATLAS-3-DRAFT": {
+                "sha256": "d274ebebee76bfe3a47554f7f2a65c5b4c2b514be1719c98b4048997e51eda90",
+                "document": {
+                  "id": "FEED-ATLAS-3-DRAFT",
+                  "kind": "feed_contract",
+                  "title": "Proposed Atlas schema 3 format",
+                  "system": "business_docs",
+                  "status": "draft",
+                  "version": "0.2",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "3"
+                  },
+                  "rules": {
+                    "encoding": "magnitude"
+                  },
+                  "body": "DRAFT ONLY. The team is considering nonnegative magnitudes for schema 3. No schema 3 contract has been approved. Do not infer its meaning from positive sample amounts or treat this proposal as a current requirement."
+                }
+              }
+            },
+            "case_sha256": "dcdd1906f51c9d83d0fe0f2546b13a71d981362b76441fc5deb66a1d9dc003a3",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-STD-SEP",
+              "date_basis": "posted_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Obtain the missing approved contract from the source owner; do not invent a total."
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-305",
+      "title": "Two approved customer rules conflict",
+      "expected": {
+        "decision": "conflicting_policy",
+        "expected_total_cents": null,
+        "problem_rows": [],
+        "required_sources": [
+          "REPORT-CEDAR-A",
+          "REPORT-CEDAR-B"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-305",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 40000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-305",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 40000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-305",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 40000,
+            "customer_claim_cents": 60000,
+            "expected_total_cents": null,
+            "decision": "conflicting_policy",
+            "problem_rows": [],
+            "sources": [
+              "REPORT-CEDAR-A",
+              "REPORT-CEDAR-B"
+            ],
+            "ledger": [],
+            "messages": [
+              "Equally applicable approved reporting documents disagree; recency is not precedence."
+            ],
+            "source_snapshots": {
+              "REPORT-CEDAR-A": {
+                "sha256": "27e2ae7b39f1b1ad20e4bd387472d940b1732299e535ee9f53c81eda7cf8d2ac",
+                "document": {
+                  "id": "REPORT-CEDAR-A",
+                  "kind": "report_policy",
+                  "title": "Cedar addendum A",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Customer Reporting",
+                  "effective_from": "2026-09-01",
+                  "effective_to": null,
+                  "scope": {
+                    "customer": "CEDAR",
+                    "metric": "net_sales",
+                    "profile": "cedar"
+                  },
+                  "rules": {
+                    "date_basis": "invoice_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "Cedar net sales uses invoice_on. This record is approved but has no supersedes or precedence relationship with the other Cedar addendum. If another applicable approved record conflicts, obtain an owner decision rather than guessing."
+                }
+              },
+              "REPORT-CEDAR-B": {
+                "sha256": "ddadfc3b8387bca04d03ce7c333f50664d3f798513f5152cf7ffe1838e11a0ed",
+                "document": {
+                  "id": "REPORT-CEDAR-B",
+                  "kind": "report_policy",
+                  "title": "Cedar addendum B",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Customer Reporting",
+                  "effective_from": "2026-09-01",
+                  "effective_to": null,
+                  "scope": {
+                    "customer": "CEDAR",
+                    "metric": "net_sales",
+                    "profile": "cedar"
+                  },
+                  "rules": {
+                    "date_basis": "posted_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "Cedar net sales uses posted_on. This record is approved but has no supersedes or precedence relationship with the other Cedar addendum. Do not choose whichever document search returns first."
+                }
+              }
+            },
+            "case_sha256": "8ae58d76e2d852ee266fab35bac6438fbbf9e181c251f5b9b327521c9487cd6b",
+            "human_review": "pending",
+            "next_action": "Reporting Product must resolve the conflicting approved definitions before recalculation."
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-306",
+      "title": "A newer document does not apply retroactively",
+      "expected": {
+        "decision": "expected_behavior",
+        "expected_total_cents": 40000,
+        "problem_rows": [],
+        "required_sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-306",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 40000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-306",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 40000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-306",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 40000,
+            "customer_claim_cents": 60000,
+            "expected_total_cents": 40000,
+            "decision": "expected_behavior",
+            "problem_rows": [],
+            "sources": [
+              "REPORT-STD-SEP",
+              "FEED-ATLAS-2"
+            ],
+            "ledger": [
+              {
+                "row_id": "B-1",
+                "raw_amount_cents": 40000,
+                "observed_cents": 40000,
+                "expected_cents": 40000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-2"
+              },
+              {
+                "row_id": "B-2",
+                "raw_amount_cents": 60000,
+                "observed_cents": 0,
+                "expected_cents": 0,
+                "difference_cents": 0,
+                "included": false,
+                "reason": "outside_policy_month",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-2"
+              }
+            ],
+            "messages": [],
+            "source_snapshots": {
+              "REPORT-STD-SEP": {
+                "sha256": "ede8f00b97e7f6a5c9b2bfceadb1b800d8f0b29a5c06c44bf83aaad12688a6fc",
+                "document": {
+                  "id": "REPORT-STD-SEP",
+                  "kind": "report_policy",
+                  "title": "Standard net sales through September 2026",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-01-01",
+                  "effective_to": "2026-10-01",
+                  "scope": {
+                    "customer": "*",
+                    "metric": "net_sales",
+                    "profile": "standard"
+                  },
+                  "rules": {
+                    "date_basis": "posted_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution."
+                }
+              },
+              "FEED-ATLAS-2": {
+                "sha256": "7202c79f6b88bc58351e21e7702e4ab93ef26de87cda6154cf1b07aec2b89802",
+                "document": {
+                  "id": "FEED-ATLAS-2",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 2: magnitude amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "2.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "2"
+                  },
+                  "rules": {
+                    "encoding": "magnitude"
+                  },
+                  "body": "For ATLAS schema 2, amount_cents is a nonnegative magnitude. SALE increases sales and RETURN reduces sales. A negative magnitude is invalid source data: quarantine it and request a corrected export. Never silently use abs() to repair it. Schema 1 and schema 2 files coexist; the feed name alone does not determine encoding. Amounts are integral US cents."
+                }
+              }
+            },
+            "case_sha256": "18582f90aac3159d49e51f195b93f9274accc6f8fbbd555f001909494993af53",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-STD-SEP",
+              "date_basis": "posted_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Explain the applicable reporting definition and reconciliation to support; a customer discrepancy alone does not justify changing code.",
+            "delta_cents": 0
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-307",
+      "title": "October configuration was not migrated",
+      "expected": {
+        "decision": "configuration_defect",
+        "expected_total_cents": 60000,
+        "problem_rows": [
+          "G-1"
+        ],
+        "required_sources": [
+          "REPORT-STD-OCT",
+          "FEED-ATLAS-2"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-307",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 100000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-307",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 100000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-307",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 100000,
+            "customer_claim_cents": 60000,
+            "expected_total_cents": 60000,
+            "decision": "configuration_defect",
+            "problem_rows": [
+              "G-1"
+            ],
+            "sources": [
+              "REPORT-STD-OCT",
+              "FEED-ATLAS-2"
+            ],
+            "ledger": [
+              {
+                "row_id": "G-1",
+                "raw_amount_cents": 40000,
+                "observed_cents": 40000,
+                "expected_cents": 0,
+                "difference_cents": 40000,
+                "included": false,
+                "reason": "outside_policy_month",
+                "policy_source": "REPORT-STD-OCT",
+                "feed_source": "FEED-ATLAS-2"
+              },
+              {
+                "row_id": "G-2",
+                "raw_amount_cents": 60000,
+                "observed_cents": 60000,
+                "expected_cents": 60000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-OCT",
+                "feed_source": "FEED-ATLAS-2"
+              }
+            ],
+            "messages": [],
+            "source_snapshots": {
+              "REPORT-STD-OCT": {
+                "sha256": "42071831a4d1e08fe42d8b80ae54dd2ffa5ce289c2f759f30017e2ad6b4af4fd",
+                "document": {
+                  "id": "REPORT-STD-OCT",
+                  "kind": "report_policy",
+                  "title": "Standard net sales from October 2026",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "2.0",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-10-01",
+                  "effective_to": null,
+                  "scope": {
+                    "customer": "*",
+                    "metric": "net_sales",
+                    "profile": "standard"
+                  },
+                  "rules": {
+                    "date_basis": "invoice_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "Effective for October 2026 reporting months onward, standard net sales uses invoice_on rather than posted_on. This is prospective: do not recalculate September using this definition. SALE and RETURN are included; TRANSFER is excluded. A single applicable approved customer addendum takes precedence. Equally applicable conflicting addenda block reconciliation. Source schema contracts still govern signed contribution."
+                }
+              },
+              "FEED-ATLAS-2": {
+                "sha256": "7202c79f6b88bc58351e21e7702e4ab93ef26de87cda6154cf1b07aec2b89802",
+                "document": {
+                  "id": "FEED-ATLAS-2",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 2: magnitude amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "2.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "2"
+                  },
+                  "rules": {
+                    "encoding": "magnitude"
+                  },
+                  "body": "For ATLAS schema 2, amount_cents is a nonnegative magnitude. SALE increases sales and RETURN reduces sales. A negative magnitude is invalid source data: quarantine it and request a corrected export. Never silently use abs() to repair it. Schema 1 and schema 2 files coexist; the feed name alone does not determine encoding. Amounts are integral US cents."
+                }
+              }
+            },
+            "case_sha256": "330180542a2b7ad46ee142a68e71a35775b2713518960f369b20221e1556e310",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-STD-OCT",
+              "date_basis": "invoice_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Reporting Engineering should update this report configuration to the applicable approved policy and rerun acceptance checks.",
+            "delta_cents": 40000
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-308",
+      "title": "Negative magnitude is invalid source data",
+      "expected": {
+        "decision": "invalid_source_data",
+        "expected_total_cents": null,
+        "problem_rows": [
+          "H-2"
+        ],
+        "required_sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-308",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 120000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-308",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 80000,
+            "problem_rows": [
+              "H-2"
+            ],
+            "decision": "calculation_defect",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": true,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-308",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 120000,
+            "customer_claim_cents": 80000,
+            "expected_total_cents": null,
+            "decision": "invalid_source_data",
+            "problem_rows": [
+              "H-2"
+            ],
+            "sources": [
+              "REPORT-STD-SEP",
+              "FEED-ATLAS-2"
+            ],
+            "ledger": [],
+            "messages": [
+              "Negative magnitudes are invalid; do not silently normalize with abs()."
+            ],
+            "source_snapshots": {
+              "REPORT-STD-SEP": {
+                "sha256": "ede8f00b97e7f6a5c9b2bfceadb1b800d8f0b29a5c06c44bf83aaad12688a6fc",
+                "document": {
+                  "id": "REPORT-STD-SEP",
+                  "kind": "report_policy",
+                  "title": "Standard net sales through September 2026",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-01-01",
+                  "effective_to": "2026-10-01",
+                  "scope": {
+                    "customer": "*",
+                    "metric": "net_sales",
+                    "profile": "standard"
+                  },
+                  "rules": {
+                    "date_basis": "posted_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution."
+                }
+              },
+              "FEED-ATLAS-2": {
+                "sha256": "7202c79f6b88bc58351e21e7702e4ab93ef26de87cda6154cf1b07aec2b89802",
+                "document": {
+                  "id": "FEED-ATLAS-2",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 2: magnitude amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "2.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "2"
+                  },
+                  "rules": {
+                    "encoding": "magnitude"
+                  },
+                  "body": "For ATLAS schema 2, amount_cents is a nonnegative magnitude. SALE increases sales and RETURN reduces sales. A negative magnitude is invalid source data: quarantine it and request a corrected export. Never silently use abs() to repair it. Schema 1 and schema 2 files coexist; the feed name alone does not determine encoding. Amounts are integral US cents."
+                }
+              }
+            },
+            "case_sha256": "3626f41bbaa8da6de326bb7a8c334c59c2f75683a62e3e199ee34ba32585aa7d",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-STD-SEP",
+              "date_basis": "posted_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Data Integrations must quarantine the invalid rows and obtain a corrected export."
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-309",
+      "title": "A signed return reversal increases net sales",
+      "expected": {
+        "decision": "calculation_defect",
+        "expected_total_cents": 100000,
+        "problem_rows": [
+          "I-2"
+        ],
+        "required_sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-309",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 80000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-309",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 80000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": false,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-309",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 80000,
+            "customer_claim_cents": 80000,
+            "expected_total_cents": 100000,
+            "decision": "calculation_defect",
+            "problem_rows": [
+              "I-2"
+            ],
+            "sources": [
+              "REPORT-STD-SEP",
+              "FEED-ATLAS-1"
+            ],
+            "ledger": [
+              {
+                "row_id": "I-1",
+                "raw_amount_cents": 90000,
+                "observed_cents": 90000,
+                "expected_cents": 90000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-1"
+              },
+              {
+                "row_id": "I-2",
+                "raw_amount_cents": 10000,
+                "observed_cents": -10000,
+                "expected_cents": 10000,
+                "difference_cents": -20000,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-1"
+              }
+            ],
+            "messages": [],
+            "source_snapshots": {
+              "REPORT-STD-SEP": {
+                "sha256": "ede8f00b97e7f6a5c9b2bfceadb1b800d8f0b29a5c06c44bf83aaad12688a6fc",
+                "document": {
+                  "id": "REPORT-STD-SEP",
+                  "kind": "report_policy",
+                  "title": "Standard net sales through September 2026",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-01-01",
+                  "effective_to": "2026-10-01",
+                  "scope": {
+                    "customer": "*",
+                    "metric": "net_sales",
+                    "profile": "standard"
+                  },
+                  "rules": {
+                    "date_basis": "posted_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution."
+                }
+              },
+              "FEED-ATLAS-1": {
+                "sha256": "733db9b1e3061ce0fc9cd65b528403b60f9d004dce478da9d0cf0cfb2d93f4ae",
+                "document": {
+                  "id": "FEED-ATLAS-1",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 1: signed accounting amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "1"
+                  },
+                  "rules": {
+                    "encoding": "signed"
+                  },
+                  "body": "For ATLAS schema 1, amount_cents is the signed contribution to sales. Preserve its sign for SALE and RETURN records. A negative RETURN reduces sales; a positive RETURN reverses a previous return and increases sales. Do not negate every RETURN and do not force every RETURN negative. The schema version on each row selects the contract. Amounts are integral US cents."
+                }
+              }
+            },
+            "case_sha256": "758b4a3f5b6c3ba098423ee404392d2013e802e6e47a7d38b25ce2f7b6b3957d",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-STD-SEP",
+              "date_basis": "posted_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Reporting Engineering should reproduce the row errors and implement schema-specific normalization; preserve signed reversals.",
+            "delta_cents": -20000
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    },
+    {
+      "case_id": "DH-310",
+      "title": "Equal and opposite row errors hide in the total",
+      "expected": {
+        "decision": "calculation_defect",
+        "expected_total_cents": 100000,
+        "problem_rows": [
+          "J-2",
+          "J-3"
+        ],
+        "required_sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1"
+        ]
+      },
+      "outcomes": {
+        "deployed_arithmetic": {
+          "packet": {
+            "case_id": "DH-310",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 100000,
+            "problem_rows": [],
+            "decision": "expected_behavior",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": false,
+              "total": true,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "force_returns_negative": {
+          "packet": {
+            "case_id": "DH-310",
+            "provenance": "prepared_arithmetic_control",
+            "expected_total_cents": 80000,
+            "problem_rows": [
+              "J-2"
+            ],
+            "decision": "calculation_defect",
+            "sources": []
+          },
+          "acceptance": {
+            "passed": false,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": false,
+              "problem_rows": false,
+              "required_evidence": false,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        },
+        "policy_workflow": {
+          "packet": {
+            "case_id": "DH-310",
+            "provenance": "deterministic_workflow_execution",
+            "reported_total_cents": 100000,
+            "customer_claim_cents": 100000,
+            "expected_total_cents": 100000,
+            "decision": "calculation_defect",
+            "problem_rows": [
+              "J-2",
+              "J-3"
+            ],
+            "sources": [
+              "REPORT-STD-SEP",
+              "FEED-ATLAS-1"
+            ],
+            "ledger": [
+              {
+                "row_id": "J-1",
+                "raw_amount_cents": 100000,
+                "observed_cents": 100000,
+                "expected_cents": 100000,
+                "difference_cents": 0,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-1"
+              },
+              {
+                "row_id": "J-2",
+                "raw_amount_cents": -10000,
+                "observed_cents": 10000,
+                "expected_cents": -10000,
+                "difference_cents": 20000,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-1"
+              },
+              {
+                "row_id": "J-3",
+                "raw_amount_cents": 10000,
+                "observed_cents": -10000,
+                "expected_cents": 10000,
+                "difference_cents": -20000,
+                "included": true,
+                "reason": "included",
+                "policy_source": "REPORT-STD-SEP",
+                "feed_source": "FEED-ATLAS-1"
+              }
+            ],
+            "messages": [
+              "The aggregate agrees only because row errors cancel. Matching totals do not prove correct normalization."
+            ],
+            "source_snapshots": {
+              "REPORT-STD-SEP": {
+                "sha256": "ede8f00b97e7f6a5c9b2bfceadb1b800d8f0b29a5c06c44bf83aaad12688a6fc",
+                "document": {
+                  "id": "REPORT-STD-SEP",
+                  "kind": "report_policy",
+                  "title": "Standard net sales through September 2026",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Reporting Product",
+                  "effective_from": "2026-01-01",
+                  "effective_to": "2026-10-01",
+                  "scope": {
+                    "customer": "*",
+                    "metric": "net_sales",
+                    "profile": "standard"
+                  },
+                  "rules": {
+                    "date_basis": "posted_on",
+                    "included_kinds": [
+                      "SALE",
+                      "RETURN"
+                    ]
+                  },
+                  "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution."
+                }
+              },
+              "FEED-ATLAS-1": {
+                "sha256": "733db9b1e3061ce0fc9cd65b528403b60f9d004dce478da9d0cf0cfb2d93f4ae",
+                "document": {
+                  "id": "FEED-ATLAS-1",
+                  "kind": "feed_contract",
+                  "title": "Atlas export schema 1: signed accounting amounts",
+                  "system": "business_docs",
+                  "status": "approved",
+                  "version": "1.0",
+                  "owner": "Data Integrations",
+                  "effective_from": "2026-01-01",
+                  "effective_to": null,
+                  "scope": {
+                    "feed": "ATLAS",
+                    "schema_version": "1"
+                  },
+                  "rules": {
+                    "encoding": "signed"
+                  },
+                  "body": "For ATLAS schema 1, amount_cents is the signed contribution to sales. Preserve its sign for SALE and RETURN records. A negative RETURN reduces sales; a positive RETURN reverses a previous return and increases sales. Do not negate every RETURN and do not force every RETURN negative. The schema version on each row selects the contract. Amounts are integral US cents."
+                }
+              }
+            },
+            "case_sha256": "05779e60246247ccf716a4d588553f2f9c5555ea291bba7ae726caf29951db5e",
+            "human_review": "pending",
+            "policy": {
+              "source_id": "REPORT-STD-SEP",
+              "date_basis": "posted_on",
+              "included_kinds": [
+                "SALE",
+                "RETURN"
+              ]
+            },
+            "next_action": "Reporting Engineering should reproduce the row errors and implement schema-specific normalization; preserve signed reversals.",
+            "delta_cents": 0
+          },
+          "acceptance": {
+            "passed": true,
+            "checks": {
+              "case_id": true,
+              "decision": true,
+              "total": true,
+              "problem_rows": true,
+              "required_evidence": true,
+              "known_sources": true,
+              "observed_evidence": true
+            },
+            "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+          }
+        }
+      }
+    }
+  ],
+  "summary": {
+    "deployed_arithmetic": {
+      "complete_cases": 0,
+      "case_count": 10,
+      "correct_decisions": 3,
+      "correct_known_totals": 4,
+      "known_total_count": 7,
+      "correct_stops": 0,
+      "stop_count": 3
+    },
+    "force_returns_negative": {
+      "complete_cases": 0,
+      "case_count": 10,
+      "correct_decisions": 5,
+      "correct_known_totals": 3,
+      "known_total_count": 7,
+      "correct_stops": 0,
+      "stop_count": 3
+    },
+    "policy_workflow": {
+      "complete_cases": 10,
+      "case_count": 10,
+      "correct_decisions": 10,
+      "correct_known_totals": 7,
+      "known_total_count": 7,
+      "correct_stops": 3,
+      "stop_count": 3
+    }
+  },
+  "interpretation": "Prepared arithmetic controls are not coding-assistant baselines. Ten hand-authored synthetic cases establish fixture behavior, not general accuracy, AI superiority, human time savings, or productivity. The policy workflow is deterministic software using structured approved rules; it requires no LLM."
+}
