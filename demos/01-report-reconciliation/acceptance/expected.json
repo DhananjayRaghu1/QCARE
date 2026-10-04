@@ -1,0 +1,106 @@
+{
+  "DH-301": {
+    "decision": "calculation_defect",
+    "expected_total_cents": 125000,
+    "problem_rows": [
+      "A-2",
+      "A-3"
+    ],
+    "required_sources": [
+      "REPORT-STD-SEP",
+      "FEED-ATLAS-1",
+      "FEED-ATLAS-2"
+    ]
+  },
+  "DH-302": {
+    "decision": "expected_behavior",
+    "expected_total_cents": 60000,
+    "problem_rows": [],
+    "required_sources": [
+      "REPORT-BLUEBIRD",
+      "FEED-ATLAS-2"
+    ]
+  },
+  "DH-303": {
+    "decision": "expected_behavior",
+    "expected_total_cents": 80000,
+    "problem_rows": [],
+    "required_sources": [
+      "REPORT-STD-SEP",
+      "FEED-ATLAS-2",
+      "DH-204"
+    ]
+  },
+  "DH-304": {
+    "decision": "insufficient_evidence",
+    "expected_total_cents": null,
+    "problem_rows": [],
+    "required_sources": [
+      "REPORT-STD-SEP",
+      "FEED-ATLAS-3-DRAFT"
+    ]
+  },
+  "DH-305": {
+    "decision": "conflicting_policy",
+    "expected_total_cents": null,
+    "problem_rows": [],
+    "required_sources": [
+      "REPORT-CEDAR-A",
+      "REPORT-CEDAR-B"
+    ]
+  },
+  "DH-306": {
+    "decision": "expected_behavior",
+    "expected_total_cents": 40000,
+    "problem_rows": [],
+    "required_sources": [
+      "REPORT-STD-SEP",
+      "FEED-ATLAS-2"
+    ]
+  },
+  "DH-307": {
+    "decision": "configuration_defect",
+    "expected_total_cents": 60000,
+    "problem_rows": [
+      "G-1"
+    ],
+    "required_sources": [
+      "REPORT-STD-OCT",
+      "FEED-ATLAS-2"
+    ]
+  },
+  "DH-308": {
+    "decision": "invalid_source_data",
+    "expected_total_cents": null,
+    "problem_rows": [
+      "H-2"
+    ],
+    "required_sources": [
+      "REPORT-STD-SEP",
+      "FEED-ATLAS-2"
+    ]
+  },
+  "DH-309": {
+    "decision": "calculation_defect",
+    "expected_total_cents": 100000,
+    "problem_rows": [
+      "I-2"
+    ],
+    "required_sources": [
+      "REPORT-STD-SEP",
+      "FEED-ATLAS-1"
+    ]
+  },
+  "DH-310": {
+    "decision": "calculation_defect",
+    "expected_total_cents": 100000,
+    "problem_rows": [
+      "J-2",
+      "J-3"
+    ],
+    "required_sources": [
+      "REPORT-STD-SEP",
+      "FEED-ATLAS-1"
+    ]
+  }
+}

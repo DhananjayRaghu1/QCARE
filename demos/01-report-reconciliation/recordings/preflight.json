@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-10-04T19:13:14.491237+00:00",
+  "claude": {
+    "installed": true,
+    "authenticated": false,
+    "model_request_sent": false,
+    "configured_model": null,
+    "version": "2.1.186 (Claude Code)"
+  },
+  "snapshot_hashes": {
+    "cases": "36294d86205cfce6b1588b844cf80383c985bdbb6d2666aa0eb0b4c9b7f1b281",
+    "documents": "b3d5c01c9c07d73669ca6fa026beec968b128cd6321d66caf4e0fdc208dc34ac",
+    "application": "e54ec3d4c774f448557a383d888a9ef2292ad971121f186c00021ad4bc0cc261"
+  },
+  "offline_workflow_available": true
+}

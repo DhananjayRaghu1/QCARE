@@ -1,0 +1,212 @@
+[
+  {
+    "id": "FEED-ATLAS-1",
+    "kind": "feed_contract",
+    "title": "Atlas export schema 1: signed accounting amounts",
+    "system": "business_docs",
+    "status": "approved",
+    "version": "1.0",
+    "owner": "Data Integrations",
+    "effective_from": "2026-01-01",
+    "effective_to": null,
+    "scope": {
+      "feed": "ATLAS",
+      "schema_version": "1"
+    },
+    "rules": {
+      "encoding": "signed"
+    },
+    "body": "For ATLAS schema 1, amount_cents is the signed contribution to sales. Preserve its sign for SALE and RETURN records. A negative RETURN reduces sales; a positive RETURN reverses a previous return and increases sales. Do not negate every RETURN and do not force every RETURN negative. The schema version on each row selects the contract. Amounts are integral US cents."
+  },
+  {
+    "id": "FEED-ATLAS-2",
+    "kind": "feed_contract",
+    "title": "Atlas export schema 2: magnitude amounts",
+    "system": "business_docs",
+    "status": "approved",
+    "version": "2.0",
+    "owner": "Data Integrations",
+    "effective_from": "2026-01-01",
+    "effective_to": null,
+    "scope": {
+      "feed": "ATLAS",
+      "schema_version": "2"
+    },
+    "rules": {
+      "encoding": "magnitude"
+    },
+    "body": "For ATLAS schema 2, amount_cents is a nonnegative magnitude. SALE increases sales and RETURN reduces sales. A negative magnitude is invalid source data: quarantine it and request a corrected export. Never silently use abs() to repair it. Schema 1 and schema 2 files coexist; the feed name alone does not determine encoding. Amounts are integral US cents."
+  },
+  {
+    "id": "FEED-ATLAS-3-DRAFT",
+    "kind": "feed_contract",
+    "title": "Proposed Atlas schema 3 format",
+    "system": "business_docs",
+    "status": "draft",
+    "version": "0.2",
+    "owner": "Data Integrations",
+    "effective_from": "2026-01-01",
+    "effective_to": null,
+    "scope": {
+      "feed": "ATLAS",
+      "schema_version": "3"
+    },
+    "rules": {
+      "encoding": "magnitude"
+    },
+    "body": "DRAFT ONLY. The team is considering nonnegative magnitudes for schema 3. No schema 3 contract has been approved. Do not infer its meaning from positive sample amounts or treat this proposal as a current requirement."
+  },
+  {
+    "id": "REPORT-STD-SEP",
+    "kind": "report_policy",
+    "title": "Standard net sales through September 2026",
+    "system": "business_docs",
+    "status": "approved",
+    "version": "1.0",
+    "owner": "Reporting Product",
+    "effective_from": "2026-01-01",
+    "effective_to": "2026-10-01",
+    "scope": {
+      "customer": "*",
+      "metric": "net_sales",
+      "profile": "standard"
+    },
+    "rules": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution."
+  },
+  {
+    "id": "REPORT-STD-OCT",
+    "kind": "report_policy",
+    "title": "Standard net sales from October 2026",
+    "system": "business_docs",
+    "status": "approved",
+    "version": "2.0",
+    "owner": "Reporting Product",
+    "effective_from": "2026-10-01",
+    "effective_to": null,
+    "scope": {
+      "customer": "*",
+      "metric": "net_sales",
+      "profile": "standard"
+    },
+    "rules": {
+      "date_basis": "invoice_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "body": "Effective for October 2026 reporting months onward, standard net sales uses invoice_on rather than posted_on. This is prospective: do not recalculate September using this definition. SALE and RETURN are included; TRANSFER is excluded. A single applicable approved customer addendum takes precedence. Equally applicable conflicting addenda block reconciliation. Source schema contracts still govern signed contribution."
+  },
+  {
+    "id": "REPORT-BLUEBIRD",
+    "kind": "report_policy",
+    "title": "Bluebird customer reporting addendum",
+    "system": "business_docs",
+    "status": "approved",
+    "version": "1.0",
+    "owner": "Customer Reporting",
+    "effective_from": "2026-09-01",
+    "effective_to": null,
+    "scope": {
+      "customer": "BLUEBIRD",
+      "metric": "net_sales",
+      "profile": "bluebird"
+    },
+    "rules": {
+      "date_basis": "invoice_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "body": "Bluebird's approved addendum uses invoice_on to assign SALE and RETURN to reporting months, including September 2026. TRANSFER remains excluded. This customer-specific addendum overrides the standard posted_on definition. It does not change source sign conventions. Do not apply Bluebird's rule to Northstar."
+  },
+  {
+    "id": "REPORT-CEDAR-A",
+    "kind": "report_policy",
+    "title": "Cedar addendum A",
+    "system": "business_docs",
+    "status": "approved",
+    "version": "1.0",
+    "owner": "Customer Reporting",
+    "effective_from": "2026-09-01",
+    "effective_to": null,
+    "scope": {
+      "customer": "CEDAR",
+      "metric": "net_sales",
+      "profile": "cedar"
+    },
+    "rules": {
+      "date_basis": "invoice_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "body": "Cedar net sales uses invoice_on. This record is approved but has no supersedes or precedence relationship with the other Cedar addendum. If another applicable approved record conflicts, obtain an owner decision rather than guessing."
+  },
+  {
+    "id": "REPORT-CEDAR-B",
+    "kind": "report_policy",
+    "title": "Cedar addendum B",
+    "system": "business_docs",
+    "status": "approved",
+    "version": "1.0",
+    "owner": "Customer Reporting",
+    "effective_from": "2026-09-01",
+    "effective_to": null,
+    "scope": {
+      "customer": "CEDAR",
+      "metric": "net_sales",
+      "profile": "cedar"
+    },
+    "rules": {
+      "date_basis": "posted_on",
+      "included_kinds": [
+        "SALE",
+        "RETURN"
+      ]
+    },
+    "body": "Cedar net sales uses posted_on. This record is approved but has no supersedes or precedence relationship with the other Cedar addendum. Do not choose whichever document search returns first."
+  },
+  {
+    "id": "DH-204",
+    "kind": "change_request",
+    "title": "Northstar requests transfer inclusion",
+    "system": "jira",
+    "status": "pending_approval",
+    "version": "1",
+    "owner": "Reporting Product",
+    "effective_from": "2026-09-01",
+    "effective_to": null,
+    "scope": {
+      "customer": "NORTHSTAR",
+      "metric": "net_sales"
+    },
+    "rules": {},
+    "body": "Northstar asked to include internal TRANSFER rows in net sales. Status: pending business approval. No approved contract amendment exists in this snapshot. Engineering must preserve the approved exclusion until the reporting owner approves a change. A customer request is not authorization to change the metric."
+  },
+  {
+    "id": "DH-188",
+    "kind": "change_history",
+    "title": "Atlas schema 2 onboarding rollout",
+    "system": "jira",
+    "status": "done",
+    "version": "1",
+    "owner": "Data Integrations",
+    "effective_from": "2026-08-01",
+    "effective_to": null,
+    "scope": {
+      "feed": "ATLAS"
+    },
+    "rules": {},
+    "body": "Schema 2 onboarding is complete. Existing customer exports remain on schema 1, and both versions may occur in the same monthly report. This ticket does not authorize rewriting schema 1 semantics. Reporting Engineering owns normalization defects; Data Integrations owns invalid exports. Done means this rollout task is complete, not that all customer feeds use schema 2."
+  }
+]
