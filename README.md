@@ -11,10 +11,12 @@ A tempting `-abs()` fix matches the customer but mishandles a return reversal. T
 ```sh
 cd demos/01-report-reconciliation
 uv sync --locked
-uv run python demo.py present
+uv run python demo.py live
 ```
 
-Open the generated `artifacts/presentation.html` in a browser. The interactive walkthrough runs offline and includes ten cases with expandable business/Jira source snapshots. For terminal output and verification:
+Open [the live demo](http://127.0.0.1:8768/). It runs fresh Claude investigations with live tool activity and three clearly labeled modes: **raw repo**, **raw repo + business docs/Jira**, and **guided workflow with a calculator**. The raw modes use the same editable prompt and ordinary file/shell tools, without a prescribed investigation, output schema, answer key or grading. They are a thin browser wrapper around Claude Code. An authenticated Claude Code client is required; the source records remain synthetic local snapshots.
+
+For the offline walkthrough, run `uv run python demo.py present` and open the generated `artifacts/presentation.html`. For terminal output and verification:
 
 ```sh
 uv run python demo.py run DH-301
@@ -31,9 +33,9 @@ The earlier controller example did not establish productivity improvement. Its b
 
 The new problem makes business context materially change the answer. A reproducible regression rejects both the original implementation and the tempting fix, while a prepared reference passes. The approved-rule workflow passes all ten synthetic case checks, including three cases that must stop and one where row errors cancel in the total.
 
-**This demonstrates verified behavior on these fixtures, not a measured productivity gain.** The default workflow uses deterministic software and hand-authored structured rules. An LLM is optional for retrieving evidence and explaining the result; it is not required for the calculation.
+**This demonstrates verified behavior on these fixtures, not a measured productivity gain.** The guided workflow uses deterministic software and hand-authored structured rules. The live raw modes investigate from code and optional prose documents without that calculator.
 
-A subsequent [actual Codex comparison](demos/01-report-reconciliation/docs/codex-comparison.md) ran the same case with and without prose business documents. Repo-only took **50.5 seconds**, found $1,250 as a possibility, and appropriately asked for the missing rule. With documents took **95.2 seconds**, established $1,250 and proposed code that passed **11 independent checks plus 5 baseline tests**. The benefit was resolving uncertainty and completing a justified proposal; there was no demonstrated speedup. The separate Claude comparison remains blocked by missing Claude authentication.
+A subsequent [actual Codex comparison](demos/01-report-reconciliation/docs/codex-comparison.md) ran the same case with and without prose business documents. Repo-only took **50.5 seconds**, found $1,250 as a possibility, and appropriately asked for the missing rule. With documents took **95.2 seconds**, established $1,250 and proposed code that passed **11 independent checks plus 5 baseline tests**. The benefit was resolving uncertainty and completing a justified proposal; there was no demonstrated speedup. The original Claude preflight record documents an earlier authentication block. The live UI checks current authentication for each attempt.
 
 Read the [verification record](demos/01-report-reconciliation/docs/verification.md), [implementation scope](demos/01-report-reconciliation/README.md), and [evaluation protocol](demos/01-report-reconciliation/docs/evaluation-protocol.md). A future pilot should measure time to an accepted decision, errors, handoffs, human review and setup/maintenance costs on real representative cases.
 

@@ -10,6 +10,28 @@ Install [uv](https://docs.astral.sh/uv/) and run these commands from this direct
 
 ```sh
 uv sync --locked
+uv run python demo.py live
+```
+
+Open [the live investigation UI](http://127.0.0.1:8768/). Each **Run investigation** click starts a fresh Claude Code session using your existing Claude login. Sign in with `claude auth login` if needed. No API key is required when your Claude subscription supports the client. The page shows real tool calls and results as the CLI emits them, the model's final answer, elapsed time, reported model and cost, and a downloadable run record. Stop cancels the subprocess. No automatic retries or precomputed substitute answers.
+
+| Live mode | What the model receives |
+| --- | --- |
+| **Raw · repo only** | The customer issue, extracted application code, neutral README and five baseline tests; ordinary file and shell tools |
+| **Raw · docs + Jira** | Exactly the same prompt, code and tools, plus ten prose source snapshots as Markdown files |
+| **Guided workflow** | The existing prescribed investigation task, structured answer schema, read-only evidence MCP and deterministic reconciliation calculator |
+
+The two raw modes use Claude Code's default system prompt and an editable short user prompt. There is **no diagnostic harness**: no required investigation steps, answer schema, hidden grading, calculator, machine-readable policy rules, reference patch or prior outputs. The browser is a launcher and recorder. A fresh temporary directory, disabled customizations/connectors, a four-minute timeout and a $1 CLI budget bound each attempt. A read-only investigation is requested and changes to supplied files are checked afterward; native shell access is not an OS read sandbox. The raw modes are not an exact reproduction of Sam's personal setup. The five baseline tests are prepared demo tests.
+
+Run both raw modes on the same case without changing the prompt to compare the effect of providing context. An appropriate clarification request is a useful outcome. Guided mode adds software and instructions, so its result cannot establish that retrieval alone helped. All source material remains synthetic; **live model execution does not mean a live Jira or business-doc connector**.
+
+Records, exact raw inputs, prompts and private CLI traces are saved under ignored `artifacts/live/<run-id>/`. The latest 30 finished runs reappear after a server restart. Runs that fail or are cancelled remain visible. The server binds only to `127.0.0.1`, validates request origin and requires a page-issued token to start or cancel a run.
+
+Local browser verification on October 4, 2026 used DH-301 in all three modes. The successful raw repo run took 23.612 seconds, ran all five baseline tests and asked for the schema rule; it also made an overconfident claim about the discrepancy size, so the raw response still needs review. The raw docs run took 25.989 seconds, ran the same tests and supported 125000 cents using the source contracts. The guided run took 14.304 seconds and passed the existing fixture checks. All three reported `claude-opus-5-5`. An earlier 27.743-second raw attempt encountered a shell permission denial; it is retained as failed in local history, and the launcher was corrected before the successful run. These are implementation smoke tests with one synthetic case, not a controlled productivity study. No model patches were applied.
+
+For an offline presentation with no model calls:
+
+```sh
 uv run python demo.py present
 ```
 
@@ -71,7 +93,7 @@ This separates engineering work, customer explanation, product approval and data
 
 ## What is implemented, and what is measured
 
-The default path is a **working deterministic reconciliation workflow**, with read-only MCP tools and an optional agent interface. Source snapshots contain prose plus **hand-authored structured rules**. The engine selects those rules by customer/profile, schema, approval status and effective month; it does not extract arbitrary prose into reliable executable policy. Preparing and maintaining those adapters is real work.
+The guided and offline paths use a **working deterministic reconciliation workflow**, with read-only MCP tools and an optional agent interface. Their source snapshots contain prose plus **hand-authored structured rules**. The engine selects those rules by customer/profile, schema, approval status and effective month; it does not extract arbitrary prose into reliable executable policy. Preparing and maintaining those adapters is real work. Raw live mode receives only the application and optionally prose documents; it has no access to this engine or the structured rules.
 
 The recorded fixture checks are:
 
@@ -83,7 +105,7 @@ The recorded fixture checks are:
 
 The workflow also passes all ten case-level checks for decision, total, affected rows and required source IDs. These are ten hand-authored synthetic cases, not a representative test population. The two arithmetic controls are **not coding-assistant baselines**. Their missing citations are not evidence that an AI or analyst would fail.
 
-[Recorded results](recordings/controls.json), [regression results](recordings/regression.json), and [verification notes](docs/verification.md) preserve what was actually executed. Live Claude comparisons were **blocked by an unauthenticated client**. A subsequent [actual two-run Codex comparison](docs/codex-comparison.md) found that business documents enabled a justified, tested patch, while repo-only correctly asked for clarification. The document run took longer: 95.2 seconds versus 50.5 seconds. No speedup or employee-productivity result is claimed. The [older controller results](../01-controller-capacity/policy-aware/docs/comparison-results.md) remain intact, including their limitations.
+[Recorded results](recordings/controls.json), [regression results](recordings/regression.json), and [verification notes](docs/verification.md) preserve what was actually executed. The original CLI comparison preflight was **blocked by an unauthenticated client**; that is a historical result, not a requirement that live mode remain blocked. A subsequent [actual two-run Codex comparison](docs/codex-comparison.md) found that business documents enabled a justified, tested patch, while repo-only correctly asked for clarification. The document run took longer: 95.2 seconds versus 50.5 seconds. No speedup or employee-productivity result is claimed. The [older controller results](../01-controller-capacity/policy-aware/docs/comparison-results.md) remain intact, including their limitations.
 
 ## Optional live agent comparison
 
@@ -114,7 +136,7 @@ uv run python demo.py benchmark --name rehearsal-plan --plan-only
 uv run python demo.py benchmark --name comparison-1 --repeats 1 --timeout 180 --budget 0.50
 ```
 
-Use a new name each time. Every condition receives every case; order rotates, evidence and runner hashes are frozen, and failures stay in the record. No automatic retries or selection of the fastest successful run. Outputs and private traces stay under ignored `artifacts/`. See the [evaluation protocol](docs/evaluation-protocol.md) before interpreting results. The adapter is tested locally; a real provider run remains unverified in this revision.
+Use a new name each time. Every condition receives every case; order rotates, evidence and runner hashes are frozen, and failures stay in the record. No automatic retries or selection of the fastest successful run. Outputs and private traces stay under ignored `artifacts/`. See the [evaluation protocol](docs/evaluation-protocol.md) before interpreting results. The live UI runs are individual investigations, not this full counterbalanced benchmark.
 
 ## Present it and discover the real workflow
 

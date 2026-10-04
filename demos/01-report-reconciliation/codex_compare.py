@@ -80,8 +80,8 @@ if __name__ == "__main__":
 '''
 
 
-def inputs(with_documents):
-    case = cases()["DH-301"]
+def inputs(with_documents, case_id="DH-301"):
+    case = cases()[case_id]
     # The fixture title gives away the diagnosis, so neither condition receives it.
     case = {key: value for key, value in case.items() if key != "title"}
     files = {
