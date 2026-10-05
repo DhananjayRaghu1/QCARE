@@ -36,6 +36,10 @@ A subsequent [actual Codex comparison](demos/01-report-reconciliation/docs/codex
 
 Read the [verification record](demos/01-report-reconciliation/docs/verification.md), [implementation scope](demos/01-report-reconciliation/README.md), and [evaluation protocol](demos/01-report-reconciliation/docs/evaluation-protocol.md). A future pilot should measure time to an accepted decision, errors, handoffs, human review and setup/maintenance costs on real representative cases.
 
+## Results
+
+Every recorded run across all demos, including live model comparisons, baselines, rehearsals and control checks, is registered in [results/INDEX.md](results/INDEX.md). [results/README.md](results/README.md) explains naming and how to add a run. The first live comparison for Demo 1 ran on Claude Opus 5.5 after this revision: [results/runs/2026-10-04_report-reconciliation_live-comparison_opus-5-5](results/runs/2026-10-04_report-reconciliation_live-comparison_opus-5-5/README.md).
+
 ## Earlier controller demos, preserved
 
 - [Policy-aware controller capacity](demos/01-controller-capacity/policy-aware/README.md): two actual recorded Claude rehearsals, failing regressions, agent patches, compatibility checks and documented citation limitations.

@@ -106,7 +106,7 @@ def test_summary_includes_failed_attempt_time_and_does_not_estimate_productivity
 
 def test_blocked_benchmark_preserves_plan_without_inventing_trials(monkeypatch, tmp_path):
     monkeypatch.setattr(demo, "ROOT", tmp_path)
-    monkeypatch.setattr(agent, "preflight", lambda: {"authenticated": False})
+    monkeypatch.setattr(agent, "preflight", lambda model=None: {"authenticated": False})
     assert demo.benchmark("blocked-run") == 3
     result = json.loads((tmp_path / "artifacts/blocked-run/results.json").read_text())
     assert result["status"] == "blocked"

@@ -1,0 +1,39 @@
+{
+  "id": "2026-10-04_controller-capacity-policy_live-comparison_sonnet-5-5",
+  "date": "2026-10-04",
+  "demo": "controller-capacity-policy",
+  "kind": "live-comparison",
+  "demo_path": "demos/01-controller-capacity/policy-aware",
+  "status": "partial",
+  "provenance": "live-model",
+  "models": [
+    "claude-sonnet-5-5"
+  ],
+  "conditions": [
+    "repo",
+    "provided",
+    "tools"
+  ],
+  "repo_commit": "178d71b",
+  "headline": "6 development attempts on AG-1423: with policy (provided or MCP) all found the 30-zone mismatch; repo-only correctly reported insufficient evidence. Not a controlled benchmark.",
+  "metrics": {
+    "attempts": 6,
+    "repo_attempts": 3,
+    "repo_partial": 2,
+    "provided_success": 1,
+    "tools_success": 2
+  },
+  "human_review": "pending",
+  "owner": "ishaan",
+  "tags": [
+    "development-observations"
+  ],
+  "related": [
+    "2026-10-04_controller-capacity-policy_controls",
+    "2026-10-04_controller-capacity-policy_rehearsal_sonnet-5-5"
+  ],
+  "files": {
+    "record": "demos/01-controller-capacity/policy-aware/recordings/comparison.json",
+    "writeup": "demos/01-controller-capacity/policy-aware/docs/comparison-results.md"
+  }
+}

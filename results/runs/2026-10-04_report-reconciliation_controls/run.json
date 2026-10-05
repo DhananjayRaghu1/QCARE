@@ -1,0 +1,36 @@
+{
+  "id": "2026-10-04_report-reconciliation_controls",
+  "date": "2026-10-04",
+  "demo": "report-reconciliation",
+  "kind": "controls",
+  "demo_path": "demos/01-report-reconciliation",
+  "status": "completed",
+  "provenance": "deterministic",
+  "models": [],
+  "conditions": [
+    "deployed_arithmetic",
+    "force_returns_negative",
+    "policy_workflow"
+  ],
+  "repo_commit": "0ba052e",
+  "command": "uv run python demo.py controls && uv run python demo.py reproduce",
+  "headline": "Approved-rule workflow 10/10 cases; current code 4/7 totals and -abs() fix 3/7 totals, 0/3 stops; DH-301 regression fails/fails/passes.",
+  "metrics": {
+    "policy_workflow_complete": 10,
+    "deployed_known_totals": 4,
+    "naive_known_totals": 3,
+    "known_total_count": 7,
+    "stop_count": 3
+  },
+  "human_review": "not-applicable",
+  "owner": "dj",
+  "tags": [
+    "fixture-check"
+  ],
+  "files": {
+    "controls": "demos/01-report-reconciliation/recordings/controls.json",
+    "regression": "demos/01-report-reconciliation/recordings/regression.json",
+    "rendered_case": "demos/01-report-reconciliation/recordings/DH-301.md",
+    "verification": "demos/01-report-reconciliation/docs/verification.md"
+  }
+}

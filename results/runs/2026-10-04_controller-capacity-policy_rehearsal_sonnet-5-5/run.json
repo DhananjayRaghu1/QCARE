@@ -1,0 +1,29 @@
+{
+  "id": "2026-10-04_controller-capacity-policy_rehearsal_sonnet-5-5",
+  "date": "2026-10-04",
+  "demo": "controller-capacity-policy",
+  "kind": "rehearsal",
+  "demo_path": "demos/01-controller-capacity/policy-aware",
+  "status": "completed",
+  "provenance": "live-model",
+  "models": [
+    "claude-sonnet-5-5"
+  ],
+  "conditions": [
+    "tools"
+  ],
+  "repo_commit": "178d71b",
+  "headline": "Two full ticket-to-fix rehearsals (investigation, failing regression, agent patch, verification) with MCP policy tools.",
+  "metrics": {
+    "rehearsals": 2
+  },
+  "human_review": "pending",
+  "owner": "ishaan",
+  "tags": [
+    "meeting-fallback"
+  ],
+  "files": {
+    "rehearsal_1": "demos/01-controller-capacity/policy-aware/replays/rehearsal-1",
+    "rehearsal_2": "demos/01-controller-capacity/policy-aware/replays/rehearsal-2"
+  }
+}

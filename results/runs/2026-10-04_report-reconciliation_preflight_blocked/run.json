@@ -1,0 +1,31 @@
+{
+  "id": "2026-10-04_report-reconciliation_preflight_blocked",
+  "date": "2026-10-04",
+  "demo": "report-reconciliation",
+  "kind": "preflight",
+  "demo_path": "demos/01-report-reconciliation",
+  "status": "blocked",
+  "provenance": "live-model",
+  "models": [],
+  "conditions": [
+    "provided",
+    "retrieval",
+    "workflow"
+  ],
+  "repo_commit": "0ba052e",
+  "command": "uv run python demo.py benchmark --name ...",
+  "headline": "Live comparison planned (30 trials) but blocked: Claude Code 2.1.186 not authenticated; zero model requests.",
+  "metrics": {
+    "planned_trials": 30,
+    "model_requests": 0
+  },
+  "human_review": "not-applicable",
+  "owner": "dj",
+  "related": [
+    "2026-10-04_report-reconciliation_live-comparison_opus-5-5"
+  ],
+  "files": {
+    "readiness": "demos/01-report-reconciliation/recordings/comparison-readiness.json",
+    "preflight": "demos/01-report-reconciliation/recordings/preflight.json"
+  }
+}

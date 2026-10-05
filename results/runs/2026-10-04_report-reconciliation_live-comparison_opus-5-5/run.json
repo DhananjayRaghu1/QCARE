@@ -1,0 +1,64 @@
+{
+  "id": "2026-10-04_report-reconciliation_live-comparison_opus-5-5",
+  "date": "2026-10-04",
+  "demo": "report-reconciliation",
+  "kind": "live-comparison",
+  "demo_path": "demos/01-report-reconciliation",
+  "status": "completed",
+  "provenance": "live-model",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "conditions": [
+    "provided",
+    "retrieval",
+    "workflow"
+  ],
+  "repo_commit": "f3426aa",
+  "command": "uv run python demo.py benchmark --name opus55-comparison-1 --repeats 1 --timeout 180 --budget 0.50 --model claude-opus-5-5",
+  "headline": "30/30 correct decisions, totals and rows; conditions indistinguishable on this fixture; all 3 strict failures are citation scoring, not wrong answers.",
+  "metrics": {
+    "trials": 30,
+    "substantively_correct": 30,
+    "provided_accepted": 10,
+    "retrieval_accepted": 9,
+    "workflow_accepted": 8,
+    "provided_median_s": 7.77,
+    "retrieval_median_s": 11.86,
+    "workflow_median_s": 9.47,
+    "provided_avg_cost_usd": 0.059,
+    "retrieval_avg_cost_usd": 0.091,
+    "workflow_avg_cost_usd": 0.069,
+    "retrieval_avg_tool_calls": 6.3,
+    "workflow_avg_tool_calls": 3.2
+  },
+  "cost_usd": 2.19,
+  "human_review": "pending",
+  "owner": "ishaan",
+  "tags": [
+    "opus-5-5",
+    "first-live-run"
+  ],
+  "related": [
+    "2026-10-04_report-reconciliation_preflight_blocked",
+    "2026-10-04_report-reconciliation_controls"
+  ],
+  "protocol": {
+    "seed": 20261004,
+    "protocol_sha256": "2f9a6a14c9efde9cca93faf8881b8e6f3fdc88fbc58557f60749b6bd1a93bc51",
+    "oracle_sha256": "507f75cb5295fdfc70482b3439f0d16a82217465d72b13cce1b10019795336ca",
+    "snapshot_hashes": {
+      "cases": "36294d86205cfce6b1588b844cf80383c985bdbb6d2666aa0eb0b4c9b7f1b281",
+      "documents": "b3d5c01c9c07d73669ca6fa026beec968b128cd6321d66caf4e0fdc208dc34ac",
+      "application": "e54ec3d4c774f448557a383d888a9ef2292ad971121f186c00021ad4bc0cc261"
+    }
+  },
+  "files": {
+    "record": "./results.json",
+    "report": "./report.html",
+    "summary": "./README.md"
+  },
+  "links": {
+    "live_report": "https://claude.ai/artifact/JZFywvNExmUJ4A8NMkJBZw"
+  }
+}

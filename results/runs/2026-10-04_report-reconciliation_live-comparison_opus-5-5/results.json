@@ -1,0 +1,2138 @@
+{
+  "provenance": "actual_live_model_execution",
+  "recorded_on": "2026-10-04",
+  "runner": "demo.py benchmark --name opus55-comparison-1 --repeats 1 --timeout 180 --budget 0.50 --model claude-opus-5-5",
+  "client": {
+    "installed": true,
+    "authenticated": true,
+    "version": "2.1.289 (Claude Code)",
+    "configured_model": "claude-opus-5-5"
+  },
+  "plan": {
+    "seed": 20261004,
+    "repeats": 1,
+    "snapshot_hashes": {
+      "cases": "36294d86205cfce6b1588b844cf80383c985bdbb6d2666aa0eb0b4c9b7f1b281",
+      "documents": "b3d5c01c9c07d73669ca6fa026beec968b128cd6321d66caf4e0fdc208dc34ac",
+      "application": "e54ec3d4c774f448557a383d888a9ef2292ad971121f186c00021ad4bc0cc261"
+    },
+    "oracle_sha256": "507f75cb5295fdfc70482b3439f0d16a82217465d72b13cce1b10019795336ca",
+    "protocol_sha256": "2f9a6a14c9efde9cca93faf8881b8e6f3fdc88fbc58557f60749b6bd1a93bc51",
+    "policy": "Sequential fresh sessions; rotated condition order; no retries or successful-run filtering. Repetitions are not independent business cases."
+  },
+  "status": "completed",
+  "model_requests_attempted": 30,
+  "summary": {
+    "conditions": {
+      "provided": {
+        "attempts": 10,
+        "accepted": 10,
+        "failed_or_blocked": 0,
+        "median_attempt_seconds": 7.7715,
+        "total_attempt_seconds": 89.626
+      },
+      "retrieval": {
+        "attempts": 10,
+        "accepted": 9,
+        "failed_or_blocked": 0,
+        "median_attempt_seconds": 11.86,
+        "total_attempt_seconds": 128.442
+      },
+      "workflow": {
+        "attempts": 10,
+        "accepted": 8,
+        "failed_or_blocked": 0,
+        "median_attempt_seconds": 9.466000000000001,
+        "total_attempt_seconds": 106.394
+      }
+    },
+    "actual_models": [
+      "claude-opus-5-5"
+    ],
+    "same_model_verified": true,
+    "productivity_estimate": null,
+    "limit": "Model wall time excludes human acquisition/review time. Synthetic fixture success and repeated calls do not estimate employee productivity."
+  },
+  "total_cost_usd": 2.19,
+  "note": "Raw stream-json traces remain in ignored artifacts/. All 30 packets matched expected decision, total and problem rows; the three acceptance failures cite non-required sources not fetched in full. Human review pending.",
+  "trials": [
+    {
+      "case_id": "DH-307",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 7.432,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-307",
+        "decision": "configuration_defect",
+        "expected_total_cents": 60000,
+        "problem_rows": [
+          "G-1"
+        ],
+        "sources": [
+          "REPORT-STD-OCT",
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2"
+        ],
+        "explanation": "The report is for NORTHSTAR, standard profile, October 2026. REPORT-STD-SEP stopped applying on 2026-10-01, so REPORT-STD-OCT now applies. It assigns sales to a month by invoice_on and counts SALE and RETURN rows. No approved Northstar addendum overrides it. The deployed config still uses posted_on. Both rows are ATLAS schema 2, where amounts are nonnegative magnitudes and SALE adds to sales (FEED-ATLAS-2), so the sign handling is correct. G-1 has invoice_on 2026-09-30, so it belongs to September and should contribute 0. The report wrongly counted its 40000. G-2 (invoice_on 2026-10-02, 60000) is correct. The expected total is 60000, which matches the customer's figure; the report shows 100000. The calculation logic is right; the problem is the config that wasn't migrated. DH-204 (TRANSFER request, pending) doesn't matter here because there are no TRANSFER rows.",
+        "next_action": "Reporting Engineering should change the deployed standard-profile config to date_basis=invoice_on for October 2026 onward, leaving September on posted_on. Then re-run NORTHSTAR's October 2026 net sales and confirm the total is 60000."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "463a0026da323fb0562ab6ba8717dacd837ca262b5a55ec4c06ce7e1b3991357",
+      "cost_usd": 0.060532,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-307",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 11.458,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-2",
+        "REPORT-STD-OCT"
+      ],
+      "packet": {
+        "case_id": "DH-307",
+        "decision": "configuration_defect",
+        "expected_total_cents": 60000,
+        "problem_rows": [
+          "G-1"
+        ],
+        "sources": [
+          "REPORT-STD-OCT",
+          "FEED-ATLAS-2",
+          "DH-204",
+          "DH-188"
+        ],
+        "explanation": "NORTHSTAR has no approved customer addendum. DH-204 is still pending and only concerns TRANSFER, so the approved standard profile applies. For October 2026, REPORT-STD-OCT sets date_basis to invoice_on, with SALE and RETURN included. The deployed config still uses the old posted_on basis. Under schema 2 (FEED-ATLAS-2), amounts are nonnegative magnitudes, and both SALE amounts are valid. G-1 has invoice_on 2026-09-30, so it belongs to September, but it was included at 40000 because it posted on 2026-10-01. G-2 (invoiced 2026-10-02, 60000) is correct. The expected total is 60000, which matches the customer's figure. The calculation code is correct; the config is wrong.",
+        "next_action": "Ask the Reporting owner to approve changing the NORTHSTAR standard config's date_basis to invoice_on for October 2026 onward. Leave September unchanged. Then rerun the October report and confirm it shows 60000."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "1cfa21adcb730099c048b7b506d4f53d3b77f5132bb31eec446a1eb8bda23bc1",
+      "cost_usd": 0.0889848,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR standard profile net sales date basis",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-OCT"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-2"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR addendum"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-307",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 10.542,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "FEED-ATLAS-2",
+        "REPORT-STD-OCT"
+      ],
+      "packet": {
+        "case_id": "DH-307",
+        "decision": "configuration_defect",
+        "expected_total_cents": 60000,
+        "problem_rows": [
+          "G-1"
+        ],
+        "sources": [
+          "REPORT-STD-OCT",
+          "FEED-ATLAS-2",
+          "DH-188",
+          "DH-204"
+        ],
+        "explanation": "The report is wrong because its configuration was not updated, not because the code miscalculates. For October 2026, NORTHSTAR's standard profile is set by approved REPORT-STD-OCT (effective 2026-10-01). It says to assign rows to a month by invoice_on. The deployed config still uses posted_on, the rule that ended after September. No NORTHSTAR addendum exists. DH-204 asks to include TRANSFER rows but is still pending approval, and these rows have no TRANSFERs anyway. Both rows are ATLAS schema 2 with valid non-negative amounts (FEED-ATLAS-2), and the code applies the signs correctly. G-1 (invoice_on 2026-09-30) belongs to September, so it should add 0, but the report counts 40000. G-2 adds 60000 correctly. The correct total is 60000, which matches the customer's figure. The reported 100000 is too high by 40000.",
+        "next_action": "Reporting Engineering should change the standard profile's date_basis to invoice_on for October 2026 onward, keep posted_on for September and earlier, then rerun and confirm the total is 60000. Get human review before changing the report."
+      },
+      "acceptance": {
+        "passed": false,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": false
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "00919c15d342164c5b60e1524f66f3da52a039bc2fd1e32f8f18e35c2efe8826",
+      "cost_usd": 0.0793226,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-307"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR standard profile date basis",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR addendum",
+            "limit": 10
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-309",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 12.178,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-309",
+        "decision": "calculation_defect",
+        "expected_total_cents": 100000,
+        "problem_rows": [
+          "I-2"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "DH-188",
+          "DH-204"
+        ],
+        "explanation": "The 2026-09 report falls under REPORT-STD-SEP, the approved standard profile in effect from 2026-01-01 up to (not including) 2026-10-01. It uses posted_on and counts SALE and RETURN rows. The deployed config matches it. There is no approved NORTHSTAR addendum. DH-204 is still pending approval and is about TRANSFER rows, which this case doesn't have. REPORT-STD-OCT starts 2026-10-01 and doesn't apply to September. Both rows are ATLAS schema 1. Under FEED-ATLAS-1, amount_cents is already the signed contribution, so a positive RETURN reverses an earlier return and increases sales. DH-188 confirms schema 1 meaning is unchanged. The code flips the sign on every RETURN. That turns I-2's +10000 into -10000, which happens to match the customer's 80000. The correct total is 90000 + 10000 = 100000. I-1 is correct.",
+        "next_action": "Reporting Engineering should change the normalization so schema 1 RETURN amounts keep their sign, without changing schema 2 handling. Then tell NORTHSTAR the correct 2026-09 net sales is 100000 cents, not 80000, because I-2 is a return reversal. Leave the config and data as they are."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "0eeacc1b154a8052e9ef02612c0732d73a9c5361eff34b95d60954da8bfe0496",
+      "cost_usd": 0.088004,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR standard net_sales profile return sign ATLAS schema",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-1"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR addendum"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-309",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 11.312,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "FEED-ATLAS-1",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-309",
+        "decision": "calculation_defect",
+        "expected_total_cents": 100000,
+        "problem_rows": [
+          "I-2"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "DH-188"
+        ],
+        "explanation": "For 2026-09, the approved REPORT-STD-SEP applies (posted_on; SALE and RETURN count; TRANSFER excluded). No approved NORTHSTAR addendum exists. DH-204 is still pending and these rows include no transfers anyway. REPORT-STD-OCT only applies from October. Both rows are ATLAS schema 1. Under FEED-ATLAS-1, amount_cents is a signed value, so a positive RETURN reverses an earlier return and adds to sales. DH-188 confirms schema 1 meanings are unchanged. The deployed config matches policy, but the code flips the sign of every RETURN, so I-2 counts as -10000 when it should be +10000. The expected total is 90000 + 10000 = 100000, not the reported and customer-claimed 80000.",
+        "next_action": "Reporting Engineering should reproduce the I-2 error and change the sign handling to follow each row's schema: keep the sign as given for ATLAS schema 1. Then rerun 2026-09 and tell NORTHSTAR the corrected total is 100000."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "a005f6025526a42203e74ed36fa985961ce5fa6ae42f6fda0b8e073d6bb0bb71",
+      "cost_usd": 0.07004859999999999,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-309"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR addendum net sales",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-309",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 7.251,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-309",
+        "decision": "calculation_defect",
+        "expected_total_cents": 100000,
+        "problem_rows": [
+          "I-2"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "REPORT-STD-OCT",
+          "DH-204",
+          "DH-188"
+        ],
+        "explanation": "The rule for NORTHSTAR's standard profile in 2026-09 is REPORT-STD-SEP. It assigns rows to a month by posted_on and includes SALE and RETURN. REPORT-STD-OCT applies only from October onward. No NORTHSTAR addendum applies, and the DH-204 change request is still pending approval. The deployed config matches these rules. Both rows are ATLAS schema 1. Under FEED-ATLAS-1, amount_cents is already signed, so a positive RETURN reverses an earlier return and adds to sales. DH-188 says schema 1 meanings were not changed. The code negates every RETURN, so I-2 contributes -10000 instead of +10000. The correct total is 90000 + 10000 = 100000. The reported 80000 and the customer's 80000 agree only because both apply the same wrong negation.",
+        "next_action": "Reporting Engineering should fix the code to use the sign rules of each row's schema version. Schema 1 amounts keep their sign; schema 2 RETURN amounts are negated. Then rerun 2026-09 for NORTHSTAR and tell the customer the correct net sales is 100000 cents, not 80000."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "a6674c0d476de5af7d10d52d5497b4e60cc471e776345f1b82bd9cbdfb35de12",
+      "cost_usd": 0.053087999999999996,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-306",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 19.611,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-2",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-306",
+        "decision": "expected_behavior",
+        "expected_total_cents": 40000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "REPORT-STD-OCT",
+          "FEED-ATLAS-2",
+          "DH-204",
+          "DH-188"
+        ],
+        "explanation": "For September 2026, the approved standard rule REPORT-STD-SEP applies: group rows by posted_on month and count SALE and RETURN. No approved NORTHSTAR-specific rule overrides it. REPORT-STD-OCT switches to invoice_on, but only from October 2026, and it says not to recalculate September. Under FEED-ATLAS-2, both rows are valid positive SALE amounts. B-1 (posted 2026-09-03) counts for 40000. B-2 (posted 2026-10-02) belongs to October and correctly adds 0. The customer's 60000 seems to group by invoice date, which no approved rule supports for September. DH-204 is pending approval and DH-188 changes no rules. The deployed config matches the approved rule, and every row is correct.",
+        "next_action": "Tell NORTHSTAR via support that September uses posted_on dates and the invoice_on rule starts in October 2026 without changing past months. B-2 will appear in October. Make no code or config change."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "14349e597deabb2d32d6b0d2406d06cc8c52bd05e4166115f5d4ced09b7f0827",
+      "cost_usd": 0.08373720000000001,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-306"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR standard profile date basis"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-OCT"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-306",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 11.501,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-306",
+        "decision": "expected_behavior",
+        "expected_total_cents": 40000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "REPORT-STD-OCT",
+          "FEED-ATLAS-2",
+          "DH-204",
+          "DH-188"
+        ],
+        "explanation": "For 2026-09, the standard profile REPORT-STD-SEP applies: it assigns rows by posted_on and includes SALE and RETURN. NORTHSTAR has no approved addendum. REPORT-STD-OCT (invoice_on) starts 2026-10-01, applies only going forward and says not to recalculate September. Both rows are ATLAS schema 2, so a SALE adds its positive amount (FEED-ATLAS-2). B-1 was posted 09-03: +40000, matching the report. B-2 was posted 10-02: 0, also matching. DH-204 is pending and doesn't affect these rows. DH-188 doesn't change how amounts are read. The customer's 60000 comes from using invoice_on dates, which would include only B-2.",
+        "next_action": "Tell NORTHSTAR that 40000 is correct under the September posted_on definition. B-2 will count in October reporting. No code or config change is needed."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "66a04da1849a4d88109d967511578caa24bd6d23f221fa545c326db919ca3e6c",
+      "cost_usd": 0.06534,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-306",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 11.009,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-2",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-306",
+        "decision": "expected_behavior",
+        "expected_total_cents": 40000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "REPORT-STD-OCT",
+          "FEED-ATLAS-2",
+          "DH-204",
+          "DH-188"
+        ],
+        "explanation": "The 2026-09 report month falls under REPORT-STD-SEP (approved, effective 2026-01-01 up to but not including 2026-10-01). It assigns rows by the posted_on month and includes SALE and RETURN. REPORT-STD-OCT switches to invoice_on, but it only applies from October 2026 and says not to recalculate September. No approved NORTHSTAR addendum exists. DH-204 is a pending request about TRANSFER rows, isn't approved, and doesn't affect these rows. Under FEED-ATLAS-2, schema 2 amounts are nonnegative magnitudes and SALE adds to sales, so both rows are valid. B-1 (posted 2026-09-03) correctly adds +40000. B-2 (posted 2026-10-02) is correctly left out of September. Deployed config and code match the requirements, so 40000 is correct. The customer's 60000 matches B-2 alone (invoiced 2026-09-28), so they appear to be using invoice_on, the October-onward rule, applied to September.",
+        "next_action": "Make no report change. Tell NORTHSTAR that September 2026 uses posted_on under REPORT-STD-SEP: B-1 counts in September (40000) and B-2 counts in October. The invoice_on rule in REPORT-STD-OCT applies only from October 2026 and isn't retroactive."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "45dd06f1ed17e5161f4c84ad37ba99c9ef78b004f053675aed619394a1a6e8a0",
+      "cost_usd": 0.0790226,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR net sales reporting profile date basis",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-OCT"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-2"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-302",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 6.922,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-302",
+        "decision": "expected_behavior",
+        "expected_total_cents": 60000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-BLUEBIRD",
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-188"
+        ],
+        "explanation": "REPORT-BLUEBIRD is an approved addendum for BLUEBIRD net_sales, in effect from 2026-09-01. It assigns months by invoice_on and includes SALE and RETURN. It overrides the standard posted_on rule in REPORT-STD-SEP for September 2026. Both rows are ATLAS schema 2, so under FEED-ATLAS-2 amounts are nonnegative sizes and a SALE adds to sales. Both amounts are valid. B-1 has invoice_on 2026-08-31, so it belongs to August and contributes 0. B-2 has invoice_on 2026-09-28, so it contributes +60000. The expected total is 60000, which matches the deployed config, every row's contribution and the reported total. The customer's 40000 matches a posted_on basis (B-1 was posted 2026-09-03), which the addendum replaces for this customer.",
+        "next_action": "Tell BLUEBIRD that their approved addendum assigns months by invoice date, not posting date. B-1 falls in August and B-2 in September, so 60000 is correct for 2026-09. No report change is needed."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "1396b9dc45701ee505a1f61910be188cb7ea2069d63b578515d61352b993ceea",
+      "cost_usd": 0.053432,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-302",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 13.012,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "FEED-ATLAS-2",
+        "REPORT-BLUEBIRD",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-302",
+        "decision": "expected_behavior",
+        "expected_total_cents": 60000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-BLUEBIRD",
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-188"
+        ],
+        "explanation": "The reported 60000 cents is correct. BLUEBIRD has its own approved reporting addendum (REPORT-BLUEBIRD, effective 2026-09-01). It sets the month by invoice_on date, counts SALE and RETURN rows, and overrides the standard posted_on rule (REPORT-STD-SEP) for September 2026. Both rows are ATLAS schema 2 files, where amount_cents is a nonnegative size and SALE adds to sales (FEED-ATLAS-2). B-1 was invoiced 2026-08-31, so it belongs to August and contributes 0. B-2 was invoiced 2026-09-28, so it counts in September for +60000. The deployed config and every row's current contribution match these rules. The customer's 40000 matches the old posted_on method: B-1 was posted in September and B-2 in October. DH-188 is a completed onboarding ticket and does not change any reporting rule.",
+        "next_action": "Reply to BLUEBIRD that, under their approved addendum, September net sales are assigned by invoice date. That makes the total 60000 cents (B-2 only), and B-1 counts in August. Suggest they update their spreadsheet to use invoice dates. No change to the report is needed."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "94662f0afc9bdfa7436949638210adbe58915c9a28b3603bd2a720080d693b06",
+      "cost_usd": 0.08941080000000001,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "bluebird reporting profile month",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-BLUEBIRD"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "ATLAS schema version amount_cents RETURN sign",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-2"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-302",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 8.569,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "FEED-ATLAS-2",
+        "REPORT-BLUEBIRD"
+      ],
+      "packet": {
+        "case_id": "DH-302",
+        "decision": "expected_behavior",
+        "expected_total_cents": 60000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-BLUEBIRD",
+          "FEED-ATLAS-2",
+          "REPORT-STD-SEP",
+          "DH-188"
+        ],
+        "explanation": "The approved Bluebird addendum (REPORT-BLUEBIRD) took effect on 2026-09-01 and replaces the standard posted_on rule (REPORT-STD-SEP) for Bluebird net_sales. Under the addendum, SALE and RETURN rows count in the month of their invoice_on date. Both rows use ATLAS schema 2, where amounts are non-negative magnitudes and SALE adds to sales (FEED-ATLAS-2). DH-188 only records the schema 2 rollout and does not change any policy. B-1 is invoiced 2026-08-31, so it belongs to August and contributes 0 to September, even though it posted on 2026-09-03. B-2 is invoiced 2026-09-28, so it contributes 60000 to September. The correct total is 60000, which matches the current report for both rows. The customer's 40000 appears to use the old posted_on basis, or to count B-1.",
+        "next_action": "Tell Bluebird that September 2026 net sales follow the invoice_on date under their approved addendum. B-1 counts in August and B-2 counts in September, so the total is 60000. No code or config change is needed."
+      },
+      "acceptance": {
+        "passed": false,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": false
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "f5e8fa61d992c49dd165ca0b2d9bb09ab2a0f0a09b2f5b39b9a8763535b3e3d8",
+      "cost_usd": 0.0608914,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-302"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "bluebird reporting month addendum"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-308",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 11.071,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-2",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-308",
+        "decision": "invalid_source_data",
+        "expected_total_cents": null,
+        "problem_rows": [
+          "H-2"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-188",
+          "DH-204"
+        ],
+        "explanation": "REPORT-STD-SEP is the approved policy for September 2026. It applies because no approved NORTHSTAR addendum was found, and it says to use the posted_on month and include SALE and RETURN. The deployed config matches it. H-1 is an ATLAS schema 2 SALE for 100000 and is correct. H-2 is an ATLAS schema 2 RETURN for -20000. FEED-ATLAS-2 says schema 2 amounts must be nonnegative and that negative values are invalid data: quarantine the row and do not repair it with abs(). The current code flips the sign, so H-2 adds +20000 and the reported total is 120000. The customer's 80000 relies on the same invalid row. DH-204 is still pending and DH-188 doesn't change schema meanings. No valid total can be calculated until H-2 is corrected.",
+        "next_action": "Quarantine H-2 and ask Data Integrations for a corrected ATLAS schema 2 export (per DH-188). Then rerun September 2026 net sales, and separately have Reporting Engineering add validation that rejects negative schema 2 amounts instead of flipping their sign. Do not change the report until then."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "97c956e54933cfc6be1e6dfdd2c2ed87e8aecd40aedac2c8635e7fc0416170db",
+      "cost_usd": 0.0881064,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "ATLAS schema version 2 RETURN amount sign",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "standard reporting profile net_sales",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-2"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-308",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 8.447,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "FEED-ATLAS-2",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-308",
+        "decision": "invalid_source_data",
+        "expected_total_cents": null,
+        "problem_rows": [
+          "H-2"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2"
+        ],
+        "explanation": "For 2026-09, REPORT-STD-SEP applies (approved, standard profile, posted_on, SALE+RETURN). There is no approved NORTHSTAR addendum; DH-204 is only pending and there are no TRANSFER rows anyway. REPORT-STD-OCT starts later and does not apply. Under FEED-ATLAS-2, ATLAS schema 2 amounts must be nonnegative and a RETURN reduces sales. H-2 is a schema-2 RETURN with amount -20000, so it is invalid source data. The code negated it and added +20000, for a total of 120000. The customer's 80000 assumes a repair that the contract forbids (no abs() normalization). H-1 (+100000) is correct. Expected total is null until the data is corrected.",
+        "next_action": "Data Integrations should quarantine H-2 and get a corrected ATLAS schema-2 export. Then rerun the September report. Don't patch the code with abs()."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "42ec053e10d88c206cbaae9dbe9edd08ca775b398c91363e5e35be0b92a4a306",
+      "cost_usd": 0.0537956,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-308"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR addendum net sales"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-308",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 6.901,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-308",
+        "decision": "invalid_source_data",
+        "expected_total_cents": null,
+        "problem_rows": [
+          "H-2"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-188"
+        ],
+        "explanation": "The approved rule for September 2026 is REPORT-STD-SEP (standard profile): use the posted_on month and include SALE and RETURN. The deployed config matches it. REPORT-STD-OCT only applies from October 2026. DH-204 is still awaiting approval and doesn't affect these rows. Both rows use ATLAS schema 2. Under FEED-ATLAS-2, amounts must be non-negative magnitudes, and a negative magnitude is invalid data that must be quarantined, not fixed with abs(). H-2 is a RETURN with amount_cents of -20000, so it is invalid. The current code flips the sign of every RETURN, which turns H-2 into +20000 and reports 120000. The customer's 80000 assumes the return reduces sales, but that also depends on invalid data. No valid total can be calculated until the export is corrected.",
+        "next_action": "Quarantine H-2 and ask Data Integrations for a corrected ATLAS schema 2 export (DH-188 says they own invalid exports). Don't fix it with abs(). Recalculate September net sales after the corrected data arrives, and tell NORTHSTAR the result is on hold until then."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "de2b42efcd533f18454c96d4a2d499a67309ca389ecb57ec7ec2d9385b0cdbe3",
+      "cost_usd": 0.053276000000000004,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-310",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 9.242,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-204",
+        "FEED-ATLAS-1",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-310",
+        "decision": "calculation_defect",
+        "expected_total_cents": 100000,
+        "problem_rows": [
+          "J-2",
+          "J-3"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1"
+        ],
+        "explanation": "REPORT-STD-SEP is the approved standard profile that applies to September 2026. It uses posted_on and includes SALE and RETURN. REPORT-STD-OCT starts in October and does not apply backward. No approved NORTHSTAR addendum exists. DH-204 is still pending approval and does not affect these rows, since none are TRANSFER rows. The deployed config matches the policy. Under FEED-ATLAS-1, schema 1 amount_cents is already signed, so its sign must be kept. The code flips the sign of every RETURN anyway. That turned J-2 (-10000) into +10000 and J-3 (+10000, a reversal) into -10000. The two 20000-cent errors cancel out, so the 100000 total only matches by coincidence.",
+        "next_action": "Reporting Engineering should reproduce the J-2 and J-3 errors and add per-schema sign handling that keeps schema 1 signs as they are, including reversals. Tell NORTHSTAR the 100000-cent total is correct."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "97555ac84ad65cb998cd202b31fa8ddb72f230839c4acc9e663045a160d4a2fb",
+      "cost_usd": 0.0751192,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-310"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "ATLAS schema RETURN amount sign"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR addendum"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-310",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 7.866,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-310",
+        "decision": "calculation_defect",
+        "expected_total_cents": 100000,
+        "problem_rows": [
+          "J-2",
+          "J-3"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "DH-188",
+          "DH-204"
+        ],
+        "explanation": "The rule for September 2026 is REPORT-STD-SEP, the standard Northstar profile. It assigns rows by posted_on month, counts SALE and RETURN, and leaves out TRANSFER. REPORT-STD-OCT starts in October and doesn't apply to September. DH-204 is still waiting for approval. The deployed config (posted_on; SALE and RETURN) matches REPORT-STD-SEP, so the configuration is correct. All three rows use ATLAS schema 1. Under FEED-ATLAS-1, amount_cents already carries the correct sign and must be kept as-is. DH-188 confirms schema 1's meaning is unchanged. The expected contributions are J-1 +100000, J-2 -10000 and J-3 +10000, for a total of 100000. The code flips the sign of every RETURN, so it reports J-2 as +10000 and J-3 as -10000. These two errors cancel out, which is why the reported total of 100000 matches the customer's figure even though two rows are wrong.",
+        "next_action": "Send to Reporting Engineering: RETURN amounts should be signed according to each row's schema version. Schema 1 keeps the sign from the source, and schema 2 subtracts the amount and quarantines negative values. Tell Northstar their 100000 total is correct. No report total change is needed."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "740a425975cb952bbd6bb415682be983ce967f27f745813f0e54b809fceefef3",
+      "cost_usd": 0.056068,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-310",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 11.542,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-310",
+        "decision": "calculation_defect",
+        "expected_total_cents": 100000,
+        "problem_rows": [
+          "J-2",
+          "J-3"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "DH-188",
+          "DH-204"
+        ],
+        "explanation": "REPORT-STD-SEP is the approved standard profile for 2026-09. It uses the posted_on month and includes SALE and RETURN. NORTHSTAR has no approved addendum, and DH-204 is only a pending request, so it changes nothing. The deployed config matches the policy. All three rows are ATLAS schema 1. Under FEED-ATLAS-1, amount_cents is already signed and its sign must be kept; the contract says not to flip every RETURN. The code flips the sign of every RETURN anyway. So J-2 contributes +10000 when it should be -10000, and J-3 contributes -10000 when it should be +10000. Correct contributions are J-1 +100000, J-2 -10000 and J-3 +10000, for a total of 100000. The two row errors cancel out, so the reported total and the customer's figure are correct, but the row-level ledger is wrong. DH-188 confirms schema 1 meanings are unchanged.",
+        "next_action": "Reporting Engineering should change normalization so the sign is chosen by each row's schema version: keep the sign as-is for schema 1, and apply the schema 2 magnitude rules only to schema 2 rows. Then rerun the September ledger for each row. Tell NORTHSTAR that the 100000 total is correct and needs no change."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "de720f5609f80db915e7069394820ecf77e507cbf978949e36ca6cd461bcbcac",
+      "cost_usd": 0.08638839999999999,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__get_case",
+          "input": {
+            "case_id": "DH-310"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR net sales standard profile RETURN sign schema",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-1"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-304",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 11.704,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-304",
+        "decision": "insufficient_evidence",
+        "expected_total_cents": null,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-3-DRAFT",
+          "DH-188",
+          "DH-204"
+        ],
+        "explanation": "For the standard profile in 2026-09, REPORT-STD-SEP applies: month assigned by posted_on, SALE and RETURN included, TRANSFER excluded. The deployed config matches. REPORT-STD-OCT starts later, and the Bluebird and Cedar addenda cover other customers. DH-204 (TRANSFER inclusion) is still pending approval and this report has no TRANSFER rows. Both rows use ATLAS schema 3, and the only schema 3 contract is FEED-ATLAS-3-DRAFT, which is unapproved. DH-188 confirms each row's schema version selects its contract. With no approved meaning for amount_cents, D-2's sign can't be determined. The current 80000 matches the customer's figure but can't be verified.",
+        "next_action": "Ask Data Integrations to approve a schema 3 contract for ATLAS, or to provide corrected exports on schema 1 or 2. Then reconcile 2026-09. Make no report changes until then."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "01eb796d083dca563d3d8427e2e79d10fd8e0e5656f85286f9161f196822acab",
+      "cost_usd": 0.06299199999999999,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-304",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 18.107,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-304",
+        "decision": "insufficient_evidence",
+        "expected_total_cents": null,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "REPORT-STD-OCT",
+          "FEED-ATLAS-3-DRAFT",
+          "FEED-ATLAS-1",
+          "FEED-ATLAS-2",
+          "DH-188",
+          "DH-204"
+        ],
+        "explanation": "The governing policy for September 2026 is the approved REPORT-STD-SEP: date by posted_on, include SALE and RETURN, exclude TRANSFER. No approved NORTHSTAR addendum exists. DH-204 is still pending and asks about TRANSFER, which doesn't affect these rows. REPORT-STD-OCT only applies from October onward. The deployed config matches REPORT-STD-SEP. Both rows are ATLAS schema_version 3, but the only schema 3 contract is a draft (FEED-ATLAS-3-DRAFT), and it says no schema 3 contract has been approved. FEED-ATLAS-1 and FEED-ATLAS-2 only cover schemas 1 and 2, and DH-188 does not define schema 3. Without an approved contract we can't tell whether amount_cents is a signed value or a magnitude. That means we can't confirm the RETURN sign handling, or the 80000 total that the report and the customer agree on. The fact that both amounts are positive doesn't settle it.",
+        "next_action": "Ask Data Integrations to approve and publish an ATLAS schema 3 contract that defines what amount_cents means. Then re-check D-1 and D-2 against it. Don't change the report until then."
+      },
+      "acceptance": {
+        "passed": false,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": false
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "66eb892dd2d2ef21cfa174d3a837936193f093cb0ca8fbaf3e6f8f9cae8003ff",
+      "cost_usd": 0.10377940000000001,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR standard net_sales reporting profile",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "ATLAS schema 3 export format",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-3-DRAFT"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "Northstar addendum",
+            "limit": 5
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-304",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 11.859,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-304",
+        "decision": "insufficient_evidence",
+        "expected_total_cents": null,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-3-DRAFT",
+          "DH-188"
+        ],
+        "explanation": "The approved REPORT-STD-SEP profile covers September 2026 (the October invoice_on rule is forward-looking only). It assigns rows by posted_on and includes SALE and RETURN, so both rows belong in the month and the deployed config matches. It also says the source schema contract decides each row's sign. Both rows are ATLAS schema 3, and the only schema 3 document is FEED-ATLAS-3-DRAFT, which is unapproved and says not to infer meaning from positive sample amounts. DH-188 covers only the schema 2 rollout. The current 80000 matches the customer's claim, but that doesn't validate it: we can't tell if the RETURN amount is a magnitude or a signed value. No row can be marked as wrong.",
+        "next_action": "Ask Data Integrations, the owner, to approve an ATLAS schema 3 format contract. Then re-run reconciliation. Until then, don't change the report and don't confirm the total."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "800e00e172a089638e49340a2576e4cd90a6e84185d7e6c3688aa398f91c64be",
+      "cost_usd": 0.07111479999999999,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-304"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR standard profile export format"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "ATLAS schema 3"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-305",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 16.659,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "FEED-ATLAS-2",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-305",
+        "decision": "conflicting_policy",
+        "expected_total_cents": null,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-CEDAR-A",
+          "REPORT-CEDAR-B",
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-188"
+        ],
+        "explanation": "For 2026-09, two approved Cedar net_sales addenda apply equally, both effective 2026-09-01 with no supersedes or precedence. REPORT-CEDAR-A uses invoice_on and REPORT-CEDAR-B uses posted_on. REPORT-STD-SEP says conflicting addenda require an owner decision. Both rows are valid ATLAS schema 2 SALE magnitudes, and the code's sign handling is correct. Current output follows posted_on: B-1 (posted 09-03) is included and B-2 (posted 10-02) is excluded, for 40000. Under invoice_on, B-1 (invoiced 08-31) is excluded and B-2 (invoiced 09-28) is included, for 60000, matching the customer's claim. With no approved precedence, neither result can be established and no row can be called incorrect. DH-188 is only the schema 2 rollout ticket and sets no reporting rule.",
+        "next_action": "Ask the Customer Reporting owner to decide which Cedar addendum (A or B) governs net_sales from 2026-09, or to supersede one of them. Hold the report and any config change until then, and tell CEDAR the gap comes from the date basis."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "aae5ca9f74efef25e9e224a8334b62feddbccfdd3d9e512e9729d16fd926c646",
+      "cost_usd": 0.09196700000000001,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "CEDAR net sales reporting profile date basis",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-CEDAR-A"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-CEDAR-B"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-2"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-305",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 8.262,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B"
+      ],
+      "packet": {
+        "case_id": "DH-305",
+        "decision": "conflicting_policy",
+        "expected_total_cents": null,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-CEDAR-A",
+          "REPORT-CEDAR-B"
+        ],
+        "explanation": "There are two approved Cedar addenda for the same scope (CEDAR, net_sales, cedar profile), both effective from 2026-09-01 with no end date. They give different date rules. REPORT-CEDAR-A uses invoice_on, which would count only B-2 (invoiced 2026-09-28) and give 60000, matching the customer's figure. REPORT-CEDAR-B uses posted_on, which would count only B-1 (posted 2026-09-03) and give 40000, matching the current report. Neither addendum replaces or takes priority over the other, and a newer date doesn't decide it. Because the Cedar addenda conflict, the standard rule's 'single applicable addendum' override (REPORT-STD-SEP) can't settle the question. That means there is no single approved requirement to measure the rows or the 40000 total against. The expected total stays null, and no row can be called wrong.",
+        "next_action": "Ask Customer Reporting (the owner of both addenda) to decide which Cedar addendum applies, or to approve one that replaces the other. Then recalculate September 2026. Don't change the code or config until that decision is made."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "9991255894529e1aa9c1d4fabada0dafad5e7e4944675b1986c006fb3f9a86a7",
+      "cost_usd": 0.054993,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-305"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "CEDAR reporting profile date basis",
+            "limit": 10
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-305",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 7.677,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-305",
+        "decision": "conflicting_policy",
+        "expected_total_cents": null,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-CEDAR-A",
+          "REPORT-CEDAR-B",
+          "REPORT-STD-SEP",
+          "REPORT-STD-OCT",
+          "FEED-ATLAS-2",
+          "DH-188"
+        ],
+        "explanation": "The two Cedar addenda, REPORT-CEDAR-A and REPORT-CEDAR-B, both apply to September 2026 (cedar profile, net_sales). Both are approved, both take effect on 2026-09-01, and neither replaces or ranks above the other. They disagree on the date to use: A uses invoice_on and B uses posted_on. REPORT-STD-SEP says that when equally applicable addenda conflict, the owner must decide. REPORT-STD-OCT does not apply to September. Both rows are ATLAS schema 2 SALE rows with valid positive amounts (FEED-ATLAS-2), so the source data is fine. Under A, B-1 (invoiced 2026-08-31) drops out and B-2 (invoiced 2026-09-28) counts, giving 60000, which matches the customer's figure. Under B, B-1 (posted 2026-09-03) counts and B-2 (posted 2026-10-02) drops out, giving 40000, which is the current output. The deployed posted_on setting matches B, but there is no approved basis for choosing B over A. So neither total can be confirmed, and no row can be called wrong.",
+        "next_action": "Send the A/B conflict to Customer Reporting, which owns both Cedar addenda. Ask for a decision that replaces one or sets which takes precedence. Until then, don't change the config or reconcile the total. Afterwards, re-run September 2026 using the approved date (60000 if invoice_on, 40000 if posted_on)."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "45c0e4771fff82f13743c92bfbfca6fb9552a89b6dd211a4c1a69d50adc25001",
+      "cost_usd": 0.055688,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-301",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 9.69,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-301",
+        "decision": "calculation_defect",
+        "expected_total_cents": 125000,
+        "problem_rows": [
+          "A-2",
+          "A-3"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "FEED-ATLAS-2"
+        ],
+        "explanation": "The governing policy is approved REPORT-STD-SEP. It applies to months before October 2026, dates rows by posted_on, includes SALE and RETURN rows, and makes each source schema contract decide the sign. No approved NORTHSTAR addendum applies. DH-204 asks only about transfers and is still pending, and DH-188 does not change schema 1. The deployed config is correct. The defect is in the code, which flips the sign of every RETURN row regardless of schema. Schema 1 (FEED-ATLAS-1) already stores signed amounts, so the code gets two rows wrong: A-2 should be -20000 but shows +20000, and A-3 (a reversed return) should be +5000 but shows -5000. Schema 2 (FEED-ATLAS-2) stores positive amounts, and A-4 and A-5 are handled correctly. The correct total is 100000 - 20000 + 5000 + 50000 - 10000 = 125000. The report shows 155000. The customer's 115000 is also wrong because it treats A-3's reversal as a reduction.",
+        "next_action": "Reporting Engineering should fix the sign handling so it follows each row's schema: keep schema 1 signs as they are, and subtract schema 2 RETURN amounts. Then re-run September 2026 and tell NORTHSTAR the correct total is 125000, explaining that A-3 reverses an earlier return."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "fc31832ec3a142e9c58c59e8e459b10e226c58b20b600f0b22893bf4a3f9c757",
+      "cost_usd": 0.074319,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-301"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "ATLAS schema version return sign NORTHSTAR",
+            "limit": 10
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-301",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 13.632,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-301",
+        "decision": "calculation_defect",
+        "expected_total_cents": 125000,
+        "problem_rows": [
+          "A-2",
+          "A-3"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "FEED-ATLAS-2",
+          "DH-188"
+        ],
+        "explanation": "REPORT-STD-SEP applies to September 2026 for Northstar's standard profile: assign rows by posted_on and include SALE and RETURN. The deployed config matches, and no Northstar addendum exists. The code flips the sign of every RETURN regardless of schema version. Under FEED-ATLAS-1, schema 1 amounts already carry the correct sign and must be kept: A-2 should be -20000 (current +20000) and A-3, a return reversal, should be +5000 (current -5000). Schema 2 rows A-1/A-4/A-5 follow FEED-ATLAS-2 and are correct. Expected total is 100000-20000+5000+50000-10000=125000. The report shows 155000 and the customer claims 115000; both are wrong.",
+        "next_action": "Reporting Engineering (owner per DH-188) should fix the code to apply the sign rule for each row's schema version. Then re-run September 2026 and give Northstar the corrected total of 125000 cents, explaining why their 115000 differs."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "472d32aed0b3f5c12e4ed3a56d9e99bf882b9cd40c410adeb2db44819d9a7f12",
+      "cost_usd": 0.074172,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-301",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 13.384,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-301",
+        "decision": "calculation_defect",
+        "expected_total_cents": 125000,
+        "problem_rows": [
+          "A-2",
+          "A-3"
+        ],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-1",
+          "FEED-ATLAS-2",
+          "DH-188",
+          "DH-204"
+        ],
+        "explanation": "The applicable policy for September 2026 is REPORT-STD-SEP: the standard profile, using posted_on dates and including SALE and RETURN. NORTHSTAR has no approved addendum. DH-204 is still pending approval, and nothing in this report is a TRANSFER row. The deployed config matches this policy. The code, however, flips the sign of every RETURN without checking the schema version. Under schema 1 (FEED-ATLAS-1), amounts are already signed and their sign must be kept. Under schema 2 (FEED-ATLAS-2), amounts are positive magnitudes and a RETURN reduces sales. All amounts are valid. Expected contributions: A-1 +100000, A-2 -20000, A-3 +5000 (reversal of an earlier return), A-4 +50000, A-5 -10000, for a total of 125000. Current output is 155000 because A-2 shows +20000 and A-3 shows -5000. The customer's 115000 is also wrong: it treats every RETURN as negative, including the A-3 reversal.",
+        "next_action": "Reporting Engineering should fix the RETURN sign handling so it depends on each row's schema version: keep the sign for schema 1, subtract the amount for schema 2. Then re-run September 2026 for NORTHSTAR (expected 125000) and tell the customer A-3 is a return reversal that adds to sales. Keep the config unchanged."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "f34008fb22ca896a0adfcfff9cd7179dec453ea4b61519bf60c09b9390f6430f",
+      "cost_usd": 0.1118868,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__get_case",
+          "input": {
+            "case_id": "DH-301"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR standard reporting profile net sales",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-1"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-2"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "Northstar addendum"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-303",
+      "condition": "provided",
+      "status": "completed",
+      "elapsed_seconds": 8.74,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-1",
+        "FEED-ATLAS-2",
+        "FEED-ATLAS-3-DRAFT",
+        "REPORT-BLUEBIRD",
+        "REPORT-CEDAR-A",
+        "REPORT-CEDAR-B",
+        "REPORT-STD-OCT",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-303",
+        "decision": "expected_behavior",
+        "expected_total_cents": 80000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-204",
+          "DH-188"
+        ],
+        "explanation": "REPORT-STD-SEP applies to Northstar's standard profile for 2026-09. It covers the month (2026-01-01 up to but not including 2026-10-01). No Northstar addendum applies. REPORT-STD-OCT only applies from October onward. Under REPORT-STD-SEP, months are assigned by posted_on, SALE and RETURN count, and TRANSFER is left out. All rows are ATLAS schema 2, so FEED-ATLAS-2 applies: amounts are nonnegative magnitudes, and a RETURN reduces sales. Row by row: C-1 SALE adds 100000; C-2 RETURN subtracts 20000; C-3 TRANSFER adds 0. That gives 80000. Each row in the current output matches this, and so does the deployed config. The customer's 110000 adds in the 30000 TRANSFER. DH-204 shows that inclusion request is still pending approval, so it does not authorize a change.",
+        "next_action": "Reply to Northstar that 80000 cents is correct under the approved September standard. Their 110000 includes the 30000 TRANSFER row, which stays excluded until Reporting Product approves DH-204. No code or config change is needed."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "7778ebcabd6c714122741ba28247647d27e2345c282041e019bc277f3d0df3fe",
+      "cost_usd": 0.0542,
+      "tool_calls": []
+    },
+    {
+      "case_id": "DH-303",
+      "condition": "retrieval",
+      "status": "completed",
+      "elapsed_seconds": 10.022,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-2",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-303",
+        "decision": "expected_behavior",
+        "expected_total_cents": 80000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-204",
+          "DH-188"
+        ],
+        "explanation": "The rule for 2026-09 is REPORT-STD-SEP, the approved standard profile. It is effective from 2026-01-01 up to, but not including, 2026-10-01. It uses posted_on, counts SALE and RETURN, and leaves out TRANSFER. No approved NORTHSTAR addendum was found, and REPORT-STD-OCT starts in October and does not apply to earlier months. All rows use ATLAS schema 2, where FEED-ATLAS-2 says amounts are always non-negative: a SALE adds and a RETURN subtracts. Row by row: C-1 adds 100000, C-2 subtracts 20000, and C-3 (a TRANSFER) adds 0. That gives 80000, which matches the report for every row. The customer's 110000 includes the 30000 TRANSFER. DH-204, the request to count transfers, is still waiting for approval, so it doesn't change the rule. DH-188 only covers the schema 2 rollout.",
+        "next_action": "Tell NORTHSTAR that the 80000 total is correct under the approved standard rule, and that the gap of 30000 is the TRANSFER row C-3. Don't change the report or config unless the reporting owner approves DH-204."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "a42c84510e6c1b9f2776026043b512e1ec375b34aa5f58e3ad0a4263fd1ab1ba",
+      "cost_usd": 0.08349279999999999,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__get_case",
+          "input": {
+            "case_id": "DH-303"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR net sales reporting profile",
+            "limit": 10
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "REPORT-STD-SEP"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-204"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "FEED-ATLAS-2"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "DH-303",
+      "condition": "workflow",
+      "status": "completed",
+      "elapsed_seconds": 8.86,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "observed_sources": [
+        "DH-188",
+        "DH-204",
+        "FEED-ATLAS-2",
+        "REPORT-STD-SEP"
+      ],
+      "packet": {
+        "case_id": "DH-303",
+        "decision": "expected_behavior",
+        "expected_total_cents": 80000,
+        "problem_rows": [],
+        "sources": [
+          "REPORT-STD-SEP",
+          "FEED-ATLAS-2",
+          "DH-204"
+        ],
+        "explanation": "For September 2026, the approved standard profile is REPORT-STD-SEP (effective 2026-01-01 to 2026-10-01). It assigns rows to a month by posted_on, includes SALE and RETURN, and excludes TRANSFER. REPORT-STD-OCT starts in October, does not apply to September, and would not change the outcome anyway. FEED-ATLAS-2 says ATLAS schema 2 amounts are nonnegative magnitudes, so a RETURN reduces sales. Row by row: C-1 SALE +100000, C-2 RETURN -20000, C-3 TRANSFER excluded (0). That gives 80000, which matches the current output and every row's contribution. The customer's figure of 110000 counts the 30000 TRANSFER row. Northstar's request to include transfers (DH-204) is still pending approval, so it does not authorize a change, and no approved Northstar addendum exists. The deployed config matches the approved policy, and the source data is valid.",
+        "next_action": "Tell Northstar that September net sales is 80000 cents because the internal TRANSFER row C-3 is excluded under the approved standard. Make no code or config change unless the reporting owner approves DH-204."
+      },
+      "acceptance": {
+        "passed": true,
+        "checks": {
+          "case_id": true,
+          "decision": true,
+          "total": true,
+          "problem_rows": true,
+          "required_evidence": true,
+          "known_sources": true,
+          "observed_evidence": true
+        },
+        "limit": "Checks fixture decisions, cents, row IDs and evidence IDs; narrative entailment and human review remain separate."
+      },
+      "human_review": "pending",
+      "prompt_sha256": "9390f6c6e7ab548ceaee9f1668f1e4085a2387b6d064c24a6a9a02c2a9d1077e",
+      "cost_usd": 0.0668696,
+      "tool_calls": [
+        {
+          "name": "mcp__reconciliation__reconcile_report",
+          "input": {
+            "case_id": "DH-303"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__search_knowledge",
+          "input": {
+            "query": "NORTHSTAR net sales transfer"
+          }
+        },
+        {
+          "name": "mcp__reconciliation__get_document",
+          "input": {
+            "document_id": "DH-188"
+          }
+        }
+      ]
+    }
+  ]
+}

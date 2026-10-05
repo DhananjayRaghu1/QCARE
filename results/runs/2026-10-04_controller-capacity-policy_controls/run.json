@@ -1,0 +1,28 @@
+{
+  "id": "2026-10-04_controller-capacity-policy_controls",
+  "date": "2026-10-04",
+  "demo": "controller-capacity-policy",
+  "kind": "controls",
+  "demo_path": "demos/01-controller-capacity/policy-aware",
+  "status": "completed",
+  "provenance": "deterministic",
+  "models": [],
+  "conditions": [
+    "reference",
+    "unsafe_all_pro_50"
+  ],
+  "repo_commit": "178d71b",
+  "headline": "Independent policy checks: reference 34/34; unsafe all-Pro-50 passes all 23 visible tests but fails 2/34 (DEV-102 on firmware 3.1.x).",
+  "metrics": {
+    "reference_passed": 34,
+    "unsafe_passed": 32,
+    "policy_cases": 34,
+    "visible_tests": 23
+  },
+  "human_review": "not-applicable",
+  "owner": "ishaan",
+  "files": {
+    "record": "demos/01-controller-capacity/policy-aware/recordings/controls.json",
+    "writeup": "demos/01-controller-capacity/policy-aware/docs/comparison-results.md"
+  }
+}
