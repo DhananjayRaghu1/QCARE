@@ -7,7 +7,7 @@ import json
 from catalog import ROOT, cases, documents, digest, get_case, snapshot_hashes
 from reconcile import reconcile_case
 
-DECISIONS = ["calculation_defect", "configuration_defect", "expected_behavior",
+DECISIONS = ["calculation_defect", "configuration_defect", "configuration_and_calculation_defect", "expected_behavior",
              "insufficient_evidence", "conflicting_policy", "invalid_source_data"]
 
 PACKET_SCHEMA = {

@@ -1,0 +1,6 @@
+{
+  "id": "DH-401",
+  "request": "Add the monthly settlement CSV export for NORTHSTAR through the existing export_csv(rows, customer, month) function. Use the approved customer requirements and preserve existing exports for other customers. September sample transactions are attached. Identify missing requirements before assuming behavior.",
+  "customer": "NORTHSTAR",
+  "month": "2026-09"
+}

@@ -1,4 +1,16 @@
-# Demo 1: Which total can we defend?
+# Three business-context demos
+
+The [site home](http://127.0.0.1:8768/) contains three separate workflows. Each has an original request, linked sources, inspectable code, a prepared example, live repo-only and docs-plus-Jira modes, and a dedicated proposed production architecture page.
+
+| Demo | Result | Workflow and architecture |
+| --- | --- | --- |
+| [Investigate a report](http://127.0.0.1:8768/demos/report) | DH-301 only: justify $1,250 rather than either starting total | [Production design](http://127.0.0.1:8768/architecture/report) |
+| [Implement a customer export](http://127.0.0.1:8768/demos/export) | Patch, CSV behavior and independent acceptance checks | [Production design](http://127.0.0.1:8768/architecture/export) |
+| [Assess a migration](http://127.0.0.1:8768/demos/migration) | Dependencies, customer obligations, owners and release gates | [Production design](http://127.0.0.1:8768/architecture/migration) |
+
+The live ticket selector has been removed; DH-302 through DH-310 remain developer regression fixtures only. Their historical records are preserved. Production pages describe real-system retrieval, permission boundaries, evidence combination, verification and human review; they do not claim those connectors are deployed.
+
+## Demo 1: Which total can we defend?
 
 A customer says their monthly report is wrong. The application shows **$1,550**; their spreadsheet shows **$1,150**. Approved business definitions and export contracts show that **both are wrong: the correct total is $1,250**.
 
@@ -10,6 +22,34 @@ Install [uv](https://docs.astral.sh/uv/) and run these commands from this direct
 
 ```sh
 uv sync --locked
+uv run python demo.py live
+```
+
+Open [the demo hub](http://127.0.0.1:8768/) and choose a workflow. Each **Run investigation** click starts a fresh Claude Code session using your existing Claude login. Sign in with `claude auth login` if needed. No API key is required when your Claude subscription supports the client. The page shows real tool calls and results as the CLI emits them, the model's final answer, elapsed time, reported model and cost, and a downloadable run record. Stop cancels the subprocess. No automatic retries or precomputed substitute answers.
+
+DH-301 has a plain-language title, customer situation, prominent original request, decision to investigate and explanation of why it matters. The page shows both starting amounts in dollars, explains what the difference means, and includes reporting terminology plus transaction dates and deployed settings. Start with DH-301, then compare the two raw modes. These reader guides exist only in the browser page; they are not added to model prompts or task files. Run history is filtered to the selected ticket, and completed answers are labeled with their saved time.
+
+**ATLAS is the fictional upstream system that supplies transaction exports**, separate from the reporting application, the customer and the AI. The page maps that flow and explains every customer, team and data field. Document references in the case, answer and activity log open the complete source with its owner, approval status, scope and effective dates. Each source also has a standalone local page, such as [the ATLAS v1 contract](http://127.0.0.1:8768/documents/FEED-ATLAS-1). A searchable reference desk contains all ten snapshots. These links point to local demo records, not an external Jira account.
+
+The reporting demo also has an optional **worked example**, clearly labeled as a prepared rule-engine explanation rather than a model run. It shows the approved policy, each row's current and required contribution, the calculation and the next action. Missing rules, conflicting agreements and invalid data produce an explicit stop. Opening these reader explanations does not add them to a model session.
+
+| Live mode | What the model receives |
+| --- | --- |
+| **Raw · repo only** | The customer issue, extracted application code, neutral README and five baseline tests; ordinary file and shell tools |
+| **Raw · docs + Jira** | Exactly the same prompt, code and tools, plus ten prose source snapshots as Markdown files |
+| **Guided workflow** | The existing prescribed investigation task, structured answer schema, read-only evidence MCP and deterministic reconciliation calculator |
+
+The two raw modes use Claude Code's default system prompt and an editable short user prompt. There is **no diagnostic harness**: no required investigation steps, answer schema, hidden grading, calculator, machine-readable policy rules, reference patch or prior outputs. The browser is a launcher and recorder. A fresh temporary directory, disabled customizations/connectors, a four-minute timeout and a $1 CLI budget bound each attempt. A read-only investigation is requested and changes to supplied files are checked afterward; native shell access is not an OS read sandbox. The raw modes are not an exact reproduction of Sam's personal setup. The five baseline tests are prepared demo tests.
+
+Run both raw modes on the same case without changing the prompt to compare the effect of providing context. An appropriate clarification request is a useful outcome. Guided mode adds software and instructions, so its result cannot establish that retrieval alone helped. All source material remains synthetic; **live model execution does not mean a live Jira or business-doc connector**.
+
+Records, exact raw inputs, prompts and private CLI traces are saved under ignored `artifacts/live/<run-id>/`. The latest 30 finished runs reappear after a server restart. Runs that fail or are cancelled remain visible. The server binds only to `127.0.0.1`, validates request origin and requires a page-issued token to start or cancel a run.
+
+Local browser verification on October 4, 2026 used DH-301 in all three modes. The successful raw repo run took 23.612 seconds, ran all five baseline tests and asked for the schema rule; it also made an overconfident claim about the discrepancy size, so the raw response still needs review. The raw docs run took 25.989 seconds, ran the same tests and supported 125000 cents using the source contracts. The guided run took 14.304 seconds and passed the existing fixture checks, but its input included a scenario title that hinted at the diagnosis. **That historical guided result is not a fair comparison with raw runs.** New guided prompts and the MCP case tool omit these titles; the UI flags affected historical runs without changing their saved files. All three reported `claude-opus-5-5`. An earlier 27.743-second raw attempt encountered a shell permission denial; it is retained as failed in local history, and the launcher was corrected before the successful run. These are implementation smoke tests with one synthetic case, not a controlled productivity study. No model patches were applied.
+
+For an offline presentation with no model calls:
+
+```sh
 uv run python demo.py present
 ```
 
@@ -52,7 +92,9 @@ The justified repair is schema-specific normalization. Schema 1 preserves signed
 
 The output is an evidence packet: a decision, exact total or explicit uncertainty, affected row IDs, before/after contributions, source snapshots with hashes, and a next action. The workflow does not change the production application, close tickets or send customers messages.
 
-## Why documents and Jira change the action
+## Archived reporting regression scenarios
+
+The extra cases below are retained for automated regression coverage and the legacy offline presentation. They are not selectable or runnable through the live meeting site.
 
 | Case | Context that matters | Justified result |
 | --- | --- | --- |
@@ -71,7 +113,7 @@ This separates engineering work, customer explanation, product approval and data
 
 ## What is implemented, and what is measured
 
-The default path is a **working deterministic reconciliation workflow**, with read-only MCP tools and an optional agent interface. Source snapshots contain prose plus **hand-authored structured rules**. The engine selects those rules by customer/profile, schema, approval status and effective month; it does not extract arbitrary prose into reliable executable policy. Preparing and maintaining those adapters is real work.
+The guided and offline paths use a **working deterministic reconciliation workflow**, with read-only MCP tools and an optional agent interface. Their source snapshots contain prose plus **hand-authored structured rules**. The engine selects those rules by customer/profile, schema, approval status and effective month; it does not extract arbitrary prose into reliable executable policy. Preparing and maintaining those adapters is real work. Raw live mode receives only the application and optionally prose documents; it has no access to this engine or the structured rules.
 
 The recorded fixture checks are:
 
@@ -83,7 +125,7 @@ The recorded fixture checks are:
 
 The workflow also passes all ten case-level checks for decision, total, affected rows and required source IDs. These are ten hand-authored synthetic cases, not a representative test population. The two arithmetic controls are **not coding-assistant baselines**. Their missing citations are not evidence that an AI or analyst would fail.
 
-[Recorded results](recordings/controls.json), [regression results](recordings/regression.json), and [verification notes](docs/verification.md) preserve what was actually executed. New live Claude comparisons were **blocked by an unauthenticated client**; no new model execution, speedup or employee-productivity result is claimed. The [older controller results](../01-controller-capacity/policy-aware/docs/comparison-results.md) remain intact, including their limitations.
+[Recorded results](recordings/controls.json), [regression results](recordings/regression.json), and [verification notes](docs/verification.md) preserve what was actually executed. The original CLI comparison preflight was **blocked by an unauthenticated client**; that is a historical result, not a requirement that live mode remain blocked. A subsequent [actual two-run Codex comparison](docs/codex-comparison.md) found that business documents enabled a justified, tested patch, while repo-only correctly asked for clarification. The document run took longer: 95.2 seconds versus 50.5 seconds. No speedup or employee-productivity result is claimed. The [older controller results](../01-controller-capacity/policy-aware/docs/comparison-results.md) remain intact, including their limitations.
 
 ## Optional live agent comparison
 
@@ -114,12 +156,33 @@ uv run python demo.py benchmark --name rehearsal-plan --plan-only
 uv run python demo.py benchmark --name comparison-1 --repeats 1 --timeout 180 --budget 0.50
 ```
 
-Use a new name each time. Every condition receives every case; order rotates, evidence and runner hashes are frozen, and failures stay in the record. No automatic retries or selection of the fastest successful run. Outputs and private traces stay under ignored `artifacts/`. See the [evaluation protocol](docs/evaluation-protocol.md) before interpreting results. The adapter is tested locally; a real provider run remains unverified in this revision.
+Use a new name each time. Every condition receives every case; order rotates, evidence and runner hashes are frozen, and failures stay in the record. No automatic retries or selection of the fastest successful run. Outputs and private traces stay under ignored `artifacts/`. See the [evaluation protocol](docs/evaluation-protocol.md) before interpreting results. The live UI runs are individual investigations, not this full counterbalanced benchmark.
 
 ## Present it and discover the real workflow
 
-Use [the 10-minute meeting script](docs/meeting-guide.md). Lead with DH-301, then show DH-303 and DH-305 to establish that the workflow can explain or stop as well as recommend a fix. Keep the other cases available for questions.
+Use [the meeting script](docs/meeting-guide.md). Lead with DH-301, then choose the export or migration demo based on the audience’s workflow.
 
 The scope of demo 1 is **one monthly report discrepancy → a reviewable decision and next action**. Live enterprise connectors, automatic policy extraction, general root-cause diagnosis, autonomous deployment and a productivity estimate are outside the implemented scope.
 
 If their reporting rules are stable and code can already answer the question, ordinary software may be the best solution. If people repeatedly search business docs, Jira history and account configuration to decide what should happen, an assistant connected to those sources and reliable calculation tools is a reasonable pilot. The meeting should identify which situation applies.
+
+
+## Demo 2: Requirements become a reviewable implementation
+
+`portfolio/export/` contains a small working invoice exporter, two existing tests, a neutral request and five sample rows. Four source snapshots supply the approved Northstar settlement requirements, Finance rules, Jira scope and a later unapproved draft. The approved behavior uses America/New_York settlement dates, subtracts fees from paid amounts, does not refund processing fees, ignores unsettled records, validates included money/currency and preserves other customers’ invoice exports. September’s prepared CSV contains N-103 at -5000 cents and N-102 at 19400 cents: net $144.
+
+Both live modes can edit `app/exporter.py` and add test files in an isolated temporary workspace. Protected inputs are checked after the run; the resulting patch and generated files are saved under ignored `artifacts/live/<id>/`. The repository is never automatically patched. Twelve independent acceptance checks are supplied only after the model finishes, alongside the repository tests. A clarification-only response has no implementation to grade. A completed model run can still have failing checks.
+
+The prepared reference is not model-generated. It passes all 12 independent checks and both baseline tests; the original exporter passes its baseline tests but fails the new acceptance requirements. No new paid model runs were made to claim a docs-versus-repo outcome for this demo.
+
+## Demo 3: Change impact across code and business obligations
+
+`portfolio/migration/` contains a shared ATLAS decoder, three consuming jobs, two baseline tests and a retirement request. Six sources cover delivery scope, replay obligations, a customer agreement, dated operational usage and rollout/rollback requirements. The prepared recommendation defers shared v1 removal: Cedar still requires v1 and archived data needs replay support. A done daily-sales Jira ticket does not clear those dependencies; the October 1 usage snapshot must be refreshed.
+
+The worked example executes the actual repository checks twice: current support passes; a prepared removal of v1 fails the historical replay check. Its source-linked dependency matrix is author-prepared, not inferred from real production telemetry. Both live modes perform read-only assessments; no automated narrative correctness score is claimed.
+
+## Production integration versus local execution
+
+The architecture pages explain a proposed production flow: request and user scope → authorized Git/Jira/Confluence/operations retrieval → full evidence with versions and dates → explicit claims or requirements → independent checks → human approval. An optional permission-aware index helps discovery; it is not necessary to put the entire repository in a vector database.
+
+Locally, the two raw modes receive file snapshots. Only the reporting demo’s separately labeled guided mode uses the existing real local MCP server and prepared calculator. The new demos do not claim live Jira or Confluence connectivity. Source pages and prepared examples incur no model calls.

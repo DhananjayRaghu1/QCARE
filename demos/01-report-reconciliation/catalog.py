@@ -44,6 +44,9 @@ def get_case(case_id):
     case = cases().get(case_id)
     if case is None:
         return {"status": "not_found", "id": case_id}
+    case = deepcopy(case)
+    # Fixture titles are author notes that can disclose the diagnosis.
+    case.pop("title", None)
     ledger = contributions(case["rows"], case["month"], case["deployed_config"])
     code = (ROOT / "app/report.py").read_text()
     related = [doc["id"] for doc in documents().values() if doc["system"] == "jira" and

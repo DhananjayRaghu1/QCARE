@@ -1,0 +1,6 @@
+{
+  "id": "DH-501",
+  "request": "Assess whether ATLAS schema v1 support can be removed on 2026-10-15. Inspect the repository and available business evidence. Identify affected workflows and customers, unresolved dependencies, owners, verification steps and a safe rollout or deferral recommendation. Do not change files.",
+  "as_of": "2026-10-04",
+  "proposed_removal": "2026-10-15"
+}

@@ -1,5 +1,25 @@
 # Verification record — 4 October 2026
 
+## Three-demo site verification
+
+The meeting site now contains reporting investigation (DH-301 only), customer export implementation (DH-401), and migration impact assessment (DH-501). Each has a proposed production architecture page. The extra reporting tickets are removed from the live selection and run API; regression fixtures and historical evidence remain intact.
+
+**71 tests passed.** The added checks exercise equal repo inputs across conditions, exclusion of reference answers, route validation, source pages, temporary-workspace patch capture, protected-input deletion, unsafe/unrecorded generated files and actual subprocess execution. The prepared export passes **12 independent checks plus 2 baseline tests**; the unmodified exporter passes its baseline tests and fails the new requirements. The migration example executes the two baseline tests with current support (pass) and after a prepared v1 removal (replay fails).
+
+Browser verification covers all three demo pages, the prominent original ticket, one reporting selection only, source dialogs, both new worked examples, navigation and all three production architecture pages. No browser console errors were observed during those checks. The new implementation runner was exercised with explicit local subprocess stubs, not a paid model; no new model-quality comparison or efficiency claim is made for demos 2 and 3. Production connector behavior is documented as a proposed design, not tested infrastructure.
+
+## Previous live UI and review fixes
+
+The suite now passes **62 tests**. Regression coverage includes title removal from every guided condition and the actual MCP case response; simultaneous configuration and calculation defects; malformed amounts, dates and duplicate IDs; timeout/process-exit races; deleted comparison inputs; a real subprocess that closes stdout and takes more than five seconds to exit; and recovery from truncated trace lines. Source-route checks verify all ten original documents and hashes, explicit stop cases, and unknown-path rejection without launching a model.
+
+The earlier guided DH-301 smoke run took 14.304 seconds and passed authored fixture checks, but received a diagnosis-hinting scenario title. It cannot fairly be compared with the raw runs. New case inputs omit these titles. Restored historical guided results display a warning without rewriting their saved files. The two raw smoke runs (23.612 and 25.989 seconds) did not receive those titles; neither these individual runs nor the corrected runner establish productivity gains. No new paid model runs were made for this review correction.
+
+Browser verification covered all ten ticket walkthroughs: seven justified totals and three explicit stops, source/term navigation with Back, the complete original contract and metadata, search across all ten documents, and the historical comparison warning. The page explains ATLAS and the customer/application/AI relationship, links source references in answers and activity, and labels worked examples as prepared rule-engine output. No browser console errors were observed. JavaScript syntax and Git whitespace checks passed.
+
+## Earlier comparison and initial verification
+
+**Subsequent live comparison:** [two actual Codex investigations](codex-comparison.md) are recorded: repo-only 50.476 seconds, documents 95.180 seconds. The proposed document-backed patch passed 11 independent checks and 5 baseline tests. At that revision, the new-demo suite had 42 passing tests. The initial Claude block and initial 40-test results below remain a historical record; they do not imply the later Codex runs were blocked.
+
 ## Executed locally
 
 Environment: macOS, managed CPython 3.12.10, locked dependencies. An initial attempt with the machine's Anaconda 3.12.2 crashed while importing `readline` during pytest startup; the demo pins the managed interpreter used for the successful runs. No application workaround was introduced for that environment problem.

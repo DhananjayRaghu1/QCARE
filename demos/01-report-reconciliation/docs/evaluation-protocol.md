@@ -24,7 +24,7 @@ The runner rotates condition order across cases and repetitions, uses fresh clie
 
 Raw traces remain local and ignored. Summaries include every attempted duration, total attempted time, accepted counts, actual model IDs and an explicit null productivity estimate. “Completed” means the client returned valid output; acceptance is a separate field. “Accepted” means automated fixture checks passed; human approval is separate again.
 
-Before sharing a run, inspect its structured packet, source evidence and private trace. Preserve failed runs. Do not publish credentials or unrelated context from logs. The committed preflight and blocked-comparison records show zero actual model attempts for this revision.
+Before sharing a run, inspect its structured packet, source evidence and private trace. Preserve failed runs. Do not publish credentials or unrelated context from logs. The original preflight and blocked-comparison records show zero Claude attempts. A separate [actual Codex comparison](codex-comparison.md) now records two attempts for one case, repo-only versus prose documents; it does not replace the three-condition protocol above.
 
 ## A pilot that can test business value
 

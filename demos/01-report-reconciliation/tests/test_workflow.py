@@ -96,15 +96,42 @@ def test_conflicting_format_contract_stops():
 def test_amounts_require_exact_integer_cents(amount):
     case = cases()["DH-301"]
     case["rows"][0]["amount_cents"] = amount
-    with pytest.raises(ValueError, match="integer cents"):
-        reconcile_case(case, documents())
+    result = reconcile_case(case, documents())
+    assert result["decision"] == "invalid_source_data"
+    assert result["expected_total_cents"] is None
+    assert result["problem_rows"] == ["A-1"]
+    assert "integer cents" in result["messages"][0]
 
 
 def test_duplicate_ids_reject_ambiguous_lineage():
     case = cases()["DH-301"]
     case["rows"][1]["id"] = case["rows"][0]["id"]
-    with pytest.raises(ValueError, match="Duplicate"):
-        reconcile_case(case, documents())
+    result = reconcile_case(case, documents())
+    assert result["decision"] == "invalid_source_data"
+    assert result["expected_total_cents"] is None
+    assert "Duplicate" in result["messages"][0]
+
+
+@pytest.mark.parametrize("bad_date", ["2026-02-30", "not-a-date", None])
+def test_invalid_dates_return_a_reviewable_stop(bad_date):
+    case = cases()["DH-301"]
+    case["rows"][0]["posted_on"] = bad_date
+    result = reconcile_case(case, documents())
+    assert result["decision"] == "invalid_source_data"
+    assert result["reported_total_cents"] is None
+    assert result["expected_total_cents"] is None
+    assert result["problem_rows"] == ["A-1"]
+
+
+def test_wrong_configuration_cannot_hide_signed_return_defects():
+    case = cases()["DH-301"]
+    case["deployed_config"]["date_basis"] = "invoice_on"
+    result = reconcile_case(case, documents())
+    assert result["decision"] == "configuration_and_calculation_defect"
+    assert result["configuration_mismatch"]
+    assert result["calculation_problem_rows"] == ["A-2", "A-3"]
+    assert result["expected_total_cents"] == 125000
+    assert "settings alone" in result["next_action"]
 
 
 def test_prepared_reference_matches_independent_totals_and_problem_rows():

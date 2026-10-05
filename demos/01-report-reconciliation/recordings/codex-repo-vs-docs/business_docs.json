@@ -1,0 +1,60 @@
+{
+  "condition": "business_docs",
+  "status": "completed",
+  "errors": [],
+  "packet": {
+    "decision": "supported_fix",
+    "current_total_cents": 155000,
+    "justified_total_cents": 125000,
+    "diagnosis": "All five rows qualify under September's approved posted_on rule. The application negates every RETURN, producing contributions [100000, 20000, -5000, 50000, -10000]. ATLAS schema 1 requires preserving signed amounts, including positive return reversals; schema 2 requires subtracting return magnitudes. The justified contributions are [100000, -20000, 5000, 50000, -10000], totaling 125000 cents. The application therefore overstates sales by 30000 cents. The customer's 115000 cents matches forcing every return negative, which mishandles A-3's reversal; the actual spreadsheet formula is unavailable. No applicable documentation conflict prevents this conclusion.",
+    "next_action": "Reporting Engineering should apply the proposed per-row source-contract normalization and add the regression coverage below. Preserve September's deployed date and kind configuration. Explain the justified 125000-cent total and A-3 reversal in the reconciliation. All five existing tests passed; the proposed replacement passed those five plus ten additional tests in memory. No files were edited.",
+    "sources": [
+      "issue.json: NORTHSTAR, standard profile, September 2026; deployed configuration, five mixed-schema rows, and 115000-cent customer claim.",
+      "app/report.py: unconditionally negates RETURN amounts, without consulting feed or schema_version.",
+      "tests/test_existing.py: all five existing tests pass, but every fixture uses ATLAS schema 2.",
+      "README.md: inputs are validated source rows, amounts are integer USD cents, and baseline tests may not establish all requirements.",
+      "business-docs/FEED-ATLAS-1.md: approved schema 1 contract preserves SALE and RETURN signs; positive returns reverse previous returns.",
+      "business-docs/FEED-ATLAS-2.md: approved schema 2 contract uses nonnegative magnitudes; negative magnitudes are invalid and must not be repaired with abs().",
+      "business-docs/DH-188.md: schema versions coexist within monthly reports; rollout completion does not supersede schema 1 semantics; Reporting Engineering owns normalization defects.",
+      "business-docs/REPORT-STD-SEP.md: applicable September standard uses posted_on, includes SALE and RETURN, and excludes TRANSFER.",
+      "business-docs/REPORT-STD-OCT.md: invoice_on applies prospectively from October and does not change September.",
+      "business-docs/DH-204.md: NORTHSTAR transfer inclusion remains pending approval.",
+      "business-docs/REPORT-BLUEBIRD.md: invoice_on exception applies to BLUEBIRD, not NORTHSTAR.",
+      "business-docs/REPORT-CEDAR-A.md and business-docs/REPORT-CEDAR-B.md: conflicting addenda concern CEDAR and are inapplicable here.",
+      "business-docs/FEED-ATLAS-3-DRAFT.md: schema 3 has no approved contract."
+    ],
+    "open_questions": [],
+    "proposed_report_py": "\"\"\"Monthly reporting using approved source contracts for validated rows.\"\"\"\n\n\ndef contributions(rows, month, config):\n    result = []\n    for row in rows:\n        included = (row[config[\"date_basis\"]][:7] == month\n                    and row[\"kind\"] in config[\"included_kinds\"])\n        contribution = 0\n        if included:\n            amount = row[\"amount_cents\"]\n            contract = (row[\"feed\"], row[\"schema_version\"])\n            if contract == (\"ATLAS\", \"1\"):\n                contribution = amount\n            elif contract == (\"ATLAS\", \"2\"):\n                if amount < 0:\n                    raise ValueError(\"ATLAS schema 2 requires nonnegative amount_cents\")\n                contribution = -amount if row[\"kind\"] == \"RETURN\" else amount\n            else:\n                raise ValueError(f\"Unsupported source contract: {contract!r}\")\n        result.append({\"row_id\": row[\"id\"], \"included\": included,\n                       \"contribution_cents\": contribution})\n    return result\n\n\ndef total(rows, month, config):\n    return sum(row[\"contribution_cents\"] for row in contributions(rows, month, config))\n",
+    "regression_tests": [
+      "Issue fixture: assert all rows are included, contributions equal [100000, -20000, 5000, 50000, -10000], and total equals 125000.",
+      "Schema 1: preserve negative, zero, and positive SALE and RETURN amounts, explicitly covering positive return reversals.",
+      "Schema 2: add SALE magnitudes and subtract RETURN magnitudes, preserving exact integer cents.",
+      "Mixed schemas: identical positive RETURN amounts in versions 1 and 2 have opposite contributions regardless of row order.",
+      "Invalid schema 2 negative amounts: raise ValueError for included SALE and RETURN rows without silently repairing values. This prevents calculation; upstream quarantine is outside this module.",
+      "Unsupported contracts: reject included schema 3 or unknown-feed rows instead of inferring their sign conventions.",
+      "September selection: use posted_on when invoice_on differs; include September 1 and 30, exclude August 31 and October 1, and keep TRANSFER excluded for both schemas.",
+      "Preserve caller-selected invoice_on behavior, input immutability, empty totals, and all five existing tests."
+    ]
+  },
+  "elapsed_seconds": 95.18,
+  "exit_code": 0,
+  "working_directory": "<trial-workspace>",
+  "usage": [
+    {
+      "input_tokens": 86073,
+      "cached_input_tokens": 66560,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 5446,
+      "reasoning_output_tokens": 1645
+    }
+  ],
+  "trace_audit": {
+    "command_count": 6,
+    "outside_evidence_reads_observed": false,
+    "model_identity": "Requested gpt-6-astra from the user configuration; JSONL does not independently report a resolved backend model ID.",
+    "warnings": [
+      "CLI warned that skip_host_skill_discovery is under development.",
+      "Client stderr recorded an unspecified sandbox violation; every task command exited successfully."
+    ]
+  }
+}

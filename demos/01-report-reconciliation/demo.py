@@ -124,6 +124,8 @@ def main():
     regression.add_argument("--output", type=Path)
     present = sub.add_parser("present")
     present.add_argument("--output", type=Path, default=ROOT / "artifacts/presentation.html")
+    live = sub.add_parser("live", help="Serve the live model investigation UI on localhost")
+    live.add_argument("--port", type=int, default=8768)
     run = sub.add_parser("agent")
     run.add_argument("case_id", choices=sorted(cases()))
     run.add_argument("--context", choices=("provided", "retrieval", "workflow"), required=True)
@@ -152,6 +154,9 @@ def main():
             write_json(args.output, result)
         print(json.dumps({"summary": result["summary"], "interpretation": result["interpretation"]}, indent=2))
         return int(result["summary"]["policy_workflow"]["complete_cases"] != len(cases()))
+    elif args.command == "live":
+        from live_server import serve
+        serve(args.port)
     elif args.command == "present":
         from presentation import render
         args.output.parent.mkdir(parents=True, exist_ok=True)

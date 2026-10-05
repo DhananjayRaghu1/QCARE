@@ -1,0 +1,50 @@
+[
+  {
+    "id": "EXPORT-NS-1",
+    "title": "Northstar settlement export agreement",
+    "body": "Effective September 2026, NORTHSTAR receives settlements, not invoices. Select the reporting month by settled_at converted to America/New_York (including daylight saving), not invoice_at or UTC month. Include PAID and REFUNDED records only; ignore PENDING and VOID before reading settled_at. Export this customer only. All other customers keep their existing invoice export unchanged. CSV columns in order: invoice_id,settlement_date,net_cents. settlement_date is the local YYYY-MM-DD. Sort by settlement_date, then invoice_id. Use standard CSV quoting and newline-terminated rows. For reporting periods before 2026-09, retain the existing invoice export format for NORTHSTAR too.",
+    "system": "confluence",
+    "status": "approved",
+    "owner": "Reporting Product",
+    "effective_from": "2026-09-01",
+    "effective_to": null,
+    "version": "1",
+    "scope": "NORTHSTAR settlement export"
+  },
+  {
+    "id": "FIN-SETTLEMENT-2",
+    "title": "Settlement amounts and refunds",
+    "body": "For PAID rows, net_cents = gross_cents - fee_cents. For REFUNDED rows, net_cents = -gross_cents: processing fees are NOT returned. gross_cents and fee_cents must be nonnegative integer USD cents, not booleans or floats. Reject included non-USD rows rather than performing currency conversion. settled_at must include a UTC offset. Never silently guess missing settlement dates.",
+    "system": "confluence",
+    "status": "approved",
+    "owner": "Finance Operations",
+    "effective_from": "2026-09-01",
+    "effective_to": null,
+    "version": "1",
+    "scope": "NORTHSTAR settlement export"
+  },
+  {
+    "id": "DH-411",
+    "title": "Northstar export approval and delivery scope",
+    "body": "Approved implementation scope: EXPORT-NS-1 and FIN-SETTLEMENT-2. Implement in app/exporter.py using the existing interface; add tests. Keep BLUEBIRD and other customers on their existing invoice CSV. Delivery means a reviewed code change and test evidence, not sending a customer file or changing production. The proposal EXPORT-NS-2-DRAFT is not approved.",
+    "system": "jira",
+    "status": "done",
+    "owner": "Reporting Engineering",
+    "effective_from": "2026-09-01",
+    "effective_to": null,
+    "version": "1",
+    "scope": "NORTHSTAR settlement export"
+  },
+  {
+    "id": "EXPORT-NS-2-DRAFT",
+    "title": "Proposed UTC settlement export",
+    "body": "Proposal for a future export: use UTC month and refund processing fees. This is awaiting customer and Finance approval. Do not apply it to September or existing exports.",
+    "system": "confluence",
+    "status": "draft",
+    "owner": "Reporting Product",
+    "effective_from": "2026-11-01",
+    "effective_to": null,
+    "version": "2",
+    "scope": "NORTHSTAR settlement export"
+  }
+]
