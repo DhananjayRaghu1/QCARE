@@ -1,0 +1,38 @@
+{
+  "id": "2026-10-05_customer-export_rehearsal_opus-5-5",
+  "date": "2026-10-05",
+  "demo": "customer-export",
+  "demo_path": "demos/01-report-reconciliation",
+  "kind": "rehearsal",
+  "status": "completed",
+  "provenance": "live-model",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "conditions": [
+    "langgraph-workflow"
+  ],
+  "repo_commit": "71b25ec",
+  "command": "uv run python demo.py live, then Demo 2 > Run workflow",
+  "headline": "Two live LangGraph workflow runs on DH-401: both passed 12/12 hidden acceptance checks; the 'Use UTC' note was stopped before any code and settled by a developer decision; a developer send-back was re-checked and built. $1.20 and $1.94.",
+  "metrics": {
+    "runs": 2,
+    "hidden_checks_passed_runs": 2,
+    "utc_note_model_seconds": 210.0,
+    "utc_note_cost_usd": 1.2,
+    "send_back_model_seconds": 283.2,
+    "send_back_cost_usd": 1.94,
+    "quotes_verified": "19/19 and 20/20"
+  },
+  "cost_usd": 3.2,
+  "human_review": "pending",
+  "owner": "ishaan",
+  "tags": [
+    "opus-5-5",
+    "langgraph",
+    "meeting-fallback"
+  ],
+  "files": {
+    "record": "./results.json"
+  }
+}

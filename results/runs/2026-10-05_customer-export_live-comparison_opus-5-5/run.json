@@ -1,0 +1,47 @@
+{
+  "id": "2026-10-05_customer-export_live-comparison_opus-5-5",
+  "date": "2026-10-05",
+  "demo": "customer-export",
+  "demo_path": "demos/01-report-reconciliation",
+  "kind": "live-comparison",
+  "status": "completed",
+  "provenance": "live-model",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "conditions": [
+    "context-on",
+    "context-off"
+  ],
+  "repo_commit": "71b25ec",
+  "command": "uv run python demo.py live --sandbox-repo Ishaan1402/datahoney-export-sandbox, then Demo 2 > Business context On / Off",
+  "headline": "Same LangGraph workflow and model, business context on vs off: with context 12/12 hidden checks after one decision; without it the agent asked what the rules were, passed its own tests, scored 0/12, and the reviewer escalated instead of letting it merge.",
+  "metrics": {
+    "context_on_hidden_passed": 12,
+    "context_off_hidden_passed": 0,
+    "hidden_total": 12,
+    "context_on_model_seconds": 151.5,
+    "context_on_cost_usd": 0.75,
+    "context_off_model_seconds": 138.4,
+    "context_off_cost_usd": 0.6,
+    "attempts": 4
+  },
+  "cost_usd": 4.69,
+  "human_review": "pending",
+  "owner": "ishaan",
+  "tags": [
+    "opus-5-5",
+    "langgraph",
+    "control",
+    "meeting-fallback"
+  ],
+  "related": [
+    "2026-10-05_customer-export_rehearsal_opus-5-5",
+    "2026-10-05_customer-export_rehearsal_opus-5-5-2"
+  ],
+  "files": {
+    "record": "./results.json",
+    "recording_with_context": "demos/01-report-reconciliation/recordings/langgraph-export/2026-10-05-opus-5-5-with-context.json",
+    "recording_no_context": "demos/01-report-reconciliation/recordings/langgraph-export/2026-10-05-opus-5-5-no-context.json"
+  }
+}

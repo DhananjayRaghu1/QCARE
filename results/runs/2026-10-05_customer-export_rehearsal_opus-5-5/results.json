@@ -1,0 +1,291 @@
+{
+  "format_version": 1,
+  "note": "Sanitized from artifacts/live/workflows/<id>/result.json. Raw traces, prompts and temp paths stay in the demo's git-ignored artifacts.",
+  "smoke_check": {
+    "what": "One CLI capability check before the rehearsals: restricted tools + context MCP + JSON schema on claude-opus-5-5.",
+    "seconds": 5.3,
+    "cost_usd": 0.054
+  },
+  "runs": [
+    {
+      "run_id": "eaf902a39b304ac39e4ebbe8097eeb70",
+      "scenario": "no note, then a developer send-back",
+      "developer_note": "",
+      "status": "completed",
+      "outcome": "approved",
+      "wall_seconds_including_human": 342.151,
+      "model_seconds": 283.2,
+      "cost_usd": 1.9415,
+      "steps": [
+        {
+          "node": "analyze",
+          "round": 0,
+          "seconds": 59.58,
+          "cost_usd": 0.276073,
+          "lookups": 5,
+          "tool_calls": 4,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "implement",
+          "round": 0,
+          "seconds": 56.0,
+          "cost_usd": 0.3460206,
+          "lookups": 0,
+          "tool_calls": 4,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "review",
+          "round": 1,
+          "seconds": 21.74,
+          "cost_usd": 0.2553876,
+          "lookups": 0,
+          "tool_calls": 1,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "check_requirements",
+          "round": 1,
+          "seconds": 26.59,
+          "cost_usd": 0.225744,
+          "lookups": 0,
+          "tool_calls": 0,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "analyze",
+          "round": 1,
+          "seconds": 49.94,
+          "cost_usd": 0.2468524,
+          "lookups": 1,
+          "tool_calls": 0,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "implement",
+          "round": 1,
+          "seconds": 24.89,
+          "cost_usd": 0.1987476,
+          "lookups": 0,
+          "tool_calls": 4,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "review",
+          "round": 2,
+          "seconds": 18.37,
+          "cost_usd": 0.1895166,
+          "lookups": 0,
+          "tool_calls": 1,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "check_requirements",
+          "round": 2,
+          "seconds": 26.08,
+          "cost_usd": 0.2032008,
+          "lookups": 0,
+          "tool_calls": 0,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        }
+      ],
+      "developer_decisions": [],
+      "developer_instructions": [
+        "Close the reviewer's two test gaps: add a test that 2027-01 still uses the settlement export, and run the amount and currency rejection tests on REFUNDED rows too."
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "decision": "accept",
+          "tests": {
+            "passed": true,
+            "total": 18,
+            "failed": 0
+          },
+          "guard": [],
+          "finding_severities": [
+            "low",
+            "low"
+          ]
+        },
+        {
+          "round": 2,
+          "decision": "accept",
+          "tests": {
+            "passed": true,
+            "total": 19,
+            "failed": 0
+          },
+          "guard": [],
+          "finding_severities": []
+        }
+      ],
+      "requirements": 22,
+      "requirements_met": 22,
+      "citations": {
+        "verified": 20,
+        "checkable": 20,
+        "inferred": 2
+      },
+      "tests": {
+        "passed": true,
+        "total": 19,
+        "failed": 0,
+        "existing": 2,
+        "new": 17
+      },
+      "files_changed": [
+        "app/exporter.py",
+        "tests/test_settlement_export.py"
+      ],
+      "risks_flagged": [
+        "Currency and amount checks only run for PAID/REFUNDED rows whose New York month is the requested month. A row with a bad settled_at raises an error whatever its month, because its month can't be determined. This matches the spec, but reviewers should confirm it is the intended reading of 'included'.",
+        "zoneinfo depends on the system tz database. Deployment environments without one (for example Windows or slim containers) would need the tzdata package.",
+        "datetime.fromisoformat accepts the 'Z' suffix and some looser formats only on Python 3.11 and later. Check the runtime version before merging.",
+        "Invoice IDs are sorted as plain strings, so 'N-10' comes before 'N-2'. This matches AC10, but it may surprise people reading the file."
+      ],
+      "hidden_acceptance": {
+        "passed": true,
+        "hidden_passed": 12,
+        "hidden_total": 12,
+        "repository_passed": true
+      }
+    },
+    {
+      "run_id": "bcf880638393434782327a60a0fdfdb2",
+      "scenario": "'Use UTC to keep it simple' note",
+      "developer_note": "Use UTC to keep it simple",
+      "status": "completed",
+      "outcome": "approved",
+      "wall_seconds_including_human": 245.16,
+      "model_seconds": 210.0,
+      "cost_usd": 1.2005,
+      "steps": [
+        {
+          "node": "analyze",
+          "round": 0,
+          "seconds": 63.83,
+          "cost_usd": 0.24319560000000004,
+          "lookups": 5,
+          "tool_calls": 4,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "analyze",
+          "round": 0,
+          "seconds": 42.2,
+          "cost_usd": 0.22345200000000004,
+          "lookups": 0,
+          "tool_calls": 0,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "implement",
+          "round": 0,
+          "seconds": 56.04,
+          "cost_usd": 0.3008762,
+          "lookups": 0,
+          "tool_calls": 5,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "review",
+          "round": 1,
+          "seconds": 24.43,
+          "cost_usd": 0.220604,
+          "lookups": 0,
+          "tool_calls": 1,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        },
+        {
+          "node": "check_requirements",
+          "round": 1,
+          "seconds": 23.47,
+          "cost_usd": 0.21235679999999998,
+          "lookups": 0,
+          "tool_calls": 0,
+          "models": [
+            "claude-opus-5-5"
+          ]
+        }
+      ],
+      "developer_decisions": [
+        "Which timezone should decide NORTHSTAR's reporting month and settlement_date: the approved America/New_York (EXPORT-NS-1) or UTC (developer note)? \u2192 Follow EXPORT-NS-1: America/New_York with daylight saving"
+      ],
+      "developer_instructions": [],
+      "rounds": [
+        {
+          "round": 1,
+          "decision": "accept",
+          "tests": {
+            "passed": true,
+            "total": 22,
+            "failed": 0
+          },
+          "guard": [],
+          "finding_severities": [
+            "low",
+            "low"
+          ]
+        }
+      ],
+      "requirements": 21,
+      "requirements_met": 21,
+      "citations": {
+        "verified": 19,
+        "checkable": 19,
+        "inferred": 2
+      },
+      "tests": {
+        "passed": true,
+        "total": 22,
+        "failed": 0,
+        "existing": 2,
+        "new": 20
+      },
+      "files_changed": [
+        "app/exporter.py",
+        "tests/test_settlement_export.py"
+      ],
+      "risks_flagged": [
+        "F1 (low): no test pins the R21 rule that settled_at is validated on out-of-month rows, so moving the month filter ahead of validation would go unnoticed.",
+        "F2 (low): untested validation branches: amounts on REFUNDED rows, currency None or missing, and a PENDING row with the settled_at key absent.",
+        "zoneinfo depends on system tz data or the tzdata package. Confirm America/New_York is available in CI and deployment, especially on Windows or slim containers.",
+        "Path selection compares the month as a string and assumes a zero-padded 'YYYY-MM'. A malformed month is not validated.",
+        "Sorting by invoice_id is lexical (N-10 before N-9). This matches the spec wording, but Reporting Product may want to confirm it.",
+        "Because settled_at is validated on all of the customer's PAID/REFUNDED rows, one bad row from any month blocks every NORTHSTAR export from 2026-09 onward. That is intended under R16/R21, but operations should expect it."
+      ],
+      "hidden_acceptance": {
+        "passed": true,
+        "hidden_passed": 12,
+        "hidden_total": 12,
+        "repository_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,359 @@
+{
+  "format_version": 1,
+  "note": "Sanitized from artifacts/live/workflows/<id>/result.json. Every attempt is kept.",
+  "runs": [
+    {
+      "run_id": "1688c099879c4861aaae1d5a20725e4c",
+      "label": "context on, first attempt after the redesign",
+      "context": true,
+      "developer_note": "Use UTC to keep it simple. Open a draft PR when it\u2019s ready.",
+      "status": "completed",
+      "outcome": "approved",
+      "headline": {
+        "context": true,
+        "outcome": "approved",
+        "status": "completed",
+        "hidden_passed": 12,
+        "hidden_total": 12,
+        "tests_passed": 29,
+        "tests_total": 29,
+        "decisions": 1,
+        "assumptions": 3,
+        "requirements": 12,
+        "quotes_verified": 12,
+        "quotes_checkable": 12,
+        "rounds": 4,
+        "model_seconds": 435.2,
+        "cost_usd": 2.5704,
+        "pr": true
+      },
+      "decisions": [
+        "Should NORTHSTAR settlements be assigned to months using America/New_York local time, as approved in EXPORT-NS-1, or using UTC, as the developer note suggests? \u2192 Use America/New_York (DST-aware), as approved in EXPORT-NS-1"
+      ],
+      "developer_instructions": [
+        "Reporting Product confirms plain string order for invoice_id ties (N-10 before N-2). Correct R6's acceptance example and keep the string-order test."
+      ],
+      "rounds": [
+        {
+          "round": 1,
+          "decision": "revise",
+          "guard": [
+            "1 high or medium review finding: F1",
+            "requirements not confirmed as met: R6"
+          ]
+        },
+        {
+          "round": 2,
+          "decision": "revise",
+          "guard": [
+            "1 high or medium review finding: F1",
+            "requirements not confirmed as met: R6"
+          ]
+        },
+        {
+          "round": 3,
+          "decision": "revise",
+          "guard": [
+            "1 high or medium review finding: F1",
+            "requirements not confirmed as met: R6"
+          ]
+        },
+        {
+          "round": 4,
+          "decision": "accept",
+          "guard": []
+        }
+      ],
+      "steps": [
+        {
+          "node": "analyze",
+          "round": 0,
+          "seconds": 45.05,
+          "cost_usd": 0.2309604,
+          "blocked": 0
+        },
+        {
+          "node": "implement",
+          "round": 1,
+          "seconds": 73.45,
+          "cost_usd": 0.40192700000000003,
+          "blocked": 0
+        },
+        {
+          "node": "review",
+          "round": 1,
+          "seconds": 44.95,
+          "cost_usd": 0.2952782,
+          "blocked": 0
+        },
+        {
+          "node": "implement",
+          "round": 2,
+          "seconds": 36.8,
+          "cost_usd": 0.23309699999999997,
+          "blocked": 0
+        },
+        {
+          "node": "review",
+          "round": 2,
+          "seconds": 53.71,
+          "cost_usd": 0.28186279999999997,
+          "blocked": 1
+        },
+        {
+          "node": "implement",
+          "round": 3,
+          "seconds": 37.19,
+          "cost_usd": 0.24154,
+          "blocked": 0
+        },
+        {
+          "node": "review",
+          "round": 3,
+          "seconds": 58.08,
+          "cost_usd": 0.2975748,
+          "blocked": 1
+        },
+        {
+          "node": "analyze",
+          "round": 3,
+          "seconds": 11.09,
+          "cost_usd": 0.13770159999999998,
+          "blocked": 0
+        },
+        {
+          "node": "implement",
+          "round": 4,
+          "seconds": 32.53,
+          "cost_usd": 0.2098784,
+          "blocked": 0
+        },
+        {
+          "node": "review",
+          "round": 4,
+          "seconds": 42.35,
+          "cost_usd": 0.2406054,
+          "blocked": 1
+        }
+      ],
+      "pr": {
+        "isDraft": false,
+        "number": 2,
+        "state": "OPEN",
+        "title": "DH-401: NORTHSTAR settlement CSV export from 2026-09",
+        "url": "https://github.com/Ishaan1402/datahoney-export-sandbox/pull/2"
+      }
+    },
+    {
+      "run_id": "49c55ca2eccd4771b18a268aefdc1a92",
+      "label": "context on (recorded)",
+      "context": true,
+      "developer_note": "Use UTC to keep it simple. Open a draft PR when it\u2019s ready.",
+      "status": "completed",
+      "outcome": "approved",
+      "headline": {
+        "context": true,
+        "outcome": "approved",
+        "status": "completed",
+        "hidden_passed": 12,
+        "hidden_total": 12,
+        "tests_passed": 21,
+        "tests_total": 21,
+        "decisions": 1,
+        "assumptions": 7,
+        "requirements": 12,
+        "quotes_verified": 11,
+        "quotes_checkable": 11,
+        "rounds": 1,
+        "model_seconds": 151.5,
+        "cost_usd": 0.7503,
+        "pr": true
+      },
+      "decisions": [
+        "For the NORTHSTAR September 2026 settlement export, should the reporting month and settlement_date use America/New_York time (as approved in EXPORT-NS-1) or UTC (as the developer note suggests)? \u2192 America/New_York per EXPORT-NS-1"
+      ],
+      "developer_instructions": [],
+      "rounds": [
+        {
+          "round": 1,
+          "decision": "accept",
+          "guard": []
+        }
+      ],
+      "steps": [
+        {
+          "node": "analyze",
+          "round": 0,
+          "seconds": 56.55,
+          "cost_usd": 0.20780939999999998,
+          "blocked": 0
+        },
+        {
+          "node": "implement",
+          "round": 1,
+          "seconds": 56.83,
+          "cost_usd": 0.288142,
+          "blocked": 0
+        },
+        {
+          "node": "review",
+          "round": 1,
+          "seconds": 38.14,
+          "cost_usd": 0.2543636,
+          "blocked": 0
+        }
+      ],
+      "pr": {
+        "isDraft": false,
+        "number": 3,
+        "state": "OPEN",
+        "title": "DH-401: NORTHSTAR settlement export from 2026-09",
+        "url": "https://github.com/Ishaan1402/datahoney-export-sandbox/pull/3"
+      }
+    },
+    {
+      "run_id": "e33bad18a8e04b28a31d4207a8037503",
+      "label": "context off, driver approved by mistake",
+      "context": false,
+      "developer_note": "Use UTC to keep it simple. Open a draft PR when it\u2019s ready.",
+      "status": "completed",
+      "outcome": "approved",
+      "headline": {
+        "context": false,
+        "outcome": "approved",
+        "status": "completed",
+        "hidden_passed": 0,
+        "hidden_total": 12,
+        "tests_passed": 15,
+        "tests_total": 15,
+        "decisions": 4,
+        "assumptions": 6,
+        "requirements": 10,
+        "quotes_verified": 8,
+        "quotes_checkable": 8,
+        "rounds": 1,
+        "model_seconds": 152.8,
+        "cost_usd": 0.7698,
+        "pr": true
+      },
+      "decisions": [
+        "Which date decides the month a NORTHSTAR transaction belongs to? \u2192 Developer did not know; the engineer uses best judgment and records it as an assumption.",
+        "Which time zone defines the month boundaries for NORTHSTAR? \u2192 Developer did not know; the engineer uses best judgment and records it as an assumption.",
+        "Which transaction statuses go in the NORTHSTAR settlement export? \u2192 Developer did not know; the engineer uses best judgment and records it as an assumption.",
+        "What columns and amount should the NORTHSTAR settlement CSV contain? \u2192 Developer did not know; the engineer uses best judgment and records it as an assumption."
+      ],
+      "developer_instructions": [],
+      "rounds": [
+        {
+          "round": 1,
+          "decision": "revise",
+          "guard": [
+            "3 high or medium review findings: F1, F2, F3",
+            "requirements not confirmed as met: R4, R5, R6, R8"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "node": "analyze",
+          "round": 0,
+          "seconds": 50.32,
+          "cost_usd": 0.2022966,
+          "blocked": 0
+        },
+        {
+          "node": "implement",
+          "round": 1,
+          "seconds": 61.32,
+          "cost_usd": 0.32945060000000004,
+          "blocked": 0
+        },
+        {
+          "node": "review",
+          "round": 1,
+          "seconds": 41.16,
+          "cost_usd": 0.2380424,
+          "blocked": 0
+        }
+      ],
+      "pr": {
+        "isDraft": false,
+        "number": 4,
+        "state": "OPEN",
+        "title": "DH-401: NORTHSTAR monthly settlement CSV export",
+        "url": "https://github.com/Ishaan1402/datahoney-export-sandbox/pull/4"
+      }
+    },
+    {
+      "run_id": "74c4e60549614132be2e9a466e9ffa63",
+      "label": "context off (recorded), stopped at review",
+      "context": false,
+      "developer_note": "Use UTC to keep it simple. Open a draft PR when it\u2019s ready.",
+      "status": "cancelled",
+      "outcome": "needs_decision",
+      "headline": {
+        "context": false,
+        "outcome": "needs_decision",
+        "status": "cancelled",
+        "hidden_passed": 0,
+        "hidden_total": 12,
+        "tests_passed": 14,
+        "tests_total": 14,
+        "decisions": 2,
+        "assumptions": 7,
+        "requirements": 10,
+        "quotes_verified": 7,
+        "quotes_checkable": 9,
+        "rounds": 1,
+        "model_seconds": 138.4,
+        "cost_usd": 0.6039,
+        "pr": true
+      },
+      "decisions": [
+        "What are the approved NORTHSTAR settlement export rules: the columns and their order, the amount fields (gross, fee, net), and which statuses are included (PAID, REFUNDED, PENDING)? \u2192 Developer did not know; the engineer uses best judgment and records it as an assumption.",
+        "Which date puts a NORTHSTAR row in the export month, and in which timezone? \u2192 Developer did not know; the engineer uses best judgment and records it as an assumption."
+      ],
+      "developer_instructions": [],
+      "rounds": [
+        {
+          "round": 1,
+          "decision": "revise",
+          "guard": [
+            "3 high or medium review findings: F1, F2, F3",
+            "requirements not confirmed as met: R4, R7, R8, R9, R10"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "node": "analyze",
+          "round": 0,
+          "seconds": 42.9,
+          "cost_usd": 0.1416036,
+          "blocked": 0
+        },
+        {
+          "node": "implement",
+          "round": 1,
+          "seconds": 53.83,
+          "cost_usd": 0.26170740000000003,
+          "blocked": 0
+        },
+        {
+          "node": "review",
+          "round": 1,
+          "seconds": 41.64,
+          "cost_usd": 0.2006148,
+          "blocked": 0
+        }
+      ],
+      "pr": {
+        "isDraft": true,
+        "number": 5,
+        "state": "OPEN",
+        "title": "DH-401: NORTHSTAR monthly settlement CSV export",
+        "url": "https://github.com/Ishaan1402/datahoney-export-sandbox/pull/5"
+      }
+    }
+  ]
+}

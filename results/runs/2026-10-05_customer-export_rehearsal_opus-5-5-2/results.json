@@ -1,0 +1,120 @@
+{
+  "format_version": 1,
+  "note": "Sanitized from artifacts/live/workflows/<id>/result.json; raw traces stay in the demo's git-ignored artifacts.",
+  "run_id": "ccb6a0829110427497f8d00eb1a16255",
+  "developer_note": "Use UTC to keep it simple. Open a draft PR when it\u2019s ready.",
+  "status": "completed",
+  "outcome": "approved",
+  "wall_seconds_including_human": 261.599,
+  "model_seconds": 222.0,
+  "cost_usd": 1.3106,
+  "steps": [
+    {
+      "node": "analyze",
+      "round": 0,
+      "seconds": 58.87,
+      "cost_usd": 0.2809608,
+      "lookups": 6,
+      "tool_calls": 4,
+      "blocked": 0,
+      "models": [
+        "claude-opus-5-5"
+      ]
+    },
+    {
+      "node": "analyze",
+      "round": 0,
+      "seconds": 37.78,
+      "cost_usd": 0.20180140000000002,
+      "lookups": 0,
+      "tool_calls": 0,
+      "blocked": 0,
+      "models": [
+        "claude-opus-5-5"
+      ]
+    },
+    {
+      "node": "implement",
+      "round": 1,
+      "seconds": 73.68,
+      "cost_usd": 0.4196922,
+      "lookups": 0,
+      "tool_calls": 12,
+      "blocked": 1,
+      "models": [
+        "claude-opus-5-5"
+      ]
+    },
+    {
+      "node": "review",
+      "round": 1,
+      "seconds": 27.66,
+      "cost_usd": 0.2080036,
+      "lookups": 0,
+      "tool_calls": 1,
+      "blocked": 0,
+      "models": [
+        "claude-opus-5-5"
+      ]
+    },
+    {
+      "node": "check_requirements",
+      "round": 1,
+      "seconds": 24.01,
+      "cost_usd": 0.2001408,
+      "lookups": 0,
+      "tool_calls": 0,
+      "blocked": 0,
+      "models": [
+        "claude-opus-5-5"
+      ]
+    }
+  ],
+  "developer_decisions": [
+    "Should the NORTHSTAR settlement month and settlement_date use America/New_York (as approved EXPORT-NS-1 says) or UTC (as the developer note suggests)? \u2192 America/New_York per EXPORT-NS-1"
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "decision": "accept",
+      "tests": {
+        "passed": true,
+        "total": 20,
+        "failed": 0
+      },
+      "guard": []
+    }
+  ],
+  "citations": {
+    "verified": 19,
+    "checkable": 19,
+    "inferred": 1
+  },
+  "tests": {
+    "passed": true,
+    "total": 20,
+    "failed": 0,
+    "existing": 2,
+    "new": 18
+  },
+  "git": {
+    "repo": "Ishaan1402/datahoney-export-sandbox",
+    "branch": "dh-401/workflow-ccb6a082",
+    "base": "81051062a007e3e49d271b224f01eed5b7ecbadd",
+    "head": "774b7d1f416720f45227faf5a8f72a7a906a6d94",
+    "pr": {
+      "isDraft": false,
+      "number": 1,
+      "state": "OPEN",
+      "title": "DH-401: NORTHSTAR settlement export from 2026-09",
+      "url": "https://github.com/Ishaan1402/datahoney-export-sandbox/pull/1"
+    },
+    "pr_requested": true
+  },
+  "hidden_acceptance": {
+    "passed": true,
+    "hidden_passed": 12,
+    "hidden_total": 12,
+    "repository_passed": true
+  }
+}
