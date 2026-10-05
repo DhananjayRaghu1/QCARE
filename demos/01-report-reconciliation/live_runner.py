@@ -19,6 +19,7 @@ import uuid
 import agent
 from catalog import ROOT, digest
 from codex_compare import inputs
+from process_utils import signal_group
 
 MODES = {
     "raw_repo": "Raw · repo only",
@@ -49,10 +50,10 @@ def raw_command(model, budget):
 def stop_process(process):
     if process.poll() is None:
         try:
-            os.killpg(process.pid, signal.SIGTERM)
+            signal_group(process.pid, signal.SIGTERM)
             process.wait(timeout=2)
         except subprocess.TimeoutExpired:
-            os.killpg(process.pid, signal.SIGKILL)
+            signal_group(process.pid, signal.SIGKILL)
             process.wait(timeout=3)
         except ProcessLookupError:
             pass
@@ -161,12 +162,20 @@ class Run:
                     deadline = time.monotonic() + self.timeout
                     ended = False
                     with (destination / "trace.jsonl").open("w") as trace_file:
-                        while not ended:
+                        while not ended or process.poll() is None:
                             if self.cancel.is_set() or time.monotonic() >= deadline:
                                 result["status"] = "cancelled" if self.cancel.is_set() else "failed"
                                 result["errors"].append("Stopped by user." if self.cancel.is_set() else "Timed out. This attempt was saved; it was not retried.")
                                 stop_process(process)
                                 break
+                            if ended:
+                                # EOF is not process completion. Keep the original
+                                # run deadline and cancellation active during cleanup.
+                                try:
+                                    process.wait(timeout=0.15)
+                                except subprocess.TimeoutExpired:
+                                    pass
+                                continue
                             try:
                                 line = lines.get(timeout=0.15)
                             except queue.Empty:
@@ -183,7 +192,7 @@ class Run:
                                     self.consume(event)
                             except ValueError:
                                 pass
-                    process.wait(timeout=5)
+                    process.wait()
                     reader.join(timeout=2)
                 result["exit_code"] = process.returncode
                 events = []

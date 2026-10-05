@@ -20,6 +20,7 @@ from jsonschema import validate, ValidationError
 
 from catalog import ROOT, cases, documents, digest, get_case, snapshot_hashes
 from evaluation import PACKET_SCHEMA, score, expectations
+from process_utils import signal_group
 
 CONDITIONS = ("provided", "retrieval", "workflow")
 TASK = """Investigate the synthetic customer report below. Establish the applicable approved
@@ -27,6 +28,7 @@ customer reporting profile and source-schema meanings, accounting for effective 
 requests. Compare current behavior with the requirements, including individual rows even if
 the aggregate agrees. Distinguish a calculation defect, a configuration defect, expected
 behavior, missing approved evidence, conflicting policy, and invalid source data.
+If both configuration and calculation are defective, report configuration_and_calculation_defect.
 Do not guess requirements from current code, a positive sample, or a draft. If a prerequisite
 is missing/conflicting or input data is invalid, expected_total_cents must be null.
 problem_rows lists rows with incorrect current contributions, or invalid data rows; otherwise
@@ -162,7 +164,7 @@ def parse_trace(stdout, condition):
 
 def protocol_hash():
     return digest({name: (ROOT / name).read_text() for name in
-                   ("agent.py", "demo.py", "evaluation.py", "catalog.py", "reconcile.py", "mcp_server.py", "uv.lock")})
+                   ("agent.py", "demo.py", "evaluation.py", "catalog.py", "reconcile.py", "mcp_server.py", "process_utils.py", "uv.lock")})
 
 
 def run_agent(case_id, condition, *, timeout=180, budget=0.5, client=None):
@@ -201,11 +203,11 @@ def run_agent(case_id, condition, *, timeout=180, budget=0.5, client=None):
             stdout, stderr = process.communicate(text, timeout=timeout)
         except subprocess.TimeoutExpired:
             result["errors"].append("Model run timed out; included as a failed attempt, not retried.")
-            os.killpg(process.pid, signal.SIGTERM)
+            signal_group(process.pid, signal.SIGTERM)
             try:
                 stdout, stderr = process.communicate(timeout=3)
             except subprocess.TimeoutExpired:
-                os.killpg(process.pid, signal.SIGKILL)
+                signal_group(process.pid, signal.SIGKILL)
                 stdout, stderr = process.communicate()
         exit_code = process.returncode
     result["elapsed_seconds"] = round(time.monotonic() - started, 3)

@@ -17,30 +17,37 @@ def _active(doc, as_of):
             and (doc["effective_to"] is None or as_of < doc["effective_to"]))
 
 
+class InvalidSourceData(ValueError):
+    def __init__(self, message, rows=()):
+        super().__init__(message)
+        self.rows = list(rows)
+
+
 def _validate(case):
     if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", case["month"]):
-        raise ValueError("Invalid reporting month")
+        raise InvalidSourceData("Invalid reporting month")
     ids = set()
     for row in case["rows"]:
         if row["id"] in ids:
-            raise ValueError("Duplicate row ID; cannot produce unambiguous lineage")
+            raise InvalidSourceData("Duplicate row ID; cannot produce unambiguous lineage", [row["id"]])
         ids.add(row["id"])
         if type(row["amount_cents"]) is not int:
-            raise ValueError("amount_cents must be integer cents, not floats or booleans")
+            raise InvalidSourceData("amount_cents must be integer cents, not floats or booleans", [row["id"]])
         if row["kind"] not in {"SALE", "RETURN", "TRANSFER"}:
-            raise ValueError("Unrecognized record kind")
+            raise InvalidSourceData("Unrecognized record kind", [row["id"]])
         for field in ("invoice_on", "posted_on"):
-            if date.fromisoformat(row[field]).isoformat() != row[field]:
-                raise ValueError("Dates must use YYYY-MM-DD")
+            try:
+                valid = date.fromisoformat(row[field]).isoformat() == row[field]
+            except (ValueError, TypeError, KeyError):
+                valid = False
+            if not valid:
+                raise InvalidSourceData("Invalid date: " + field + " must use a real YYYY-MM-DD date", [row["id"]])
 
 
 def reconcile_case(case, docs):
     """Return a reproducible evidence packet, never modify the application or inputs."""
-    _validate(case)
-    as_of = case["month"] + "-01"
-    observed = contributions(case["rows"], case["month"], case["deployed_config"])
     report = {"case_id": case["id"], "provenance": "deterministic_workflow_execution",
-              "reported_total_cents": sum(row["contribution_cents"] for row in observed),
+              "reported_total_cents": None,
               "customer_claim_cents": case["customer_claim_cents"], "expected_total_cents": None,
               "decision": None, "problem_rows": [], "sources": [], "ledger": [], "messages": [],
               "source_snapshots": {}, "case_sha256": digest(case), "human_review": "pending"}
@@ -60,6 +67,15 @@ def reconcile_case(case, docs):
             "invalid_source_data": "Data Integrations must quarantine the invalid rows and obtain a corrected export.",
         }[decision]
         return report
+
+    try:
+        _validate(case)
+    except (ValueError, TypeError, KeyError) as error:
+        report["problem_rows"] = getattr(error, "rows", [])
+        return stop("invalid_source_data", str(error))
+    as_of = case["month"] + "-01"
+    observed = contributions(case["rows"], case["month"], case["deployed_config"])
+    report["reported_total_cents"] = sum(row["contribution_cents"] for row in observed)
 
     scoped = [doc for doc in docs.values() if doc["kind"] == "report_policy" and
               doc["scope"].get("profile") == case["report_profile"] and
@@ -127,8 +143,19 @@ def reconcile_case(case, docs):
     report["problem_rows"] = [row["row_id"] for row in report["ledger"] if row["difference_cents"] != 0]
     config_differs = (case["deployed_config"]["date_basis"] != rules["date_basis"] or
                       set(case["deployed_config"]["included_kinds"]) != set(rules["included_kinds"]))
-    report["decision"] = "configuration_defect" if config_differs else "calculation_defect" if report["problem_rows"] else "expected_behavior"
+    # Reapply the approved filters to isolate arithmetic errors from selection
+    # errors. A settings mismatch must not conceal a sign defect as well.
+    with_correct_settings = contributions(case["rows"], case["month"], rules)
+    arithmetic_rows = [row["row_id"] for row, actual in zip(report["ledger"], with_correct_settings, strict=True)
+                       if row["expected_cents"] != actual["contribution_cents"]]
+    report["configuration_mismatch"] = config_differs
+    report["calculation_problem_rows"] = arithmetic_rows
+    report["problem_rows"] = list(dict.fromkeys(report["problem_rows"] + arithmetic_rows))
+    report["decision"] = ("configuration_and_calculation_defect" if config_differs and arithmetic_rows else
+                          "configuration_defect" if config_differs else
+                          "calculation_defect" if arithmetic_rows else "expected_behavior")
     report["next_action"] = {
+        "configuration_and_calculation_defect": "Reporting Engineering must correct the report configuration and the schema-specific sign handling; fixing settings alone will leave incorrect row contributions.",
         "configuration_defect": "Reporting Engineering should update this report configuration to the applicable approved policy and rerun acceptance checks.",
         "calculation_defect": "Reporting Engineering should reproduce the row errors and implement schema-specific normalization; preserve signed reversals.",
         "expected_behavior": "Explain the applicable reporting definition and reconciliation to support; a customer discrepancy alone does not justify changing code.",

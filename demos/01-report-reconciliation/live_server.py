@@ -6,7 +6,7 @@ import secrets
 import threading
 from urllib.parse import urlparse, parse_qs
 
-from catalog import ROOT, cases, get_case
+from catalog import ROOT, cases, get_case, documents, get_document
 from live_runner import MODES, RAW_PROMPT, Run
 
 
@@ -24,21 +24,36 @@ class LiveServer(ThreadingHTTPServer):
             for path in sorted((ROOT / "artifacts/live").glob("*/result.json"), key=lambda p: p.stat().st_mtime)[-30:]:
                 try:
                     result = json.loads(path.read_text())
+                    if result.get("mode") == "workflow" and '"title":' in result.get("prompt", ""):
+                        result["comparability_warning"] = "Historical guided run: its input included a scenario title that disclosed the diagnosis. Do not use it as a fair raw-versus-guided comparison. New runs omit that title."
                     run = Run(result["case_id"], result["mode"])
                     run.id, run.result, run.status = result["id"], result, result["status"]
                     events = path.with_name("events.json")
+                    warnings = []
                     if events.exists():
-                        run.events = json.loads(events.read_text())
-                    else:
+                        try:
+                            saved_events = json.loads(events.read_text())
+                            if not isinstance(saved_events, list) or not all(isinstance(event, dict) for event in saved_events):
+                                raise ValueError("Invalid saved events")
+                            run.events = saved_events
+                        except (ValueError, OSError):
+                            warnings.append("Saved activity was incomplete; recovered available events from the trace.")
+                    if not events.exists() or warnings:
                         # Older live records predate the saved display-event stream.
                         trace = path.with_name("trace.jsonl")
                         if trace.exists():
                             for line in trace.read_text().splitlines():
-                                event = json.loads(line)
+                                try:
+                                    event = json.loads(line)
+                                except ValueError:
+                                    warnings.append("Skipped an incomplete trace line; the saved result is retained.")
+                                    continue
                                 if isinstance(event, dict):
                                     run.consume(event)
                             for event in run.events:
                                 event["seconds"] = None
+                    if warnings:
+                        result["restore_warnings"] = list(dict.fromkeys(warnings))
                     self.runs[run.id] = run
                 except (ValueError, KeyError, OSError):
                     continue
@@ -85,6 +100,21 @@ class Handler(BaseHTTPRequestHandler):
         url = urlparse(self.path)
         if url.path in ("/", "/live.html"):
             return self.respond(200, (ROOT / "live.html").read_text(), "text/html; charset=utf-8")
+        if url.path in ("/reader.js", "/reader.css"):
+            kind = "text/javascript" if url.path.endswith(".js") else "text/css"
+            return self.respond(200, (ROOT / url.path[1:]).read_text(), kind + "; charset=utf-8")
+        if url.path == "/api/documents":
+            return self.respond(200, {"documents": [get_document(key) for key in documents()]})
+        if url.path.startswith("/documents/"):
+            from source_pages import render_document
+            page = render_document(url.path.rsplit("/", 1)[-1])
+            if page:
+                return self.respond(200, page, "text/html; charset=utf-8")
+        if url.path.startswith("/api/walkthroughs/"):
+            case_id = url.path.rsplit("/", 1)[-1]
+            if case_id in cases():
+                from reconcile import reconcile
+                return self.respond(200, reconcile(case_id))
         if url.path == "/api/config":
             with self.server.lock:
                 runs = [{"id": run.id, "case_id": run.case_id, "mode": run.mode,

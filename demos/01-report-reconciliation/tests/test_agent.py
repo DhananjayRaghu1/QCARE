@@ -5,7 +5,7 @@ import pytest
 
 import agent
 import demo
-from catalog import cases, documents, get_document
+from catalog import cases, documents, get_document, get_case
 from evaluation import score
 
 
@@ -121,6 +121,33 @@ def test_missing_total_is_not_a_valid_abstention():
     packet = {"case_id": "DH-304", "decision": "insufficient_evidence", "problem_rows": [],
               "sources": ["REPORT-STD-SEP", "FEED-ATLAS-3-DRAFT"]}
     assert score(packet, "DH-304")["checks"]["total"] is False
+
+
+def test_no_mode_or_case_tool_receives_diagnostic_fixture_titles():
+    for case_id, case in cases().items():
+        assert "title" not in get_case(case_id)["case"]
+        for condition in agent.CONDITIONS:
+            assert case["title"] not in agent.prompt(case_id, condition)
+
+
+def test_timeout_race_keeps_attempt_when_process_exits_before_signal(monkeypatch, tmp_path):
+    class ExitedProcess:
+        pid, returncode = 123456, 0
+        def communicate(self, *args, **kwargs):
+            if args:
+                raise agent.subprocess.TimeoutExpired("stub", .01)
+            return "", ""
+    monkeypatch.setattr(agent, "ROOT", tmp_path)
+    monkeypatch.setattr(agent, "protocol_hash", lambda: "stub")
+    monkeypatch.setattr(agent.subprocess, "Popen", lambda *a, **k: ExitedProcess())
+    def missing(*args):
+        raise ProcessLookupError()
+    monkeypatch.setattr(agent.os, "killpg", missing)
+    result = agent.run_agent("DH-301", "workflow", client={"authenticated": True})
+    assert result["status"] == "failed"
+    assert result["agent_run"]
+    assert any("timed out" in error for error in result["errors"])
+    assert len(list(tmp_path.glob("artifacts/agent-*/result.json"))) == 1
 
 
 def test_actual_subprocess_timeout_is_preserved_as_failure(monkeypatch, tmp_path):

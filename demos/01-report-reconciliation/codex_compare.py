@@ -18,6 +18,7 @@ import time
 import tomllib
 
 from catalog import ROOT, cases, documents, digest, snapshot_hashes
+from process_utils import signal_group
 
 
 PROMPT = """Investigate the customer discrepancy in issue.json using the files in this working
@@ -177,11 +178,11 @@ def run(name, timeout=300):
                 stdout, stderr = process.communicate(PROMPT, timeout=timeout)
             except subprocess.TimeoutExpired:
                 result["errors"].append("Timed out; retained as a failed attempt, not retried")
-                os.killpg(process.pid, signal.SIGTERM)
+                signal_group(process.pid, signal.SIGTERM)
                 try:
                     stdout, stderr = process.communicate(timeout=5)
                 except subprocess.TimeoutExpired:
-                    os.killpg(process.pid, signal.SIGKILL)
+                    signal_group(process.pid, signal.SIGKILL)
                     stdout, stderr = process.communicate()
             result["elapsed_seconds"] = round(time.monotonic() - started, 3)
             result["exit_code"] = process.returncode
@@ -189,7 +190,11 @@ def run(name, timeout=300):
             for suffix, content in (("trace.jsonl", stdout), ("stderr.txt", stderr)):
                 (destination / f"{condition}.{suffix}").write_text(content)
             for relative, content in inputs(condition == "business_docs").items():
-                if (directory / relative).read_text() != content:
+                try:
+                    unchanged = (directory / relative).read_text() == content
+                except (OSError, UnicodeError):
+                    unchanged = False
+                if not unchanged:
                     result["errors"].append("Input changed: " + relative)
         if process.returncode:
             result["errors"].append("Client returned a nonzero exit code")

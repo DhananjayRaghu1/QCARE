@@ -94,6 +94,41 @@ def test_auth_failure_does_not_launch_model(monkeypatch, tmp_path):
     assert not run.result["agent_run"]
 
 
+def test_valid_answer_survives_slow_exit_after_stdout_closes(monkeypatch, tmp_path):
+    monkeypatch.setattr(live_runner, "ROOT", tmp_path)
+    monkeypatch.setattr(live_runner.agent, "preflight", lambda: {"authenticated": True})
+    final = json.dumps({"type": "result", "result": "Preserve this completed answer."})
+    script = f"import os,time; print({final!r},flush=True); os.close(1); time.sleep(5.2)"
+    monkeypatch.setattr(live_runner, "raw_command", lambda *args: [sys.executable, "-c", script])
+    run = Run("DH-301", "raw_repo", timeout=10)
+    run.execute()
+    assert run.status == "completed", run.result
+    assert run.result["answer"] == "Preserve this completed answer."
+
+
+@pytest.mark.parametrize("events_file", [None, "[truncated"])
+def test_truncated_trace_does_not_hide_saved_result(monkeypatch, tmp_path, events_file):
+    import live_server
+    monkeypatch.setattr(live_server, "ROOT", tmp_path)
+    path = tmp_path / "artifacts/live/saved"
+    path.mkdir(parents=True)
+    result = {"id": "saved", "case_id": "DH-301", "mode": "raw_repo", "status": "completed",
+              "elapsed_seconds": 2, "answer": "Saved answer"}
+    (path / "result.json").write_text(json.dumps(result))
+    (path / "trace.jsonl").write_text(json.dumps({"type": "system", "subtype": "init", "model": "stub"})+'\n{bad line\n'+json.dumps({"type": "assistant", "message": {"content": [{"type": "text", "text": "Answer"}]}})+'\n{"truncated":')
+    if events_file:
+        (path / "events.json").write_text(events_file)
+    server = LiveServer(0, restore=True)
+    try:
+        run = server.runs["saved"]
+        assert run.result["answer"] == "Saved answer"
+        assert run.status == "completed"
+        assert [event["kind"] for event in run.events] == ["session", "message"]
+        assert run.result["restore_warnings"]
+    finally:
+        server.server_close()
+
+
 def test_http_origin_token_validation_concurrency_and_stop():
     class WaitingRun(Run):
         def execute(self):
@@ -130,6 +165,57 @@ def test_http_origin_token_validation_concurrency_and_stop():
         with pytest.raises(HTTPError) as error:
             request("/artifacts/anything")
         assert error.value.code == 404
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_historical_title_hint_is_flagged_without_rewriting_saved_record(monkeypatch, tmp_path):
+    import live_server
+    monkeypatch.setattr(live_server, "ROOT", tmp_path)
+    path = tmp_path / "artifacts/live/old-guided/result.json"
+    path.parent.mkdir(parents=True)
+    original = json.dumps({"id": "old-guided", "case_id": "DH-308", "mode": "workflow",
+                           "status": "completed", "prompt": '{"title": "Negative magnitude is invalid source data"}'})
+    path.write_text(original)
+    server = LiveServer(0, restore=True)
+    try:
+        assert "disclosed the diagnosis" in server.runs["old-guided"].result["comparability_warning"]
+        assert path.read_text() == original
+    finally:
+        server.server_close()
+
+
+def test_source_links_and_worked_examples_serve_actual_fixtures_without_starting_runs():
+    from html import unescape
+    import re
+    from catalog import documents, digest
+
+    server = LiveServer(0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    base = f"http://127.0.0.1:{server.server_port}"
+    try:
+        with urlopen(base + "/api/documents") as response:
+            snapshots = json.load(response)["documents"]
+        assert len(snapshots) == len(documents()) == 10
+        for snapshot in snapshots:
+            doc = snapshot["document"]
+            assert doc == documents()[doc["id"]]
+            assert snapshot["sha256"] == digest(doc)
+            with urlopen(base + "/documents/" + doc["id"]) as response:
+                text = unescape(re.sub("<[^>]+>", "", response.read().decode()))
+            assert doc["body"] in text
+            assert doc["owner"] in text
+            assert snapshot["sha256"] in text
+        for case_id, expected in (("DH-301", 125000), ("DH-304", None), ("DH-305", None), ("DH-308", None)):
+            with urlopen(base + "/api/walkthroughs/" + case_id) as response:
+                assert json.load(response)["report"]["expected_total_cents"] == expected
+        for path in ("/documents/does-not-exist", "/documents/../../agent.py", "/api/walkthroughs/not-a-case"):
+            with pytest.raises(HTTPError) as error:
+                urlopen(base + path)
+            assert error.value.code == 404
+        assert not server.runs
     finally:
         server.shutdown()
         server.server_close()

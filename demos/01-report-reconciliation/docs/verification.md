@@ -1,6 +1,16 @@
 # Verification record — 4 October 2026
 
-**Subsequent live comparison:** [two actual Codex investigations](codex-comparison.md) are now recorded: repo-only 50.476 seconds, documents 95.180 seconds. The proposed document-backed patch passed 11 independent checks and 5 baseline tests. The complete new-demo suite now has 42 passing tests. The initial Claude block and initial 40-test results below remain a historical record; they do not imply the later Codex runs were blocked.
+## Current live UI and review fixes
+
+The suite now passes **62 tests**. Regression coverage includes title removal from every guided condition and the actual MCP case response; simultaneous configuration and calculation defects; malformed amounts, dates and duplicate IDs; timeout/process-exit races; deleted comparison inputs; a real subprocess that closes stdout and takes more than five seconds to exit; and recovery from truncated trace lines. Source-route checks verify all ten original documents and hashes, explicit stop cases, and unknown-path rejection without launching a model.
+
+The earlier guided DH-301 smoke run took 14.304 seconds and passed authored fixture checks, but received a diagnosis-hinting scenario title. It cannot fairly be compared with the raw runs. New case inputs omit these titles. Restored historical guided results display a warning without rewriting their saved files. The two raw smoke runs (23.612 and 25.989 seconds) did not receive those titles; neither these individual runs nor the corrected runner establish productivity gains. No new paid model runs were made for this review correction.
+
+Browser verification covered all ten ticket walkthroughs: seven justified totals and three explicit stops, source/term navigation with Back, the complete original contract and metadata, search across all ten documents, and the historical comparison warning. The page explains ATLAS and the customer/application/AI relationship, links source references in answers and activity, and labels worked examples as prepared rule-engine output. No browser console errors were observed. JavaScript syntax and Git whitespace checks passed.
+
+## Earlier comparison and initial verification
+
+**Subsequent live comparison:** [two actual Codex investigations](codex-comparison.md) are recorded: repo-only 50.476 seconds, documents 95.180 seconds. The proposed document-backed patch passed 11 independent checks and 5 baseline tests. At that revision, the new-demo suite had 42 passing tests. The initial Claude block and initial 40-test results below remain a historical record; they do not imply the later Codex runs were blocked.
 
 ## Executed locally
 

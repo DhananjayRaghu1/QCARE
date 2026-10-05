@@ -20,6 +20,9 @@ def test_real_stdio_transport_evidence_and_tool_boundary():
                 names = {tool.name for tool in listed.tools}
                 assert names == {"get_case", "get_document", "search_knowledge"} | ({"reconcile_report"} if with_calculator else set())
                 assert all(tool.annotations.readOnlyHint for tool in listed.tools)
+                case = await session.call_tool("get_case", {"case_id": "DH-308"})
+                assert "title" not in json.loads(case.content[0].text)["case"]
+                assert "Negative magnitude is invalid source data" not in case.content[0].text
                 result = await session.call_tool("get_document", {"document_id": "FEED-ATLAS-1"})
                 data = json.loads(result.content[0].text)
                 assert not result.isError
