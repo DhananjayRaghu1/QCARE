@@ -520,7 +520,7 @@ async function mountWorkflow(){
   $('#wfMaxRounds').textContent = wf.graph.max_rounds;
   renderGraphDetail(); renderInputs(); renderStrip(null); renderCompare();
   root.addEventListener('toggle', event => { if(event.target.matches?.('details[data-lazy]')) fillLazy(event.target); }, true);
-  const latest = (config.workflows || []).at(-1);
+  const latest = (config.workflows || []).filter(flow => !flow.case_id || flow.case_id === 'DH-401').at(-1);
   if(latest){ wf.run = latest.id; wf.status = latest.status; schedule(0); }
   window.addEventListener('wheel', () => { wf.follow = false; }, {passive:true});
   window.addEventListener('touchmove', () => { wf.follow = false; }, {passive:true});

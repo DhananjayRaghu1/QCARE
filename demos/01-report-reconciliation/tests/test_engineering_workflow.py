@@ -159,7 +159,8 @@ def test_graph_outline_matches_the_designed_loop():
             ("developer_review", "analyze"), ("developer_review", "finalize")} <= edges
     assert "check_requirements" not in outline["limits"]
     assert outline["ticket"]["links"] == [{"type": "relates to", "id": "DH-411"}]
-    assert len(outline["sources"]) == 21
+    assert len(outline["sources"]) == 23
+    assert {"DH-501", "OPS-USAGE-1004"} <= outline["sources"].keys()
 
 
 def test_happy_path_pauses_for_review_then_approves_without_applying(tmp_path):
@@ -391,7 +392,7 @@ def test_citation_check_requires_an_opened_record_and_exact_words():
 
 def test_connector_serves_provenance_without_calculator_rules():
     corpus = context_mcp.records()
-    assert len(corpus) == 21 and not any("rules" in record or "kind" in record for record in corpus.values())
+    assert len(corpus) == 23 and not any("rules" in record or "kind" in record for record in corpus.values())
     issue = context_mcp.get_record("DH-401", "jira")
     assert issue["document"]["links"][0]["id"] == "DH-411" and issue["sha256"] == digest(issue["document"])
     assert issue["document"]["body"] == json.loads((portfolio.BASE / "export/issue.json").read_text())["request"]

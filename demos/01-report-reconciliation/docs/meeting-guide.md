@@ -36,13 +36,20 @@ If a live run is slow or fails, replay **With context** instead, and say out lou
 
 Questions that land well: Where do your approved rules live today? Who would have caught the UTC shortcut, and when? What happens today when an engineer builds from the ticket alone?
 
-## Demo 3: Assess retirement risk (optional, 3–4 minutes)
+## Demo 3: Release-check DJ's cleanup (about 4 minutes)
 
-Show the three code consumers of the shared ATLAS decoder. Then read the completed daily-sales Jira ticket, the replay obligation and the Cedar agreement. The ticket only covers one path. Historical replay and partner deliveries remain dependencies. The operational usage snapshot is dated and must be refreshed.
+Credit **Dhananjay (DJ) Raghu**: this is his shared-code cleanup idea, expanded into a release check on a teammate's prepared PR. His original request, tests and worked example are preserved. It connects well to a team with customer-specific imports and reports: code shows the call paths; agreements and operations establish the promises those paths must keep. All customers, jobs, contracts and operational records here are synthetic.
 
-The prepared example runs the tests with current support and after removing v1: replay breaks. The dependency matrix supplies owners and gates; it does not claim to be a live production inventory.
+1. **The PR.** Open the prepared cleanup diff. It removes v1 support, changes the jobs to accept only v2 and deletes the replay regression. Its remaining CI is green. This is a local fixture, not a real sandbox PR.
+2. **The missed failure.** Show the before/after job replay. NORTHSTAR's September goes from **$1,250 to $400**, and CEDAR statements go from **$180 to $0**. “The job silently skips the old rows. There is no exception to alert us.” These totals come from executing the sample jobs, not from the model's arithmetic.
+3. **The evidence.** Leave **Business context: On**, then click **Run release check →**, or replay a saved actual run if one exists. One read-only Opus session maps live ingest, historical replay, Cedar delivery and rollback. Open an exact quote, its owner and observation date. Distinguish the old October 1 usage snapshot from the decision's current synthetic usage evidence.
+4. **The gate.** Point to the allow/block result for each dependent. A developer note asking to proceed cannot clear a contract or missing recovery proof. The October 15 proposal is not cleared. **December 30 is only a conditional lower bound**: the synthetic last archived v1 export is September 30, and its 90-day replay obligation covers December 29 inclusive. Cedar's separate delivery promise runs through November 30. The absolute date is unknown until migration, retention/conversion, backups, rollback and fresh usage are verified.
+5. **Your decision.** At **The gate is fixed; choose the next action**, choose **Defer full removal**, **Prepare a scoped canary** or **Request owner sign-off**. Click **Record decision and draft next actions →** and open **Download unsent drafts**. Show the PR review comment, sign-off requests and decision-record update. They are drafts; nothing is sent, no PR is created or commented on, and blocked gates stay blocked.
+6. **The control.** Run or replay **Business context: Off** with the same model, candidate and replay rows. It still sees the losses and blocks, but can only ask for missing evidence. It cannot source customer obligations, approval owners or a retirement date. The twelve hidden checks score the completed output separately from the gate. Read only the actual saved scores; do not use an expected score as a measured result.
 
-Ask how they discover cross-team dependencies, verify actual usage, obtain customer approval and test recovery before removal.
+The prepared worked example and offline `migration_demo.py verify` check are useful fallbacks, but label them as prepared software. A replay is a recording of a run; it is not a new model call. The [release-check guide](migration-release-check.md) records these boundaries.
+
+Ask how they discover which customers depend on shared code, confirm current usage, find approval owners and prove archived data and rollback will still work. The useful comparison is whether the extra context supplies a defensible next action, not whether it produces more blockers or takes less time.
 
 ## Open the relevant production architecture page
 

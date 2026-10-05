@@ -36,6 +36,11 @@ def records():
                           "scope": doc["scope"] if isinstance(doc["scope"], str) else scope_text(doc)}
               for doc in docs}
     corpus["DH-401"] = ticket()
+    issue = json.loads((portfolio.BASE / "migration/issue.json").read_text())
+    corpus["DH-501"] = {"id": "DH-501", "title": "Assess ATLAS schema v1 retirement", "system": "jira",
+        "status": "open", "owner": "Data Integrations", "body": issue["request"], "scope": "ATLAS v1 retirement",
+        "effective_from": None, "effective_to": None, "version": "1",
+        "links": [{"id": source, "type": "related evidence"} for source in portfolio.DEFINITIONS["migration"]["sources"]]}
     return corpus
 
 

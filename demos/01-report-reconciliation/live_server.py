@@ -8,29 +8,34 @@ from urllib.parse import urlparse, parse_qs
 
 from catalog import ROOT, cases, get_case, documents, get_document
 import engineering_workflow
+import migration_workflow
 from live_runner import MODES, RAW_PROMPT, Run
 import portfolio
-from workflow_runner import WorkflowRun
+from workflow_runner import WorkflowRun, MigrationRun
 
 RECORDINGS = ROOT / "recordings" / "langgraph-export"
+MIGRATION_RECORDINGS = ROOT / "recordings" / "langgraph-migration"
 
 
 class LiveServer(ThreadingHTTPServer):
     daemon_threads = True
 
     def __init__(self, port=8768, run_factory=Run, restore=False, workflow_factory=WorkflowRun,
-                 workflow_model=engineering_workflow.MODEL, sandbox_repo=None, run_model=None):
-        super().__init__(("127.0.0.1", port), Handler)
+                 workflow_model=engineering_workflow.MODEL, sandbox_repo=None, run_model=None,
+                 migration_factory=None):
         self.token = secrets.token_urlsafe(32)
         self.runs = {}
         self.workflows = {}
         self.lock = threading.Lock()
         self.run_factory = run_factory
         self.workflow_factory = workflow_factory
+        self.migration_factory = migration_factory or MigrationRun
         self.workflow_model = workflow_model
         self.sandbox_repo = sandbox_repo
         self.run_model = run_model
         self.workers = []
+        # HTTPServer closes itself if binding fails; initialize cleanup state first.
+        super().__init__(("127.0.0.1", port), Handler)
         if restore:
             for path in sorted((ROOT / "artifacts/live").glob("*/result.json"), key=lambda p: p.stat().st_mtime)[-30:]:
                 try:
@@ -136,12 +141,42 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(200, portfolio.reference_export())
         if url.path == "/api/examples/migration":
             return self.respond(200, portfolio.reference_migration())
-        if url.path in ("/portfolio.js", "/portfolio.css", "/workflow.js", "/workflow.css"):
+        if url.path in ("/portfolio.js", "/portfolio.css", "/workflow.js", "/workflow.css", "/migration.js", "/migration.css"):
             kind = "text/javascript" if url.path.endswith(".js") else "text/css"
             return self.respond(200, (ROOT / url.path[1:]).read_text(), kind + "; charset=utf-8")
         if url.path == "/api/workflows/graph":
             return self.respond(200, {**engineering_workflow.graph_outline(), "model": self.server.workflow_model,
                                       "sandbox_repo": self.server.sandbox_repo})
+        if url.path == "/api/migrations/graph":
+            return self.respond(200, {**migration_workflow.graph_outline(), "model": self.server.workflow_model})
+        if url.path == "/api/migrations/recordings":
+            items = []
+            for path in sorted(MIGRATION_RECORDINGS.glob("*.json")):
+                try:
+                    data = json.loads(path.read_text())
+                    items.append({"name": path.stem, **{key: data.get(key) for key in
+                                  ("recorded_at", "model", "developer_note", "status", "outcome", "elapsed_seconds", "spent_usd", "context", "headline", "agent_run", "label", "provenance")}})
+                except (ValueError, OSError):
+                    continue
+            return self.respond(200, {"recordings": items})
+        if url.path.startswith("/api/migrations/recordings/"):
+            name = url.path.rsplit("/", 1)[-1]
+            if name in {item.stem for item in MIGRATION_RECORDINGS.glob("*.json")}:
+                try:
+                    return self.respond(200, json.loads((MIGRATION_RECORDINGS / (name + ".json")).read_text()))
+                except (ValueError, OSError):
+                    return self.respond(404, {"error": "Recording is unavailable."})
+        if url.path.startswith("/api/migrations/"):
+            with self.server.lock:
+                flow = self.server.workflows.get(url.path.rsplit("/", 1)[-1])
+            if flow and flow.case_id == migration_workflow.CASE_ID:
+                try:
+                    after = int(parse_qs(url.query).get("after", ["0"])[0])
+                    if after < 0:
+                        raise ValueError()
+                except ValueError:
+                    return self.respond(400, {"error": "Invalid event cursor."})
+                return self.respond(200, flow.snapshot(after))
         if url.path == "/api/workflows/recordings":
             items = []
             for path in sorted(RECORDINGS.glob("*.json")):
@@ -157,7 +192,7 @@ class Handler(BaseHTTPRequestHandler):
         if url.path.startswith("/api/workflows/"):
             with self.server.lock:
                 flow = self.server.workflows.get(url.path.rsplit("/", 1)[-1])
-            if flow:
+            if flow and flow.case_id == engineering_workflow.CASE_ID:
                 try:
                     after = int(parse_qs(url.query).get("after", ["0"])[0])
                     if after < 0:
@@ -184,7 +219,9 @@ class Handler(BaseHTTPRequestHandler):
             with self.server.lock:
                 runs = [{"id": run.id, "case_id": run.case_id, "mode": run.mode,
                          "status": run.status} for run in self.server.runs.values()]
-                workflows = [{"id": flow.id, "status": flow.status, "context": getattr(flow, "context", True)} for flow in self.server.workflows.values()]
+                workflows = [{"id": flow.id, "status": flow.status, "context": getattr(flow, "context", True),
+                              **({"case_id": flow.case_id} if getattr(flow, "case_id", None) == migration_workflow.CASE_ID else {})}
+                             for flow in self.server.workflows.values()]
             return self.respond(200, {"token": self.server.token, "modes": MODES,
                 "prompt": RAW_PROMPT, "cases": [{"id": item["id"], "customer": item["customer"],
                     "month": item["month"]} for item in cases().values() if item["id"] == "DH-301"],
@@ -268,10 +305,48 @@ class Handler(BaseHTTPRequestHandler):
                 self.server.workflows[flow.id] = flow
             flow.start()
             return self.respond(202, {"id": flow.id})
+        if self.path == "/api/migrations":
+            note, context = body.get("developer_note", ""), body.get("business_context", True)
+            if (body.get("case_id") != migration_workflow.CASE_ID or not isinstance(note, str) or len(note) > 2000
+                    or not isinstance(context, bool)):
+                return self.respond(400, {"error": "Choose DH-501 and a developer note of at most 2000 characters."})
+            with self.server.lock:
+                active = self.server.busy()
+                if active:
+                    return self.respond(409, {"error": "A model session is already running. Stop it or wait for it to finish.", "id": active.id})
+                waiting = next((flow for flow in self.server.workflows.values() if flow.status == "waiting_for_developer"), None)
+                if waiting:
+                    return self.respond(409, {"error": "Another workflow is waiting for a developer decision. Answer it or stop it first.", "id": waiting.id})
+                flow = self.server.migration_factory(note, model=self.server.workflow_model, context=context)
+                self.server.workflows[flow.id] = flow
+            flow.start()
+            return self.respond(202, {"id": flow.id})
+        if self.path.startswith("/api/migrations/") and self.path.endswith(("/respond", "/cancel")):
+            with self.server.lock:
+                flow = self.server.workflows.get(self.path.split("/")[-2])
+            if not flow or flow.case_id != migration_workflow.CASE_ID:
+                return self.respond(404, {"error": "Not found."})
+            if self.path.endswith("/cancel"):
+                flow.stop()
+                return self.respond(200, {"status": "stop_requested"})
+            interrupt_id, action, choice, message = (body.get(key) for key in ("interrupt_id", "action", "choice", "message"))
+            if (not isinstance(interrupt_id, str) or action != "decide"
+                    or choice not in ("defer", "scoped_canary", "request_signoff")
+                    or not isinstance(message if message is not None else "", str) or len(message or "") > 2000):
+                return self.respond(400, {"error": "Send an interrupt ID, action decide, a known choice, and a message of at most 2000 characters."})
+            with self.server.lock:
+                active = self.server.busy()
+                if active:
+                    return self.respond(409, {"error": "A model session is already running. Wait for it to finish.", "id": active.id})
+                try:
+                    flow.respond(interrupt_id, {"action": action, "choice": choice, "message": message or ""})
+                except ValueError as error:
+                    return self.respond(409, {"error": str(error)})
+            return self.respond(202, {"status": "resumed"})
         if self.path.startswith("/api/workflows/") and self.path.endswith(("/respond", "/cancel")):
             with self.server.lock:
                 flow = self.server.workflows.get(self.path.split("/")[-2])
-            if not flow:
+            if not flow or flow.case_id != engineering_workflow.CASE_ID:
                 return self.respond(404, {"error": "Not found."})
             if self.path.endswith("/cancel"):
                 flow.stop()

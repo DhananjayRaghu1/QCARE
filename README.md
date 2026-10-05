@@ -8,7 +8,7 @@ Local, synthetic demos for discovering where code, business documents, Jira hist
 | --- | --- | --- |
 | [Investigate a report](http://127.0.0.1:8768/demos/report) | The code and customer disagree; contracts establish the intended interpretation | Justified diagnosis and next action |
 | [Build a customer export](http://127.0.0.1:8768/demos/export) | A short request omits timezone, fee, refund and compatibility rules | A live LangGraph workflow: verified requirements, a pause for the developer's decision, a reviewed patch and independent acceptance results |
-| [Assess a format migration](http://127.0.0.1:8768/demos/migration) | Code callers alone do not reveal customer contracts, recovery obligations or current usage | Dependency matrix, owners and rollout gates |
+| [Check a cleanup before release](http://127.0.0.1:8768/demos/migration) | A green cleanup PR silently drops old-format rows; code cannot establish the customer and recovery promises it must preserve | Synthetic job replays, sourced dependencies, per-dependent release gates and drafts for the developer's decision |
 
 ```sh
 cd demos/01-report-reconciliation
@@ -18,7 +18,9 @@ uv run python demo.py live
 
 Open [the demo hub](http://127.0.0.1:8768/). Each demo has an original request, source documents, working sample code, an optional prepared example, live comparison controls and a production workflow/architecture page. The meeting UI keeps only DH-301 from the original ticket set; the other reporting cases remain regression fixtures.
 
-The raw modes use the same prompt and repository; Docs + Jira adds prose source snapshots. The feature demo captures edits in a temporary workspace and checks the resulting implementation after the model finishes. Other investigations are read-only. The reporting demo also retains its separately labeled guided MCP/calculator mode. Live calls use the existing Claude Code login; clicking prepared examples does not call a model.
+The reporting raw modes use the same prompt and repository; Docs + Jira adds prose source snapshots. The feature demo captures edits in a temporary workspace and checks the resulting implementation after the model finishes. Demo 3 uses the same release-check workflow with business context on or off: its model session is read-only, while code runs synthetic job replays, applies release gates and prepares local review/sign-off/decision-record drafts. The reporting demo also retains its separately labeled guided MCP/calculator mode. Live calls use the existing Claude Code login; clicking prepared examples does not call a model.
+
+Demo 3 builds on **Dhananjay (DJ) Raghu's shared-decoder cleanup idea**. His original request, worked example and seed tests remain available. The release check adds a prepared candidate patch whose narrowed job filters silently omit v1 rows and whose deleted replay test makes its remaining CI green. See the [release-check guide](demos/01-report-reconciliation/docs/migration-release-check.md) for the comparison, evidence boundaries and conditional retirement date. No sandbox PR is created or commented on by this workflow; drafts stay local.
 
 Architecture pages describe a **proposed production design**, including authorized retrieval from Git, Jira and Confluence, combining evidence by scope and version, independent verification, and human approval. Those enterprise connectors are not deployed in this prototype.
 
