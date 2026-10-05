@@ -1,0 +1,15 @@
+{
+  "id": "DH-401",
+  "issue_type": "Story",
+  "title": "NORTHSTAR monthly settlement CSV export",
+  "status": "ready_for_development",
+  "owner": "Reporting Engineering",
+  "reporter": "Reporting Product",
+  "created": "2026-10-01",
+  "links": [
+    {"type": "relates to", "id": "DH-411"}
+  ],
+  "attachments": [
+    {"name": "sample.json", "description": "September 2026 sample transactions (synthetic)"}
+  ]
+}

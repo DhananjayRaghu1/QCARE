@@ -5,7 +5,7 @@ The [site home](http://127.0.0.1:8768/) contains three separate workflows. Each 
 | Demo | Result | Workflow and architecture |
 | --- | --- | --- |
 | [Investigate a report](http://127.0.0.1:8768/demos/report) | DH-301 only: justify $1,250 rather than either starting total | [Production design](http://127.0.0.1:8768/architecture/report) |
-| [Implement a customer export](http://127.0.0.1:8768/demos/export) | Patch, CSV behavior and independent acceptance checks | [Production design](http://127.0.0.1:8768/architecture/export) |
+| [Implement a customer export](http://127.0.0.1:8768/demos/export) | LangGraph workflow (ticket → context → conflicts → build → review → check ↺ → developer), patch and independent acceptance checks | [Production design](http://127.0.0.1:8768/architecture/export) |
 | [Assess a migration](http://127.0.0.1:8768/demos/migration) | Dependencies, customer obligations, owners and release gates | [Production design](http://127.0.0.1:8768/architecture/migration) |
 
 The live ticket selector has been removed; DH-302 through DH-310 remain developer regression fixtures only. Their historical records are preserved. Production pages describe real-system retrieval, permission boundaries, evidence combination, verification and human review; they do not claim those connectors are deployed.
@@ -174,6 +174,31 @@ If their reporting rules are stable and code can already answer the question, or
 Both live modes can edit `app/exporter.py` and add test files in an isolated temporary workspace. Protected inputs are checked after the run; the resulting patch and generated files are saved under ignored `artifacts/live/<id>/`. The repository is never automatically patched. Twelve independent acceptance checks are supplied only after the model finishes, alongside the repository tests. A clarification-only response has no implementation to grade. A completed model run can still have failing checks.
 
 The prepared reference is not model-generated. It passes all 12 independent checks and both baseline tests; the original exporter passes its baseline tests but fails the new acceptance requirements. No new paid model runs were made to claim a docs-versus-repo outcome for this demo.
+
+### The engineering workflow (LangGraph)
+
+The Demo 2 page leads with a live workflow that takes DH-401 from ticket to a reviewed pull request, with a person in the loop. A **Business context: On / Off** switch runs the same workflow as its own control. The older single-session Repo-only/Docs comparison stays in the code but is no longer shown on the page.
+
+```text
+intake → analyze ─┬─ blocking conflict ─→ ask_developer ─┬─ recommended or "I don't know" ─→ implement
+                  │                                     └─ other option or a note ─→ analyze (short re-check)
+                  └─ ready ─→ implement → review → check_requirements ─┬─ revise (≤ 3 rounds) ─→ implement
+                                                                        ├─ needs the rule owner ─→ developer_review
+                                                                        └─ accept, or round limit ─→ developer_review
+developer_review ─┬─ approve ─→ finalize (draft PR marked ready)
+                  └─ instructions ─→ analyze (short re-check) ─→ implement
+```
+
+- **One fresh Claude Code session per model step** (`claude_session.py`): analyze, implement and review. Each uses your login, `claude-opus-5-5` by default (`demo.py live --workflow-model` overrides it), only the tools its role needs, a JSON schema for its output, a per-step budget and timeout, and an $8 cap for the whole workflow. The flags are the raw modes' restricted flags, minus `--safe-mode`, which would also disable MCP.
+- **Context on vs off.** With context on, code follows the ticket's link to DH-411, and the analyst, engineer and reviewer get read-only Jira/Confluence tools. With it off (the control), they see only the ticket text, the developer's note and the repository. Everything else is identical: model, loop, review, rules, git and grading. The comparison card at the top of the results shows the latest run of each.
+- **Retrieval** (`context_mcp.py`). Read-only MCP tools (`jira_search`, `jira_get_issue`, `confluence_search`, `confluence_get_page`) over all 21 synthetic records from the three demos, so the analyst must filter by scope, status and dates. Results carry owner, status, scope, effective dates, version, SHA256 and retrieval time. Demo 1's hand-authored calculator rules are stripped. No vector index; at this size, search then fetch is enough.
+- **Requirements.** About 8–12 grouped requirements, each with a word-for-word quote and an acceptance test that follows only from those words. The workflow verifies every quote against a record whose hash shows it was actually opened.
+- **Decisions.** The workflow pauses before coding when a conflict needs a person. Choosing the recommended option, or "I don't know; use your best judgment" (recorded as an assumption), is applied in code with no extra model call. Another option, a note, or a send-back after review gets a short delta re-check that returns only what changed. Overriding an approved rule is recorded as needing the owner's sign-off. After two answers it stops asking and builds on recorded assumptions.
+- **The acceptance gate is code, not a model** (`guard_reasons`). The independent reviewer judges every requirement as met, unmet or unclear, with evidence. The gate accepts only when the tests the workflow ran pass, every requirement is met, there is no high or medium finding, the tested commit is pushed, nothing is uncommitted, `main` is unchanged, and a PR exists only if one was asked for and is still a draft. If the reviewer marks a finding as one only the rule owner can settle, the gate escalates it to you instead of looping the engineer.
+- **The answer key never enters the loop.** The 12 hidden acceptance checks run only for a separately labeled "Demo grading" panel and the comparison card. No prompt or routing decision sees them.
+- **Branches and pull requests.** The engineer works in a clone of a sandbox repository on its own branch (`dh-401/workflow-<id>`, or `dh-401/control-<id>`). It commits, pushes, and opens a **draft** PR only when the ticket, a linked record or the developer note asks for one. Its shell is an allow-list (python3, ls, read-only git, `git add/commit/push`, and `gh pr create/view/list` only when a PR was requested); anything else is refused and shown on the page as a blocked action. The reviewer gets a copy with no remote. Approving marks the draft PR ready for review. Nothing is ever merged.
+- **Sandbox setup.** By default the workflow pushes to a local bare repository under `artifacts/sandbox/`. To push real branches and PRs, create a private GitHub sandbox once with `uv run python demo.py sandbox-init --repo <you>/datahoney-export-sandbox` (needs `gh auth login`), then start with `uv run python demo.py live --sandbox-repo <you>/datahoney-export-sandbox`. Each clone authenticates through your `gh` login with a repository-local credential helper; global git settings are unchanged.
+- **Records and replays.** `artifacts/live/workflows/<id>/` keeps events, the result, and each step's prompt, trace, stderr and output, plus `final.patch`. To save a run for the page's replay picker, use `uv run python demo.py record-workflow <id>`; it accepts a completed run or one stopped at the final review. The committed recordings are one run with context and one without, both on Opus 5.5.
 
 ## Demo 3: Change impact across code and business obligations
 

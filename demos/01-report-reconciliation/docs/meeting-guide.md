@@ -10,19 +10,31 @@ The records and customers are synthetic. Prepared examples are authored referenc
 
 ## Demo 1: Investigate the wrong report (3–4 minutes)
 
-Open the original DH-301 request prominently shown on the reporting page. The app says $1,550; the customer says $1,150. Open the two ATLAS format contracts and inspect the negative return and positive return reversal. The approved total is $1,250. A plausible fix that matches the spreadsheet is still wrong.
+Start the server with `uv run python demo.py live --sandbox-repo Ishaan1402/datahoney-export-sandbox`. Single-session runs use Opus 5.5 (`--model`), and the last saved Repo-only and Docs + Jira runs reload, so results are on the page before you click anything.
 
-Use the raw repo and raw docs modes to discuss what each can justify. A repo-only clarification can be the right answer. Historical guided runs with diagnosis hints are flagged and must not be used as fair comparisons. The optional worked example is deterministic, prepared software.
+1. **The ticket.** The app says $1,550; the customer says $1,150. "Who is right?"
+2. **Repo only.** Open the saved Repo-only result. It finds the double-negated return on A-2 and explains the $400 gap. Then it suggests the obvious fix, subtracting the absolute value, which reproduces the customer's $1,150. "Plausible, fast, and wrong."
+3. **Docs + Jira.** Open the saved Docs + Jira result. Both numbers are wrong; the approved answer is **$1,250**. Under the ATLAS v1 contract, a positive return (A-3) reverses an earlier refund. Open FEED-ATLAS-1 from the evidence cards to show the sentence.
+4. **Optional.** The worked example shows the same $1,250 row by row. It is prepared software, not a model run. Run either mode live if there is time; each takes about 20 seconds.
 
 Ask which systems hold their equivalent requirements, who confirms the correct rule, and where work is handed between teams.
 
-## Demo 2: Build the correct export (3–4 minutes)
+## Demo 2: Build the right feature with the engineering workflow (about 5 minutes)
 
-Start with the original feature request. Explain invoices versus settled payments, then open the approved customer agreement and Finance rule. A UTC October 1 settlement can belong to September in New York; refunds do not return processing fees; existing customers keep their old exports. A later draft must not silently override the approved scope.
+The workflow section at the top of the Demo 2 page runs the whole ticket-to-PR loop with real Claude sessions. With a mixed audience, narrate each step in one plain sentence, and open the details only when the engineer asks.
 
-Show the prepared September CSV, implementation patch and 12 independent acceptance checks plus two baseline tests. Clearly label this as the prepared reference. A live implementation run may produce its own patch and post-run checks in a temporary workspace. It does not modify the repository or deploy anything. Compare the outcome, missing questions, requirements coverage and review effort, not only elapsed time.
+1. **The ticket.** "One paragraph. It looks like a ten-minute change." Point out the link to DH-411 and the attached sample.
+2. **Start it.** Leave **Business context: On**. Click the chips **Use UTC to keep it simple.** and **Open a draft PR when it’s ready.**, then **Run workflow**. "A busy developer's shortcut, plus an ordinary request for a PR."
+3. **Gather context (about 45 s).** Lookups appear as they happen: Jira, then the Confluence agreement, the Finance rule and the draft. "It reads the full record before relying on it, and the workflow checks every quote word-for-word."
+4. **The pause.** The workflow stops *before any code is written*. The note conflicts with the approved agreement, whose rule owner is Reporting Product. Send the recommended option; it applies at once.
+5. **Build, review, check (about 1.5 minutes).** The engineer writes the code and tests on its own branch, commits, pushes and opens a draft PR. If it tries a command outside its allow-list, the page shows the block. A separate reviewer that cannot edit the code judges every requirement. Then **rules in code, not a model,** decide whether it's done. Read the "Next" line aloud; it says why.
+6. **The summary.** Business: the plain-English paragraph. Engineer: the requirement → source → code → status table, the branch and PR links, and the risks.
+7. **Approve.** The draft PR is marked ready for review. Open it on GitHub. "Nothing was merged or deployed; your normal review takes it from here."
+8. **The control (the punchline).** Point to the comparison card: same workflow, same model, business context off. Without the documents, it had to ask what the rules even were. Its own tests still passed, but it scored **0 of 12** on the hidden checks, and the reviewer escalated "don't merge until Reporting Product answers" instead of letting it through. With context: **12 of 12**. To show it, pick **Without context** in the replay picker and replay it (about 30 s, pausing at both decisions).
 
-Ask how requirements become acceptance tests today, which omissions cause rework, and who approves compatibility changes.
+If a live run is slow or fails, replay **With context** instead, and say out loud that it is a replay of a real run.
+
+Questions that land well: Where do your approved rules live today? Who would have caught the UTC shortcut, and when? What happens today when an engineer builds from the ticket alone?
 
 ## Demo 3: Assess retirement risk (optional, 3–4 minutes)
 

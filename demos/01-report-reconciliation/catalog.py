@@ -57,13 +57,13 @@ def get_case(case_id):
             "observed_ledger": ledger, "application": {"source_id": "app/report.py", "sha256": digest(code), "content": code}}
 
 
-def search_knowledge(query, limit=5):
+def search_knowledge(query, limit=5, records=None):
     if not isinstance(query, str) or not query.strip() or not isinstance(limit, int) or isinstance(limit, bool) or not 1 <= limit <= 10:
         return {"status": "invalid_request", "results": []}
     stop = set("a an the and or for of in to is on what how why are our this customer report".split())
     terms = set(re.findall(r"[a-z0-9]+", query.lower())) - stop
     ranked = []
-    for doc in documents().values():
+    for doc in (documents() if records is None else records).values():
         metadata = " ".join([doc["id"], doc["title"], json.dumps(doc["scope"])])
         title_terms = set(re.findall(r"[a-z0-9]+", metadata.lower()))
         body_terms = set(re.findall(r"[a-z0-9]+", doc["body"].lower()))

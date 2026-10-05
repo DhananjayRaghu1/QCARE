@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -107,6 +108,42 @@ def benchmark(name, repeats=1, seed=20261004, timeout=180, budget=0.5, plan_only
     return 0 if result["status"] in {"completed", "planned"} else 3
 
 
+def record_workflow(run_id, name=None):
+    if not re.fullmatch(r"[0-9a-f]{32}", run_id):
+        raise ValueError("Use the 32-character workflow run ID shown in artifacts/live/workflows/")
+    source = ROOT / "artifacts/live/workflows" / run_id
+    result = json.loads((source / "result.json").read_text())
+    events = json.loads((source / "events.json").read_text())
+    stopped_at_review = result["status"] == "cancelled" and any(e["kind"] == "waiting" and e.get("payload", {}).get("kind") == "review" for e in events)
+    if result["status"] != "completed" and not stopped_at_review:
+        raise ValueError("Record a completed workflow, or one stopped at the final review")
+    from workflow_runner import headline
+    name = name or (result["recorded_at"][:10] + "-" + str(result.get("model") or "model").removeprefix("claude-")
+                     + ("-no-context" if result.get("context") is False else ""))
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_.-]{0,63}", name):
+        raise ValueError("Use a simple lowercase recording name")
+    workspace = re.compile(r"/[^\s\"'()]*?datahoney-(?:workflow|review)-[A-Za-z0-9_]+")
+
+    def clean(value):
+        # Replay data only: temporary workspace and local home paths are not useful to viewers.
+        if isinstance(value, str):
+            return workspace.sub("<workspace>", value).replace(str(ROOT), "<demo>").replace(str(Path.home()), "~")
+        if isinstance(value, list):
+            return [clean(item) for item in value]
+        if isinstance(value, dict):
+            return {key: clean(item) for key, item in value.items()}
+        return value
+    keys = ("recorded_at", "model", "developer_note", "status", "outcome", "elapsed_seconds", "spent_usd", "context")
+    recording = clean({"format_version": 1, "name": name, "run_id": run_id, **{key: result.get(key) for key in keys},
+                       "label": "Recorded live run. Replayed from saved events; no model is called.",
+                       "headline": headline(result),
+                       "events": events})
+    target = ROOT / "recordings/langgraph-export" / (name + ".json")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(recording, indent=2) + "\n")
+    return target
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -127,6 +164,15 @@ def main():
     present.add_argument("--output", type=Path, default=ROOT / "artifacts/presentation.html")
     live = sub.add_parser("live", help="Serve the live model investigation UI on localhost")
     live.add_argument("--port", type=int, default=8768)
+    live.add_argument("--workflow-model", default="claude-opus-5-5", help="Model for every engineering-workflow step")
+    live.add_argument("--model", default="claude-opus-5-5", help="Model for single-session runs (overrides settings aliases such as opusplan)")
+    live.add_argument("--sandbox-repo", default=os.environ.get("DATAHONEY_SANDBOX_REPO"),
+                      help="Private GitHub sandbox (owner/name) the workflow pushes branches and draft PRs to; default is a local remote")
+    init = sub.add_parser("sandbox-init", help="Create or reseed the private GitHub sandbox repository")
+    init.add_argument("--repo", required=True, help="owner/name, e.g. your-user/datahoney-export-sandbox")
+    record = sub.add_parser("record-workflow", help="Save a finished live workflow as a replayable recording")
+    record.add_argument("run_id")
+    record.add_argument("--name", help="Recording name, e.g. 2026-10-05-opus-5-5")
     run = sub.add_parser("agent")
     run.add_argument("case_id", choices=sorted(cases()))
     run.add_argument("--context", choices=("provided", "retrieval", "workflow"), required=True)
@@ -159,7 +205,12 @@ def main():
         return int(result["summary"]["policy_workflow"]["complete_cases"] != len(cases()))
     elif args.command == "live":
         from live_server import serve
-        serve(args.port)
+        serve(args.port, args.workflow_model, args.sandbox_repo, args.model)
+    elif args.command == "sandbox-init":
+        import sandbox
+        print(sandbox.init_github(args.repo))
+    elif args.command == "record-workflow":
+        print(record_workflow(args.run_id, args.name))
     elif args.command == "present":
         from presentation import render
         args.output.parent.mkdir(parents=True, exist_ok=True)

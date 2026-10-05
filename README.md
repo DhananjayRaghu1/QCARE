@@ -7,7 +7,7 @@ Local, synthetic demos for discovering where code, business documents, Jira hist
 | Demo | Why business context matters | Output |
 | --- | --- | --- |
 | [Investigate a report](http://127.0.0.1:8768/demos/report) | The code and customer disagree; contracts establish the intended interpretation | Justified diagnosis and next action |
-| [Build a customer export](http://127.0.0.1:8768/demos/export) | A short request omits timezone, fee, refund and compatibility rules | Reviewable patch with independent acceptance results |
+| [Build a customer export](http://127.0.0.1:8768/demos/export) | A short request omits timezone, fee, refund and compatibility rules | A live LangGraph workflow: verified requirements, a pause for the developer's decision, a reviewed patch and independent acceptance results |
 | [Assess a format migration](http://127.0.0.1:8768/demos/migration) | Code callers alone do not reveal customer contracts, recovery obligations or current usage | Dependency matrix, owners and rollout gates |
 
 ```sh

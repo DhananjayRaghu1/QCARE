@@ -23,9 +23,9 @@ from codex_compare import inputs
 from process_utils import signal_group
 
 MODES = {
-    "raw_repo": "Raw · repo only",
-    "raw_docs": "Raw · repo + business docs / Jira",
-    "workflow": "Guided · evidence tools + calculator",
+    "raw_repo": "Repo only",
+    "raw_docs": "Docs + Jira",
+    "workflow": "Guided workflow (calculator)",
 }
 RAW_PROMPT = ("Investigate the customer issue in issue.json. Explain what is happening "
               "and recommend the next step. Do not modify files. Use only the files "
@@ -62,11 +62,11 @@ def stop_process(process):
 
 
 class Run:
-    def __init__(self, case_id, mode, prompt=None, *, timeout=240, budget=1.0):
+    def __init__(self, case_id, mode, prompt=None, *, timeout=240, budget=1.0, model=None):
         self.id = uuid.uuid4().hex
         self.case_id, self.mode = case_id, mode
         self.prompt = prompt if prompt is not None else portfolio.PROMPTS.get(portfolio.CASE_DEMOS.get(case_id), RAW_PROMPT)
-        self.timeout, self.budget = timeout, budget
+        self.timeout, self.budget, self.model = timeout, budget, model
         self.lock = threading.Lock()
         self.cancel = threading.Event()
         self.events = []
@@ -120,7 +120,8 @@ class Run:
         trace = []
         try:
             self.emit("status", text="Checking Claude Code authentication…")
-            client = agent.preflight()
+            # An explicit model avoids settings aliases such as opusplan, which run Sonnet in --print mode.
+            client = agent.preflight(self.model) if self.model else agent.preflight()
             result["client"] = client
             if not client.get("authenticated"):
                 result["status"] = "blocked"
