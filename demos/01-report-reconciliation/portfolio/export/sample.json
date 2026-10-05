@@ -1,0 +1,52 @@
+[
+  {
+    "invoice_id": "N-101",
+    "customer": "NORTHSTAR",
+    "invoice_at": "2026-08-31T23:00:00+00:00",
+    "settled_at": "2026-09-01T03:30:00+00:00",
+    "status": "PAID",
+    "gross_cents": 10000,
+    "fee_cents": 300,
+    "currency": "USD"
+  },
+  {
+    "invoice_id": "N-102",
+    "customer": "NORTHSTAR",
+    "invoice_at": "2026-09-20T12:00:00+00:00",
+    "settled_at": "2026-10-01T03:30:00+00:00",
+    "status": "PAID",
+    "gross_cents": 20000,
+    "fee_cents": 600,
+    "currency": "USD"
+  },
+  {
+    "invoice_id": "N-103",
+    "customer": "NORTHSTAR",
+    "invoice_at": "2026-09-10T12:00:00+00:00",
+    "settled_at": "2026-09-15T12:00:00+00:00",
+    "status": "REFUNDED",
+    "gross_cents": 5000,
+    "fee_cents": 150,
+    "currency": "USD"
+  },
+  {
+    "invoice_id": "N-104",
+    "customer": "NORTHSTAR",
+    "invoice_at": "2026-09-20T12:00:00+00:00",
+    "settled_at": null,
+    "status": "PENDING",
+    "gross_cents": 8000,
+    "fee_cents": 240,
+    "currency": "USD"
+  },
+  {
+    "invoice_id": "B-201",
+    "customer": "BLUEBIRD",
+    "invoice_at": "2026-09-20T12:00:00+00:00",
+    "settled_at": "2026-09-21T12:00:00+00:00",
+    "status": "PAID",
+    "gross_cents": 9000,
+    "fee_cents": 270,
+    "currency": "USD"
+  }
+]

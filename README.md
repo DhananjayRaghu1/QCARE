@@ -2,11 +2,13 @@
 
 Local, synthetic demos for discovering where code, business documents, Jira history and customer configuration can help a team make better decisions. These are prototypes for discussion, not Data Honey's product or customer records.
 
-## Demo 1: Which total can we defend?
+## Three demos on one site
 
-**Start with [customer-report reconciliation](demos/01-report-reconciliation/README.md).** The application reports **$1,550** and the customer expects **$1,150**. Approved reporting rules and two export contracts show that **both are wrong: the correct total is $1,250**.
-
-A tempting `-abs()` fix matches the customer but mishandles a return reversal. The workflow identifies the affected rows, cites the applicable sources and recommends a schema-specific repair. Other cases produce a customer explanation, a configuration correction, or an explicit stop when evidence is missing or conflicting. A pending Jira request does not silently become approved policy.
+| Demo | Why business context matters | Output |
+| --- | --- | --- |
+| [Investigate a report](http://127.0.0.1:8768/demos/report) | The code and customer disagree; contracts establish the intended interpretation | Justified diagnosis and next action |
+| [Build a customer export](http://127.0.0.1:8768/demos/export) | A short request omits timezone, fee, refund and compatibility rules | Reviewable patch with independent acceptance results |
+| [Assess a format migration](http://127.0.0.1:8768/demos/migration) | Code callers alone do not reveal customer contracts, recovery obligations or current usage | Dependency matrix, owners and rollout gates |
 
 ```sh
 cd demos/01-report-reconciliation
@@ -14,18 +16,13 @@ uv sync --locked
 uv run python demo.py live
 ```
 
-Open [the live demo](http://127.0.0.1:8768/). It runs fresh Claude investigations with live tool activity and three clearly labeled modes: **raw repo**, **raw repo + business docs/Jira**, and **guided workflow with a calculator**. The raw modes use the same editable prompt and ordinary file/shell tools, without a prescribed investigation, output schema, answer key or grading. They are a thin browser wrapper around Claude Code. An authenticated Claude Code client is required; the source records remain synthetic local snapshots.
+Open [the demo hub](http://127.0.0.1:8768/). Each demo has an original request, source documents, working sample code, an optional prepared example, live comparison controls and a production workflow/architecture page. The meeting UI keeps only DH-301 from the original ticket set; the other reporting cases remain regression fixtures.
 
-For the offline walkthrough, run `uv run python demo.py present` and open the generated `artifacts/presentation.html`. For terminal output and verification:
+The raw modes use the same prompt and repository; Docs + Jira adds prose source snapshots. The feature demo captures edits in a temporary workspace and checks the resulting implementation after the model finishes. Other investigations are read-only. The reporting demo also retains its separately labeled guided MCP/calculator mode. Live calls use the existing Claude Code login; clicking prepared examples does not call a model.
 
-```sh
-uv run python demo.py run DH-301
-uv run python demo.py reproduce
-uv run python demo.py controls
-uv run python -m pytest -q
-```
+Architecture pages describe a **proposed production design**, including authorized retrieval from Git, Jira and Confluence, combining evidence by scope and version, independent verification, and human approval. Those enterprise connectors are not deployed in this prototype.
 
-Use the [10-minute meeting script](demos/01-report-reconciliation/docs/meeting-guide.md) to connect the demonstration to discovery. The scope is one support discrepancy → a reviewable decision and next action. Ask how the team currently finds the relevant evidence, decides which source governs, and validates the outcome.
+Read the [implementation guide](demos/01-report-reconciliation/README.md) and [meeting script](demos/01-report-reconciliation/docs/meeting-guide.md). No model-generated change is automatically applied, merged or deployed.
 
 ## What changed, and what we can claim
 

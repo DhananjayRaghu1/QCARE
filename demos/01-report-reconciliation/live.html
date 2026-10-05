@@ -7,9 +7,9 @@
 .start-guide{margin:22px 0;padding:15px 18px;background:#eaf0e2;border:1px solid #d6e0ca;border-radius:9px;font-size:13px;line-height:1.7}.start-guide a{font-weight:650;white-space:nowrap}.case-card{margin-top:22px}.case-top{display:flex;gap:22px;align-items:center;justify-content:space-between}.case-picker{width:min(100%,620px)}.case-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6a7e60;margin:22px 0 8px}.case-title{font-size:clamp(23px,3vw,29px);line-height:1.25;letter-spacing:-.7px}.case-overview{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);gap:32px;margin-top:14px}.case-story{font-size:14px;color:#526a5b;margin:0 0 18px}.case-question{padding:16px 18px;border-left:3px solid #6d8d52;background:#f0f5e9;border-radius:0 7px 7px 0}.case-question .label{margin:0 0 6px;color:#41613a}.case-question p{font-size:15px;line-height:1.6;margin:0}.case-purpose{font-size:13px;line-height:1.7;margin:15px 0 0;color:#526a5b}.case-stats .ticket{margin:0 0 13px}.gap{font-size:12px;line-height:1.6;color:#526a5b;margin:12px 0 0}.amount-note{font-size:11px;color:#7b8877;margin:7px 0 0}.evidence-note{font-size:13px;color:#526a5b;line-height:1.7;margin:10px 0}.case-foot{border-top:1px solid #e4e8de;margin-top:22px;padding-top:3px;display:grid;grid-template-columns:1fr 1fr;gap:25px}.glossary{font-size:12px;line-height:1.7;margin:12px 0 0}.glossary dt{font-weight:700;margin-top:9px}.glossary dd{margin:2px 0;color:#607469}.mode-intro{font-size:13px;color:#607469;margin:0 0 15px}.result-intro{font-size:12px;color:#788577;padding:12px 24px 0;margin:0}.run-meta{line-height:1.6}.case-config{font-size:12px;color:#607469;line-height:1.7}.source-code{margin-top:15px}.workspace{align-items:start}.empty{min-height:260px}.empty p{margin:12px auto}.case-card select{font-size:14px}.case-foot summary{font-weight:600}.intro{max-width:920px!important}@media(max-width:800px){.case-overview{grid-template-columns:1fr;gap:20px}.case-foot{grid-template-columns:1fr;gap:0}.case-top{display:block}.case-picker{width:100%}.case-stats{border-top:1px solid #e4e8de;padding-top:18px}}@media(max-width:720px){.case-card .pad{padding:19px}.case-title{font-size:24px}.start-guide{font-size:12px}.case-overview{gap:18px}.case-question p{font-size:14px}}
 </style></head><body>
 <header><div class="brand"><i></i>data honey <span style="font-weight:400;color:#adc1aa">/ investigations</span></div><div class="tag">LIVE MODEL · SYNTHETIC DATA</div></header>
-<main><div class="eyebrow">Demo 01 / Customer support investigation</div><h1>A customer questions their sales report. What next?</h1><p class="intro">Each ticket below is a different example of that question. The AI investigates whether to fix the code, change a report setting, explain the existing result, or ask someone to resolve missing or conflicting rules. All customers and records in this demo are fictional.</p>
+<main><div class="eyebrow">Demo 01 / Customer support investigation</div><h1>A customer questions their sales report. What next?</h1><p class="intro">This demo follows one customer issue: DH-301. The AI investigates whether to fix the code, change a report setting, explain the existing result, or ask someone to resolve missing or conflicting rules. All customers and records in this demo are fictional.</p>
 <div class="start-guide"><b>First time here?</b> Start with <b>DH-301</b>. Read the situation, run <b>Repo only</b>, then run <b>Docs + Jira</b> on the same ticket. Compare what the AI can justify and what it still needs to ask. <a href="#investigate">Go to run controls ↓</a></div>
-<nav class="page-nav" aria-label="Demo sections"><a href="#orientation">Who and what is involved</a><a href="#ticketSection">The customer ticket</a><a href="#evidenceSection">Read the evidence</a><a href="#investigate">Run the AI</a><a href="#referenceDesk">All documents & terms</a></nav>
+<nav class="page-nav" aria-label="Demo sections"><a href="/">← All three demos</a><a href="/architecture/report">Production workflow & architecture</a><a href="#orientation">Who and what is involved</a><a href="#ticketSection">The customer ticket</a><a href="#evidenceSection">Read the evidence</a><a href="#investigate">Run the AI</a><a href="#referenceDesk">All documents & terms</a></nav>
 <section class="card orientation" id="orientation" aria-labelledby="orientationTitle"><div class="pad"><h2 id="orientationTitle">What is ATLAS, and what are we investigating?</h2><p class="orientation-lead"><b>ATLAS is the fictional upstream system that sends transaction files.</b> Our reporting application reads those files and produces a monthly sales total. A customer asks whether that total is right. The AI helps investigate; it is not ATLAS and does not produce the source transactions.</p>
 <div class="system-flow"><div class="system-step"><span class="step-no">01 / SOURCE</span><h3>ATLAS sends rows</h3><p>Sales, returns and transfers arrive as file exports. Every row includes an amount, dates and a file-format version.</p></div><div class="system-step"><span class="step-no">02 / APPLICATION</span><h3>The code makes a report</h3><p>It selects a month and transaction types, interprets each amount and adds the contributions into one total.</p></div><div class="system-step"><span class="step-no">03 / CUSTOMER</span><h3>A customer asks us to check</h3><p>NORTHSTAR, BLUEBIRD and CEDAR are fictional customer accounts. Their spreadsheet may use a different interpretation.</p></div><div class="system-step"><span class="step-no">04 / INVESTIGATION</span><h3>You review the next action</h3><p>The AI inspects the code and available evidence. A person decides whether to repair code, change settings, explain the result or seek clarification.</p></div></div>
 <p class="role-note"><b>Why the code alone may not be enough:</b> it shows what the application currently does. Business documents define what it should do. Jira history explains which changes were requested or completed. A plausible number is not the same as a justified number.</p>
@@ -17,12 +17,12 @@
 <p class="subtle">The name ATLAS does not identify a real vendor or live integration here. Every customer, team, document and transaction is demo data. Solid-underlined references open source documents; dotted-underlined terms open explanations.</p></div></section>
 <div id="error" class="notice hidden" role="alert"></div>
 <section class="card case-card" id="ticketSection" aria-labelledby="caseTitle"><div class="pad">
-<div class="case-top"><div class="case-picker"><label class="label" for="case">01 &nbsp; Choose a ticket to understand</label><select id="case" disabled aria-describedby="caseStory"></select></div><span class="eyebrow">10 different support scenarios</span></div>
+<div class="case-top"><span class="eyebrow">DEMO 01 · ONE CUSTOMER INVESTIGATION</span></div><select id="case" hidden aria-label="Customer case"></select>
 <div id="caseMeta" class="case-kicker"></div><h2 id="caseTitle" class="case-title">Loading the customer issue…</h2>
-<p id="caseContext" class="case-context"></p>
+<h3>Original ticket supplied to the model</h3><blockquote id="originalTicket" class="case-question"></blockquote><p class="subtle">Exact synthetic customer request. Both raw modes receive it in issue.json.</p><p id="caseContext" class="case-context"></p>
 <div class="case-overview"><div><p id="caseStory" class="case-story"></p><div class="case-question"><span class="label">The decision this ticket asks us to make</span><p id="caseQuestion"></p></div><p class="case-purpose"><b>Why this matters:</b> <span id="casePurpose"></span></p><details><summary>How business documents or Jira could help</summary><p id="caseEvidence" class="evidence-note"></p></details></div>
 <div class="case-stats"><p id="ticket" class="ticket"></p><div class="numbers"><div class="number"><span>Application shows</span><strong id="current">—</strong></div><div class="number"><span>Customer expects</span><strong id="claim">—</strong></div></div><p id="gap" class="gap"></p><p class="amount-note">All amounts are USD. These are the two starting figures, not a verified answer.</p></div></div>
-<div class="case-foot"><details><summary>See the transactions, report settings and code</summary><div id="inputs"></div></details><details><summary>New to reporting? A few terms explained</summary><dl class="glossary"><dt>Ticket</dt><dd>A customer's question or support issue. DH-301 through DH-310 are ten separate examples.</dd><dt>Net sales</dt><dd>Sales after adjustments such as returns. The business agreement determines which entries and dates count.</dd><dt>Return / return reversal</dt><dd>A return usually reduces sales. A reversal undoes a previous return, which can add money back.</dd><dt>Export format / schema version</dt><dd>The version of the file sent by the source system. Two versions can represent the same transaction differently.</dd><dt>Invoice date / recorded date</dt><dd>When a sale was invoiced versus when it entered the system. They can fall in different months.</dd><dt>Jira and business documents</dt><dd>Jira records requests and decisions. Business documents define reporting rules and customer agreements. A request or draft is not necessarily an approved rule.</dd></dl></details></div>
+<div class="case-foot"><details><summary>See the transactions, report settings and code</summary><div id="inputs"></div></details><details><summary>New to reporting? A few terms explained</summary><dl class="glossary"><dt>Ticket</dt><dd>A customer's question or support issue. DH-301 is the original customer question for this demo.</dd><dt>Net sales</dt><dd>Sales after adjustments such as returns. The business agreement determines which entries and dates count.</dd><dt>Return / return reversal</dt><dd>A return usually reduces sales. A reversal undoes a previous return, which can add money back.</dd><dt>Export format / schema version</dt><dd>The version of the file sent by the source system. Two versions can represent the same transaction differently.</dd><dt>Invoice date / recorded date</dt><dd>When a sale was invoiced versus when it entered the system. They can fall in different months.</dd><dt>Jira and business documents</dt><dd>Jira records requests and decisions. Business documents define reporting rules and customer agreements. A request or draft is not necessarily an approved rule.</dd></dl></details></div>
 </div></section>
 <section id="evidenceSection" class="reader-section card"><div class="pad"><div class="section-heading"><h2 id="sourceCaseLabel">Evidence for this ticket</h2><a href="#referenceDesk">Browse all ten source documents ↓</a></div><p>Open a source to read its complete text, owner, approval status and effective dates. The cards below explain why you might check it. They are suggested reading for you, not a claim that the model has already read them.</p><div id="caseSourceList" class="source-grid"></div><p class="subtle">Reading these links does not add context to the model. Repo-only runs still receive no business documents; Docs + Jira runs receive all ten prose snapshots.</p>
 <details id="worked" class="worked"><summary>Explain this ticket step by step — reveals the prepared answer</summary><p>You can learn the example without running the AI. This explanation uses the existing rule engine and is separate from the model’s response.</p><button id="walkthroughButton" class="secondary">Show the worked example</button><div id="walkthrough"></div></details></div></section>
@@ -50,69 +50,7 @@ const caseGuides = {
     purpose: 'A quick fix that matches the customer’s spreadsheet could still mishandle a transaction. This is the best case to try first.',
     evidence: 'The export contracts define what positive and negative amounts mean. Jira history explains whether old and new file versions can appear together.'
   },
-  'DH-302': {
-    title: 'Which month does a sale belong to?',
-    story: 'Bluebird has two sales near a month boundary. One was invoiced in August and recorded in September; the other was invoiced in September and recorded in October. Choosing a different date changes September’s total.',
-    question: 'Should Bluebird’s September report use the invoice date or the date the sale was recorded?',
-    purpose: 'A customer may have a different reporting agreement from everyone else. A difference in totals does not automatically mean the code is broken.',
-    evidence: 'Bluebird’s customer agreement specifies the reporting date. The standard reporting definition alone may not be enough.'
-  },
-  'DH-303': {
-    title: 'Does a Jira request change the rules?',
-    story: 'The customer’s expected total includes a $300 internal transfer as well as a sale and a return. The current report excludes that transfer. There is a Jira request about counting transfers.',
-    question: 'Should the transfer count as sales, and has the requested change actually been approved?',
-    purpose: 'A feature request is not automatically a business requirement. The right next step may be explaining the current result rather than changing it.',
-    evidence: 'Read the approved sales definition alongside the Jira request’s status and decision history. They distinguish an existing rule from a proposed change.'
-  },
-  'DH-304': {
-    title: 'New file format: can we trust the total?',
-    story: 'These transactions use export version 3. The application and the customer show the same total, but agreement between two calculations does not prove that either interprets a new file format correctly.',
-    question: 'Is there an approved definition for version 3, or do we need the source owner to clarify it before confirming a total?',
-    purpose: 'Recognize when there is not enough evidence to give a reliable answer, even if the arithmetic looks straightforward.',
-    evidence: 'The format documentation and its approval status determine whether the meanings of these amounts are established. A draft needs different treatment from an approved contract.'
-  },
-  'DH-305': {
-    title: 'Which customer agreement should win?',
-    story: 'Cedar’s invoice dates and recorded dates fall in different months. Two customer reporting documents cover the same period, but they describe different date rules.',
-    question: 'Can we establish which agreement governs Cedar’s report, or does a business owner need to resolve the conflict?',
-    purpose: 'Choosing the newest-looking or most convenient document can produce an unjustified answer. Sometimes the next action is a policy decision, not a code fix.',
-    evidence: 'Compare both customer agreements: approval, scope, effective dates and any explicit statement that one replaces the other.'
-  },
-  'DH-306': {
-    title: 'Does the newest rule apply to September?',
-    story: 'A newer reporting document changes which date decides the sales month. This ticket asks about September, while the new document introduces a rule for October.',
-    question: 'Which rule was in effect for September’s report, regardless of which document was published most recently?',
-    purpose: 'Avoid applying a later rule to an earlier reporting period and unnecessarily changing a historical report.',
-    evidence: 'The September and October definitions state when each rule applies. Their effective dates matter as much as their contents.'
-  },
-  'DH-307': {
-    title: 'Is October using the right report setting?',
-    story: 'A $400 sale was invoiced in September but recorded in October. A $600 sale happened entirely in October. The application currently uses recorded dates, while a reporting policy change starts in October.',
-    question: 'Does the deployed date setting match October’s approved rule, or is a setting change needed?',
-    purpose: 'Distinguish a configuration problem from faulty calculation code. Fixing the wrong layer adds work and can create new errors.',
-    evidence: 'Compare the rule effective in October with the application’s deployed date setting. The raw transactions show how the choice affects the total.'
-  },
-  'DH-308': {
-    title: 'Is the source data valid?',
-    story: 'A version 2 file contains a return with a negative amount of $200. The application turns it into a positive contribution, while the customer expects it to reduce sales.',
-    question: 'Is a negative return amount valid in this file version, or should the source data be corrected before recalculating?',
-    purpose: 'Changing a sign can hide a bad input. Decide whether the problem belongs in the report logic or with the source-data owner.',
-    evidence: 'The version 2 export contract defines which input values are allowed and how invalid records should be handled.'
-  },
-  'DH-309': {
-    title: 'Can a return add money back?',
-    story: 'The file contains a $900 sale and a positive $100 entry labeled RETURN. The label alone does not tell us whether it is a new refund or the undoing of an earlier refund.',
-    question: 'Does this positive return reduce sales or reverse an earlier return and add money back?',
-    purpose: 'Understand the business meaning of an entry before choosing its sign. A label like “return” can be misleading without the file contract.',
-    evidence: 'The version 1 export contract explains signed amounts and return reversals. It gives meaning to the positive $100 entry.'
-  },
-  'DH-310': {
-    title: 'The totals match. Are the rows right?',
-    story: 'Both sides show $1,000. Underneath that total are a sale and two return entries with equal but opposite amounts. Errors in individual rows can cancel each other out.',
-    question: 'Does every transaction contribute the correct amount, even though the overall totals agree?',
-    purpose: 'A matching grand total can hide faulty logic that will fail on the next set of transactions. Check the rows as well as the total.',
-    evidence: 'The version 1 export contract tells us how to interpret each signed entry. Compare those row contributions with what the application actually calculated.'
-  }
+
 };
 function monthName(value){return new Date(value+'-01T12:00:00Z').toLocaleDateString('en-US',{month:'long',year:'numeric',timeZone:'UTC'});}
 function markdown(text){
@@ -148,6 +86,7 @@ async function loadCase(){
   $('#caseQuestion').textContent=guide.question;
   $('#casePurpose').textContent=guide.purpose;
   $('#caseEvidence').textContent=guide.evidence;
+  $('#originalTicket').textContent=c.ticket;
   $('#ticket').textContent=c.customer+' wants us to check its '+monthName(c.month)+' net sales before anyone changes the report.';
   $('#current').textContent=money(data.reported_total_cents);
   $('#claim').textContent=money(c.customer_claim_cents);
@@ -170,5 +109,5 @@ async function poll(id){const run=runs.get(id);try{const fresh=await api('/api/r
 $('#run').onclick=async()=>{busy=true;controls();error('');try{const created=await api('/api/runs',{case_id:$('#case').value,mode,prompt:$('#prompt').value});active=selected=created.id;runs.set(active,{id:active,case_id:$('#case').value,mode,events:[],cursor:0,status:'running',elapsed_seconds:0});render();poll(active);}catch(e){error(e.message);}finally{busy=false;controls();}};
 $('#cancel').onclick=async()=>{if(!active)return;try{await api('/api/runs/'+active+'/cancel',{});$('#cancel').disabled=true;$('#cancel').textContent='Stopping…';}catch(e){error(e.message);}};
 $('#case').onchange=()=>loadCase().catch(e=>error(e.message));document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
-async function init(){config=await api('/api/config');$('#case').innerHTML=config.cases.map(c=>`<option value="${esc(c.id)}">${esc(c.id+' · '+caseGuides[c.id].title+(c.id==='DH-301'?' (start here)':''))}</option>`).join('');$('#prompt').value=config.prompt;await initReader();const initialCase=new URLSearchParams(location.search).get('case');if(config.cases.some(c=>c.id===initialCase))$('#case').value=initialCase;for(const previous of config.runs){runs.set(previous.id,{...previous,events:[],cursor:0});if(previous.status==='running'){active=previous.id;$('#case').value=previous.case_id;setMode(previous.mode);}}await loadCase();for(const previous of config.runs)poll(previous.id);controls();}init().catch(e=>error(e.message));
+async function init(){config=await api('/api/config');$('#case').innerHTML=config.cases.map(c=>`<option value="${esc(c.id)}">${esc(c.id+' · '+caseGuides[c.id].title+(c.id==='DH-301'?' (start here)':''))}</option>`).join('');$('#prompt').value=config.prompt;await initReader();const initialCase='DH-301';if(config.cases.some(c=>c.id===initialCase))$('#case').value=initialCase;for(const previous of config.runs.filter(r=>r.case_id==='DH-301')){runs.set(previous.id,{...previous,events:[],cursor:0});if(previous.status==='running'){active=previous.id;$('#case').value=previous.case_id;setMode(previous.mode);}}await loadCase();for(const previous of config.runs.filter(r=>r.case_id==='DH-301'))poll(previous.id);controls();}init().catch(e=>error(e.message));
 </script></body></html>

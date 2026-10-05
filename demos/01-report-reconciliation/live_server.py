@@ -8,6 +8,7 @@ from urllib.parse import urlparse, parse_qs
 
 from catalog import ROOT, cases, get_case, documents, get_document
 from live_runner import MODES, RAW_PROMPT, Run
+import portfolio
 
 
 class LiveServer(ThreadingHTTPServer):
@@ -98,8 +99,24 @@ class Handler(BaseHTTPRequestHandler):
         if not self.local_request():
             return
         url = urlparse(self.path)
-        if url.path in ("/", "/live.html"):
+        if url.path == "/" or url.path in ("/demos/export", "/demos/migration"):
+            return self.respond(200, (ROOT / "portfolio.html").read_text(), "text/html; charset=utf-8")
+        if url.path in ("/demos/report", "/live.html"):
             return self.respond(200, (ROOT / "live.html").read_text(), "text/html; charset=utf-8")
+        if url.path.startswith("/architecture/") and url.path.rsplit("/",1)[-1] in portfolio.DEFINITIONS:
+            import architecture
+            return self.respond(200, architecture.render(url.path.rsplit("/",1)[-1]), "text/html; charset=utf-8")
+        if url.path == "/api/demos":
+            return self.respond(200, {"demos": list(portfolio.DEFINITIONS.values())})
+        if url.path.startswith("/api/demos/") and url.path.rsplit("/",1)[-1] in portfolio.DEFINITIONS:
+            return self.respond(200, portfolio.public_demo(url.path.rsplit("/",1)[-1]))
+        if url.path == "/api/examples/export":
+            return self.respond(200, portfolio.reference_export())
+        if url.path == "/api/examples/migration":
+            return self.respond(200, portfolio.reference_migration())
+        if url.path in ("/portfolio.js", "/portfolio.css"):
+            kind = "text/javascript" if url.path.endswith(".js") else "text/css"
+            return self.respond(200, (ROOT / url.path[1:]).read_text(), kind + "; charset=utf-8")
         if url.path in ("/reader.js", "/reader.css"):
             kind = "text/javascript" if url.path.endswith(".js") else "text/css"
             return self.respond(200, (ROOT / url.path[1:]).read_text(), kind + "; charset=utf-8")
@@ -121,7 +138,7 @@ class Handler(BaseHTTPRequestHandler):
                          "status": run.status} for run in self.server.runs.values()]
             return self.respond(200, {"token": self.server.token, "modes": MODES,
                 "prompt": RAW_PROMPT, "cases": [{"id": item["id"], "customer": item["customer"],
-                    "month": item["month"]} for item in cases().values()],
+                    "month": item["month"]} for item in cases().values() if item["id"] == "DH-301"],
                 "budget_usd": 1.0, "timeout_seconds": 240,
                 "runs": runs})
         if url.path.startswith("/api/cases/"):
@@ -161,9 +178,11 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(400, {"error": "Invalid request body."})
         if self.path == "/api/runs":
             case_id, mode = body.get("case_id"), body.get("mode")
-            prompt = body.get("prompt", RAW_PROMPT)
-            if (not isinstance(case_id, str) or case_id not in cases()
+            demo_name = portfolio.CASE_DEMOS.get(case_id) if isinstance(case_id, str) else None
+            prompt = body.get("prompt", portfolio.PROMPTS.get(demo_name, RAW_PROMPT))
+            if (not isinstance(case_id, str) or case_id not in portfolio.CASE_DEMOS
                     or not isinstance(mode, str) or mode not in MODES
+                    or (demo_name != "report" and mode == "workflow")
                     or not isinstance(prompt, str) or not 1 <= len(prompt.strip()) <= 6000):
                 return self.respond(400, {"error": "Choose a known case and mode, and a prompt of 1–6000 characters."})
             with self.server.lock:

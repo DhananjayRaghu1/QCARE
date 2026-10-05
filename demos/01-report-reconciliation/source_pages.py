@@ -3,7 +3,8 @@ from html import escape
 import json
 import re
 
-from catalog import documents, get_document
+from catalog import documents, get_document, digest
+from portfolio import documents as portfolio_documents
 
 STATUS_HELP = {
     "approved": "Approved. Check that its customer, file version and effective dates apply to the ticket.",
@@ -15,6 +16,8 @@ STATUS_HELP = {
 
 def scope_text(doc):
     scope = doc["scope"]
+    if isinstance(scope, str):
+        return scope
     if "feed" in scope:
         return "ATLAS transaction exports" + (" · file version " + scope["schema_version"] if "schema_version" in scope else " · all file versions")
     customer = "Customers using the standard reporting profile" if scope.get("customer") == "*" else scope.get("customer", "Unspecified customer")
@@ -22,12 +25,15 @@ def scope_text(doc):
 
 
 def linked_text(text):
-    pattern = r"\b(" + "|".join(re.escape(key) for key in sorted(documents(), key=len, reverse=True)) + r")\b"
+    pattern = r"\b(" + "|".join(re.escape(key) for key in sorted(documents() | portfolio_documents(), key=len, reverse=True)) + r")\b"
     return re.sub(pattern, lambda match: '<a href="/documents/' + match[0] + '">' + match[0] + '</a>', escape(text))
 
 
 def render_document(document_id):
     snapshot = get_document(document_id)
+    if snapshot["status"] != "ok" and document_id in portfolio_documents():
+        doc = portfolio_documents()[document_id]
+        snapshot = {"status": "ok", "document": doc, "sha256": digest(doc)}
     if snapshot["status"] != "ok":
         return None
     doc = snapshot["document"]
@@ -39,4 +45,4 @@ def render_document(document_id):
 <p class="note">{e(STATUS_HELP[doc['status']])}</p><dl class="meta"><dt>Owner</dt><dd>{e(doc['owner'])}</dd><dt>Applies to</dt><dd>{e(scope_text(doc))}</dd><dt>Effective period</dt><dd>From {e(doc['effective_from'])}, inclusive. {e(end)}</dd><dt>Record version</dt><dd>{e(doc['version'])}</dd></dl>
 <h2>Complete original source text</h2><p class="body">{linked_text(doc['body'])}</p>
 <p class="note"><b>What is ATLAS?</b> The fictional upstream system that supplies transaction export files in this demo. It is separate from the reporting application and the AI. These are local sample documents, not records from a live company account.</p>
-<details><summary>Underlying fixture record and verification hash</summary><p>The guided calculator uses the hand-authored <code>rules</code> mapping below. Raw docs mode receives the prose and metadata, without that mapping.</p><pre>{e(json.dumps(doc, indent=2))}</pre><small>SHA256: {snapshot['sha256']}</small></details></article></main></body></html>'''
+<details><summary>Underlying fixture record and verification hash</summary><p>Raw docs mode receives the prose and metadata. Only the reporting demo's guided calculator uses any hand-authored rules mapping.</p><pre>{e(json.dumps(doc, indent=2))}</pre><small>SHA256: {snapshot['sha256']}</small></details></article></main></body></html>'''

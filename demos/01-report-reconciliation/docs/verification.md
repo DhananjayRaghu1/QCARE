@@ -1,6 +1,14 @@
 # Verification record — 4 October 2026
 
-## Current live UI and review fixes
+## Three-demo site verification
+
+The meeting site now contains reporting investigation (DH-301 only), customer export implementation (DH-401), and migration impact assessment (DH-501). Each has a proposed production architecture page. The extra reporting tickets are removed from the live selection and run API; regression fixtures and historical evidence remain intact.
+
+**71 tests passed.** The added checks exercise equal repo inputs across conditions, exclusion of reference answers, route validation, source pages, temporary-workspace patch capture, protected-input deletion, unsafe/unrecorded generated files and actual subprocess execution. The prepared export passes **12 independent checks plus 2 baseline tests**; the unmodified exporter passes its baseline tests and fails the new requirements. The migration example executes the two baseline tests with current support (pass) and after a prepared v1 removal (replay fails).
+
+Browser verification covers all three demo pages, the prominent original ticket, one reporting selection only, source dialogs, both new worked examples, navigation and all three production architecture pages. No browser console errors were observed during those checks. The new implementation runner was exercised with explicit local subprocess stubs, not a paid model; no new model-quality comparison or efficiency claim is made for demos 2 and 3. Production connector behavior is documented as a proposed design, not tested infrastructure.
+
+## Previous live UI and review fixes
 
 The suite now passes **62 tests**. Regression coverage includes title removal from every guided condition and the actual MCP case response; simultaneous configuration and calculation defects; malformed amounts, dates and duplicate IDs; timeout/process-exit races; deleted comparison inputs; a real subprocess that closes stdout and takes more than five seconds to exit; and recovery from truncated trace lines. Source-route checks verify all ten original documents and hashes, explicit stop cases, and unknown-path rejection without launching a model.
 

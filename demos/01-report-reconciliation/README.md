@@ -1,4 +1,16 @@
-# Demo 1: Which total can we defend?
+# Three business-context demos
+
+The [site home](http://127.0.0.1:8768/) contains three separate workflows. Each has an original request, linked sources, inspectable code, a prepared example, live repo-only and docs-plus-Jira modes, and a dedicated proposed production architecture page.
+
+| Demo | Result | Workflow and architecture |
+| --- | --- | --- |
+| [Investigate a report](http://127.0.0.1:8768/demos/report) | DH-301 only: justify $1,250 rather than either starting total | [Production design](http://127.0.0.1:8768/architecture/report) |
+| [Implement a customer export](http://127.0.0.1:8768/demos/export) | Patch, CSV behavior and independent acceptance checks | [Production design](http://127.0.0.1:8768/architecture/export) |
+| [Assess a migration](http://127.0.0.1:8768/demos/migration) | Dependencies, customer obligations, owners and release gates | [Production design](http://127.0.0.1:8768/architecture/migration) |
+
+The live ticket selector has been removed; DH-302 through DH-310 remain developer regression fixtures only. Their historical records are preserved. Production pages describe real-system retrieval, permission boundaries, evidence combination, verification and human review; they do not claim those connectors are deployed.
+
+## Demo 1: Which total can we defend?
 
 A customer says their monthly report is wrong. The application shows **$1,550**; their spreadsheet shows **$1,150**. Approved business definitions and export contracts show that **both are wrong: the correct total is $1,250**.
 
@@ -13,13 +25,13 @@ uv sync --locked
 uv run python demo.py live
 ```
 
-Open [the live investigation UI](http://127.0.0.1:8768/). Each **Run investigation** click starts a fresh Claude Code session using your existing Claude login. Sign in with `claude auth login` if needed. No API key is required when your Claude subscription supports the client. The page shows real tool calls and results as the CLI emits them, the model's final answer, elapsed time, reported model and cost, and a downloadable run record. Stop cancels the subprocess. No automatic retries or precomputed substitute answers.
+Open [the demo hub](http://127.0.0.1:8768/) and choose a workflow. Each **Run investigation** click starts a fresh Claude Code session using your existing Claude login. Sign in with `claude auth login` if needed. No API key is required when your Claude subscription supports the client. The page shows real tool calls and results as the CLI emits them, the model's final answer, elapsed time, reported model and cost, and a downloadable run record. Stop cancels the subprocess. No automatic retries or precomputed substitute answers.
 
-Each ticket has a plain-language title, customer situation, decision to investigate and explanation of why it matters. The page shows both starting amounts in dollars, explains what the difference means, and includes reporting terminology plus transaction dates and deployed settings. Start with DH-301, then compare the two raw modes. These reader guides exist only in the browser page; they are not added to model prompts or task files. Run history is filtered to the selected ticket, and completed answers are labeled with their saved time.
+DH-301 has a plain-language title, customer situation, prominent original request, decision to investigate and explanation of why it matters. The page shows both starting amounts in dollars, explains what the difference means, and includes reporting terminology plus transaction dates and deployed settings. Start with DH-301, then compare the two raw modes. These reader guides exist only in the browser page; they are not added to model prompts or task files. Run history is filtered to the selected ticket, and completed answers are labeled with their saved time.
 
 **ATLAS is the fictional upstream system that supplies transaction exports**, separate from the reporting application, the customer and the AI. The page maps that flow and explains every customer, team and data field. Document references in the case, answer and activity log open the complete source with its owner, approval status, scope and effective dates. Each source also has a standalone local page, such as [the ATLAS v1 contract](http://127.0.0.1:8768/documents/FEED-ATLAS-1). A searchable reference desk contains all ten snapshots. These links point to local demo records, not an external Jira account.
 
-Each case also has an optional **worked example**, clearly labeled as a prepared rule-engine explanation rather than a model run. It shows the approved policy, each row's current and required contribution, the calculation and the next action. Missing rules, conflicting agreements and invalid data produce an explicit stop. Opening these reader explanations does not add them to a model session.
+The reporting demo also has an optional **worked example**, clearly labeled as a prepared rule-engine explanation rather than a model run. It shows the approved policy, each row's current and required contribution, the calculation and the next action. Missing rules, conflicting agreements and invalid data produce an explicit stop. Opening these reader explanations does not add them to a model session.
 
 | Live mode | What the model receives |
 | --- | --- |
@@ -80,7 +92,9 @@ The justified repair is schema-specific normalization. Schema 1 preserves signed
 
 The output is an evidence packet: a decision, exact total or explicit uncertainty, affected row IDs, before/after contributions, source snapshots with hashes, and a next action. The workflow does not change the production application, close tickets or send customers messages.
 
-## Why documents and Jira change the action
+## Archived reporting regression scenarios
+
+The extra cases below are retained for automated regression coverage and the legacy offline presentation. They are not selectable or runnable through the live meeting site.
 
 | Case | Context that matters | Justified result |
 | --- | --- | --- |
@@ -146,8 +160,29 @@ Use a new name each time. Every condition receives every case; order rotates, ev
 
 ## Present it and discover the real workflow
 
-Use [the 10-minute meeting script](docs/meeting-guide.md). Lead with DH-301, then show DH-303 and DH-305 to establish that the workflow can explain or stop as well as recommend a fix. Keep the other cases available for questions.
+Use [the meeting script](docs/meeting-guide.md). Lead with DH-301, then choose the export or migration demo based on the audience’s workflow.
 
 The scope of demo 1 is **one monthly report discrepancy → a reviewable decision and next action**. Live enterprise connectors, automatic policy extraction, general root-cause diagnosis, autonomous deployment and a productivity estimate are outside the implemented scope.
 
 If their reporting rules are stable and code can already answer the question, ordinary software may be the best solution. If people repeatedly search business docs, Jira history and account configuration to decide what should happen, an assistant connected to those sources and reliable calculation tools is a reasonable pilot. The meeting should identify which situation applies.
+
+
+## Demo 2: Requirements become a reviewable implementation
+
+`portfolio/export/` contains a small working invoice exporter, two existing tests, a neutral request and five sample rows. Four source snapshots supply the approved Northstar settlement requirements, Finance rules, Jira scope and a later unapproved draft. The approved behavior uses America/New_York settlement dates, subtracts fees from paid amounts, does not refund processing fees, ignores unsettled records, validates included money/currency and preserves other customers’ invoice exports. September’s prepared CSV contains N-103 at -5000 cents and N-102 at 19400 cents: net $144.
+
+Both live modes can edit `app/exporter.py` and add test files in an isolated temporary workspace. Protected inputs are checked after the run; the resulting patch and generated files are saved under ignored `artifacts/live/<id>/`. The repository is never automatically patched. Twelve independent acceptance checks are supplied only after the model finishes, alongside the repository tests. A clarification-only response has no implementation to grade. A completed model run can still have failing checks.
+
+The prepared reference is not model-generated. It passes all 12 independent checks and both baseline tests; the original exporter passes its baseline tests but fails the new acceptance requirements. No new paid model runs were made to claim a docs-versus-repo outcome for this demo.
+
+## Demo 3: Change impact across code and business obligations
+
+`portfolio/migration/` contains a shared ATLAS decoder, three consuming jobs, two baseline tests and a retirement request. Six sources cover delivery scope, replay obligations, a customer agreement, dated operational usage and rollout/rollback requirements. The prepared recommendation defers shared v1 removal: Cedar still requires v1 and archived data needs replay support. A done daily-sales Jira ticket does not clear those dependencies; the October 1 usage snapshot must be refreshed.
+
+The worked example executes the actual repository checks twice: current support passes; a prepared removal of v1 fails the historical replay check. Its source-linked dependency matrix is author-prepared, not inferred from real production telemetry. Both live modes perform read-only assessments; no automated narrative correctness score is claimed.
+
+## Production integration versus local execution
+
+The architecture pages explain a proposed production flow: request and user scope → authorized Git/Jira/Confluence/operations retrieval → full evidence with versions and dates → explicit claims or requirements → independent checks → human approval. An optional permission-aware index helps discovery; it is not necessary to put the entire repository in a vector database.
+
+Locally, the two raw modes receive file snapshots. Only the reporting demo’s separately labeled guided mode uses the existing real local MCP server and prepared calculator. The new demos do not claim live Jira or Confluence connectivity. Source pages and prepared examples incur no model calls.

@@ -17,6 +17,7 @@ import time
 import uuid
 
 import agent
+import portfolio
 from catalog import ROOT, digest
 from codex_compare import inputs
 from process_utils import signal_group
@@ -31,13 +32,14 @@ RAW_PROMPT = ("Investigate the customer issue in issue.json. Explain what is hap
               "in this working directory.")
 
 
-def raw_command(model, budget):
+def raw_command(model, budget, writable=False):
     # The default Claude Code system prompt is preserved. Restricted mode confines
     # file tools. Native Bash supports ordinary inspection and test commands.
     # This is not an OS read sandbox: Python can access files outside the directory.
+    tool_names = "Read,Glob,Grep,Bash" + (",Edit,Write" if writable else "")
     command = [shutil.which("claude") or "claude", "--print", "--output-format", "stream-json",
-               "--verbose", "--restricted", "--safe-mode", "--tools", "Read,Glob,Grep,Bash",
-               "--allowedTools", "Read,Glob,Grep,Bash",
+               "--verbose", "--restricted", "--safe-mode", "--tools", tool_names,
+               "--allowedTools", tool_names,
                "--permission-mode", "dontAsk", "--setting-sources", "",
                "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
                "--disable-slash-commands", "--no-chrome", "--no-session-persistence",
@@ -60,9 +62,10 @@ def stop_process(process):
 
 
 class Run:
-    def __init__(self, case_id, mode, prompt=RAW_PROMPT, *, timeout=240, budget=1.0):
+    def __init__(self, case_id, mode, prompt=None, *, timeout=240, budget=1.0):
         self.id = uuid.uuid4().hex
-        self.case_id, self.mode, self.prompt = case_id, mode, prompt
+        self.case_id, self.mode = case_id, mode
+        self.prompt = prompt if prompt is not None else portfolio.PROMPTS.get(portfolio.CASE_DEMOS.get(case_id), RAW_PROMPT)
         self.timeout, self.budget = timeout, budget
         self.lock = threading.Lock()
         self.cancel = threading.Event()
@@ -123,13 +126,18 @@ class Run:
                 result["status"] = "blocked"
                 raise RuntimeError("Claude Code is not signed in. Run claude auth login in your terminal, then start a new run.")
             with tempfile.TemporaryDirectory(prefix="datahoney-live-") as temporary:
-                files = {} if self.mode == "workflow" else inputs(self.mode == "raw_docs", self.case_id)
+                demo_name = portfolio.CASE_DEMOS.get(self.case_id, "report")
+                writable = demo_name == "export"
+                if demo_name != "report" and self.mode == "workflow":
+                    raise ValueError("Guided calculation is only available for the reporting demo.")
+                files = (portfolio.inputs(self.case_id, self.mode == "raw_docs") if demo_name != "report" else
+                         {} if self.mode == "workflow" else inputs(self.mode == "raw_docs", self.case_id))
                 for relative, content in files.items():
                     path = Path(temporary) / relative
                     path.parent.mkdir(parents=True, exist_ok=True)
                     path.write_text(content)
                 text = agent.prompt(self.case_id, "workflow") if self.mode == "workflow" else self.prompt
-                command = agent.client_command("workflow", client.get("configured_model"), self.budget) if self.mode == "workflow" else raw_command(client.get("configured_model"), self.budget)
+                command = agent.client_command("workflow", client.get("configured_model"), self.budget) if self.mode == "workflow" else raw_command(client.get("configured_model"), self.budget, writable)
                 result["prompt"] = text
                 result["input_hashes"] = {name: digest(content) for name, content in files.items()}
                 result["working_directory"] = temporary
@@ -217,12 +225,25 @@ class Run:
                     result["errors"].append("A requested tool was denied. Inspect the trace; this run is incomplete.")
                 if not result["answer"] and not result["packet"]:
                     result["errors"].append("The client returned no final answer.")
-                changed = [name for name, content in files.items()
-                           if not (Path(temporary) / name).is_file()
-                           or (Path(temporary) / name).read_text() != content]
+                changed = []
+                for name, content in files.items():
+                    path = Path(temporary) / name
+                    try:
+                        unchanged = not path.is_symlink() and path.read_text() == content
+                    except (OSError, UnicodeError):
+                        unchanged = False
+                    if not unchanged and not (writable and name == "app/exporter.py"):
+                        changed.append(name)
                 result["changed_input_files"] = changed
                 if changed:
-                    result["errors"].append("The model changed task inputs despite the read-only request.")
+                    result["errors"].append("The model changed protected task inputs.")
+                if writable:
+                    result["patch"] = portfolio.capture_patch(Path(temporary), files)
+                    if "app/exporter.py" in result["patch"]["files"] and not result["errors"]:
+                        result["implementation_checks"] = portfolio.acceptance(temporary)
+                    else:
+                        result["implementation_checks"] = {"passed": None, "output": "No eligible implementation to check. A justified clarification request can still be useful."}
+                    (destination / "changes.patch").write_text(result["patch"]["diff"])
                 if self.mode == "workflow":
                     parsed = agent.parse_trace("".join(trace), "workflow")
                     result["errors"] += parsed["errors"]

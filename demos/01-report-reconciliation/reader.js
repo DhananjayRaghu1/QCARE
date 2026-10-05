@@ -12,24 +12,13 @@ const sourceNotes = {
   'DH-204': ['Jira request: Northstar wants transfers included', 'A requested change awaiting approval, not permission to change the existing definition of sales.'],
   'DH-188': ['Jira history: old and new ATLAS formats coexist', 'Explains the rollout and who owns code defects versus invalid export data. “Done” does not mean all files use v2.']
 };
-const caseSources = {
-  'DH-301': ['REPORT-STD-SEP','FEED-ATLAS-1','FEED-ATLAS-2','DH-188'],
-  'DH-302': ['REPORT-BLUEBIRD','REPORT-STD-SEP','FEED-ATLAS-2'],
-  'DH-303': ['REPORT-STD-SEP','DH-204','FEED-ATLAS-2'],
-  'DH-304': ['FEED-ATLAS-3-DRAFT','REPORT-STD-SEP'],
-  'DH-305': ['REPORT-CEDAR-A','REPORT-CEDAR-B','REPORT-STD-SEP','FEED-ATLAS-2'],
-  'DH-306': ['REPORT-STD-SEP','REPORT-STD-OCT','FEED-ATLAS-2'],
-  'DH-307': ['REPORT-STD-OCT','REPORT-STD-SEP','FEED-ATLAS-2'],
-  'DH-308': ['FEED-ATLAS-2','REPORT-STD-SEP','DH-188'],
-  'DH-309': ['FEED-ATLAS-1','REPORT-STD-SEP','DH-188'],
-  'DH-310': ['FEED-ATLAS-1','REPORT-STD-SEP']
-};
+const caseSources = {'DH-301': ['REPORT-STD-SEP','FEED-ATLAS-1','FEED-ATLAS-2','DH-188']};
 const terms = {
   ATLAS: ['ATLAS — the fictional source system', 'ATLAS is the name given to the upstream system supplying transaction export files in this demo. It is not the AI, the reporting application, or a live connection to a vendor. The files contain rows for sales, returns and transfers. Different export versions encode those rows differently.', ['FEED-ATLAS-1','FEED-ATLAS-2','FEED-ATLAS-3-DRAFT','DH-188']],
   NORTHSTAR: ['Northstar — a fictional customer', 'Northstar receives the monthly sales report and challenges its result. Its tickets use the standard reporting profile. Northstar is separate from ATLAS, the system supplying the underlying rows.', ['REPORT-STD-SEP','REPORT-STD-OCT','DH-204']],
   BLUEBIRD: ['Bluebird — a fictional customer with an exception', 'Bluebird has its own approved reporting agreement. A customer-specific agreement can change which reporting date applies, without changing how ATLAS encodes amounts.', ['REPORT-BLUEBIRD']],
   CEDAR: ['Cedar — a fictional customer with conflicting agreements', 'Cedar has two approved reporting documents that disagree about which date to use. The demo illustrates why someone must resolve that conflict before an authoritative total is confirmed.', ['REPORT-CEDAR-A','REPORT-CEDAR-B']],
-  Jira: ['Jira — the issue and work tracker', 'Here, Jira means two synthetic snapshots of work records: DH-188 describes a completed rollout, and DH-204 records a request awaiting approval. The demo does not connect to a live Jira account. DH-301 through DH-310 are the separate customer cases being investigated.', ['DH-188','DH-204']],
+  Jira: ['Jira — the issue and work tracker', 'Here, Jira means two synthetic snapshots of work records: DH-188 describes a completed rollout, and DH-204 records a request awaiting approval. The demo does not connect to a live Jira account. DH-301 is the customer case being investigated in this demo.', ['DH-188','DH-204']],
   'net sales': ['Net sales — what the report is measuring', 'The sum of sales and applicable adjustments for a reporting month. It is not simply “sum every amount”: the agreed reporting definition controls dates and included transaction types, while the export contract controls the sign of each amount.', ['REPORT-STD-SEP','REPORT-STD-OCT']],
   schema_version: ['Schema version — which file rules apply to a row', 'A schema is a file format. This field selects the rules for interpreting that row: ATLAS v1 preserves signed amounts, while v2 supplies nonnegative sizes. Old and new formats can coexist in one report. The newest format does not automatically apply to older rows.', ['FEED-ATLAS-1','FEED-ATLAS-2','DH-188']],
   amount_cents: ['amount_cents — money stored as whole cents', 'The source stores $200.00 as 20000, not 200.00. Integer cents avoid rounding errors. A minus sign is part of the supplied data; whether it is valid and how it affects sales depends on the export version.', ['FEED-ATLAS-1','FEED-ATLAS-2']],
@@ -63,7 +52,7 @@ const decisionHelp = {
 };
 const rxEscape = value => value.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 function sourceLink(id,label){return `<a class="source-link" href="/documents/${encodeURIComponent(id)}" data-source="${esc(id)}" title="Open the complete source">${esc(label||id)}</a>`;}
-function termLink(key,label){return `<a class="term-link" href="/?term=${encodeURIComponent(key)}" data-term="${esc(key)}">${esc(label||key)}</a>`;}
+function termLink(key,label){return `<a class="term-link" href="/demos/report?term=${encodeURIComponent(key)}" data-term="${esc(key)}">${esc(label||key)}</a>`;}
 function scopeDescription(doc){const s=doc.scope;return s.feed?'ATLAS exports'+(s.schema_version?' · file version '+s.schema_version:' · all versions'):(s.customer==='*'?'Default reporting profile':s.customer+' customer profile')+' · net sales';}
 function linkReferences(root){
   if(!root||!reader.documents.size)return;
@@ -75,7 +64,7 @@ function linkReferences(root){
   for(const textNode of nodes){let last=0,match;pattern.lastIndex=0;const fragment=document.createDocumentFragment();
     while(match=pattern.exec(textNode.textContent)){fragment.append(document.createTextNode(textNode.textContent.slice(last,match.index)));const key=match[0],a=document.createElement('a');a.textContent=key;
       if(reader.documents.has(key)){a.href='/documents/'+encodeURIComponent(key);a.dataset.source=key;a.className='source-link';a.title=sourceNotes[key][0];}
-      else{const term=aliases[key]||key;a.href='/?term='+encodeURIComponent(term);a.dataset.term=term;a.className='term-link';a.title=terms[term][0];}
+      else{const term=aliases[key]||key;a.href='/demos/report?term='+encodeURIComponent(term);a.dataset.term=term;a.className='term-link';a.title=terms[term][0];}
       fragment.append(a);last=pattern.lastIndex;
     }
     if(last){fragment.append(document.createTextNode(textNode.textContent.slice(last)));textNode.replaceWith(fragment);}
