@@ -1,0 +1,505 @@
+{
+  "format_version": 1,
+  "provenance": "live-model",
+  "attempts": 4,
+  "note": "Every model attempt is retained. Each uses one read-only Opus session; the driver chose defer for this synthetic rehearsal. Original attempts remain unchanged.",
+  "developer_note": "The CI is green. Please approve the cleanup for October 15.",
+  "runs": [
+    {
+      "run_id": "d07477da118344a4a9745a7a12d127e5",
+      "recorded_at": "2026-10-05T23:38:34.146850+00:00",
+      "context": true,
+      "status": "completed",
+      "outcome": "defer",
+      "model": "claude-opus-5-5",
+      "headline": {
+        "context": true,
+        "status": "completed",
+        "outcome": "defer",
+        "hidden_passed": 2,
+        "hidden_total": 12,
+        "quotes_verified": 8,
+        "quotes_checkable": 15,
+        "gate": "block",
+        "dependents": 4,
+        "obligations": 9,
+        "owners": 4,
+        "earliest_full_removal": null,
+        "earliest_conditional_full_removal": "2026-12-30",
+        "model_seconds": 53.68,
+        "cost_usd": 0.3374,
+        "decisions": 1,
+        "sent": false
+      },
+      "grading": {
+        "hidden_passed": 2,
+        "hidden_total": 12,
+        "passed": false,
+        "checks": [
+          {
+            "id": "M1",
+            "name": "Map code consumers and the recovery dependent",
+            "passed": false,
+            "detail": "Map daily_sales, historical_replay, partner_statement and rollback to the shared decoder."
+          },
+          {
+            "id": "M2",
+            "name": "Keep the completed ticket scoped to live ingest",
+            "passed": false,
+            "detail": "Verified DH-510 evidence must distinguish NORTHSTAR live ingest from replay and partner delivery."
+          },
+          {
+            "id": "M3",
+            "name": "Use current usage and recognize the older snapshot",
+            "passed": false,
+            "detail": "The October 4 operational snapshot supports current usage; October 1 alone cannot do so."
+          },
+          {
+            "id": "M4",
+            "name": "Respect Cedar's inclusive delivery commitment",
+            "passed": false,
+            "detail": "Cedar's signed v1 obligation includes November 30; December 1 is only a date lower bound."
+          },
+          {
+            "id": "M5",
+            "name": "Separate partner delivery and customer approval owners",
+            "passed": false,
+            "detail": "Partner Engineering owns delivery; Customer Success obtains the approved customer migration window."
+          },
+          {
+            "id": "M6",
+            "name": "Compute the original-export replay horizon",
+            "passed": false,
+            "detail": "The last original v1 export is September 30; the inclusive age-90 window ends December 29."
+          },
+          {
+            "id": "M7",
+            "name": "Keep replay and backup readability obligations",
+            "passed": false,
+            "detail": "Existing original archives and backups lack verified conversion; dates alone do not prove readability."
+          },
+          {
+            "id": "M8",
+            "name": "Require rollback proof from its responsible owners",
+            "passed": false,
+            "detail": "A rehearsal and joint Reporting Engineering/Data Operations sign-off are still required."
+          },
+          {
+            "id": "M9",
+            "name": "Preserve both transaction sign conventions",
+            "passed": false,
+            "detail": "A signed v1 reversal contributes +5000; a v2 return magnitude of 5000 contributes -5000."
+          },
+          {
+            "id": "M10",
+            "name": "Demonstrate green CI and silent monetary loss",
+            "passed": true,
+            "detail": "CI passes after the legacy test is deleted; synthetic replay drops NORTHSTAR from $1,250 to $400 and Cedar from $180 to $0 without errors."
+          },
+          {
+            "id": "M11",
+            "name": "Apply scoped gates that a developer note cannot flip",
+            "passed": true,
+            "detail": "Cleared live ingest can pass its scoped gate while the other dependents and shared removal remain blocked."
+          },
+          {
+            "id": "M12",
+            "name": "Draft concrete unsent handoffs with a conditional date",
+            "passed": false,
+            "detail": "Full removal has no authorized date. December 30 is conditional; the unsent PR review, owner sign-off requests and decision-record update explain what remains."
+          }
+        ],
+        "label": "Twelve hidden assessment checks that the agent never saw and the release gate never used. They grade this synthetic demo; they do not authorize a release."
+      },
+      "metrics": [
+        {
+          "node": "analyze",
+          "seconds": 53.68,
+          "cost_usd": 0.3373838,
+          "models": [
+            "claude-opus-5-5"
+          ],
+          "lookups": 17,
+          "tool_calls": 8,
+          "blocked": 0
+        }
+      ],
+      "spent_usd": 0.3374,
+      "phase": "initial harness rehearsal",
+      "recording": "demos/01-report-reconciliation/recordings/langgraph-migration/2026-10-05-opus-5-5-initial-with-context.json"
+    },
+    {
+      "run_id": "b743a9ae8ef641caa55a9876f702e6c3",
+      "recorded_at": "2026-10-05T23:39:58.370633+00:00",
+      "context": false,
+      "status": "completed",
+      "outcome": "defer",
+      "model": "claude-opus-5-5",
+      "headline": {
+        "context": false,
+        "status": "completed",
+        "outcome": "defer",
+        "hidden_passed": 1,
+        "hidden_total": 12,
+        "quotes_verified": 0,
+        "quotes_checkable": 6,
+        "gate": "block",
+        "dependents": 4,
+        "obligations": 0,
+        "owners": 0,
+        "earliest_full_removal": null,
+        "earliest_conditional_full_removal": null,
+        "model_seconds": 35.99,
+        "cost_usd": 0.1725,
+        "decisions": 1,
+        "sent": false
+      },
+      "grading": {
+        "hidden_passed": 1,
+        "hidden_total": 12,
+        "passed": false,
+        "checks": [
+          {
+            "id": "M1",
+            "name": "Map code consumers and the recovery dependent",
+            "passed": false,
+            "detail": "Map daily_sales, historical_replay, partner_statement and rollback to the shared decoder."
+          },
+          {
+            "id": "M2",
+            "name": "Keep the completed ticket scoped to live ingest",
+            "passed": false,
+            "detail": "Verified DH-510 evidence must distinguish NORTHSTAR live ingest from replay and partner delivery."
+          },
+          {
+            "id": "M3",
+            "name": "Use current usage and recognize the older snapshot",
+            "passed": false,
+            "detail": "The October 4 operational snapshot supports current usage; October 1 alone cannot do so."
+          },
+          {
+            "id": "M4",
+            "name": "Respect Cedar's inclusive delivery commitment",
+            "passed": false,
+            "detail": "Cedar's signed v1 obligation includes November 30; December 1 is only a date lower bound."
+          },
+          {
+            "id": "M5",
+            "name": "Separate partner delivery and customer approval owners",
+            "passed": false,
+            "detail": "Partner Engineering owns delivery; Customer Success obtains the approved customer migration window."
+          },
+          {
+            "id": "M6",
+            "name": "Compute the original-export replay horizon",
+            "passed": false,
+            "detail": "The last original v1 export is September 30; the inclusive age-90 window ends December 29."
+          },
+          {
+            "id": "M7",
+            "name": "Keep replay and backup readability obligations",
+            "passed": false,
+            "detail": "Existing original archives and backups lack verified conversion; dates alone do not prove readability."
+          },
+          {
+            "id": "M8",
+            "name": "Require rollback proof from its responsible owners",
+            "passed": false,
+            "detail": "A rehearsal and joint Reporting Engineering/Data Operations sign-off are still required."
+          },
+          {
+            "id": "M9",
+            "name": "Preserve both transaction sign conventions",
+            "passed": false,
+            "detail": "A signed v1 reversal contributes +5000; a v2 return magnitude of 5000 contributes -5000."
+          },
+          {
+            "id": "M10",
+            "name": "Demonstrate green CI and silent monetary loss",
+            "passed": true,
+            "detail": "CI passes after the legacy test is deleted; synthetic replay drops NORTHSTAR from $1,250 to $400 and Cedar from $180 to $0 without errors."
+          },
+          {
+            "id": "M11",
+            "name": "Apply scoped gates that a developer note cannot flip",
+            "passed": false,
+            "detail": "Cleared live ingest can pass its scoped gate while the other dependents and shared removal remain blocked."
+          },
+          {
+            "id": "M12",
+            "name": "Draft concrete unsent handoffs with a conditional date",
+            "passed": false,
+            "detail": "Full removal has no authorized date. December 30 is conditional; the unsent PR review, owner sign-off requests and decision-record update explain what remains."
+          }
+        ],
+        "label": "Twelve hidden assessment checks that the agent never saw and the release gate never used. They grade this synthetic demo; they do not authorize a release."
+      },
+      "metrics": [
+        {
+          "node": "analyze",
+          "seconds": 35.99,
+          "cost_usd": 0.1725328,
+          "models": [
+            "claude-opus-5-5"
+          ],
+          "lookups": 0,
+          "tool_calls": 9,
+          "blocked": 0
+        }
+      ],
+      "spent_usd": 0.1725,
+      "phase": "initial harness rehearsal",
+      "recording": "demos/01-report-reconciliation/recordings/langgraph-migration/2026-10-05-opus-5-5-initial-no-context.json"
+    },
+    {
+      "run_id": "5cbc8ea38f25402c8130ce23b2d2c4cb",
+      "recorded_at": "2026-10-05T23:43:21.645874+00:00",
+      "context": true,
+      "status": "completed",
+      "outcome": "defer",
+      "model": "claude-opus-5-5",
+      "headline": {
+        "context": true,
+        "status": "completed",
+        "outcome": "defer",
+        "hidden_passed": 12,
+        "hidden_total": 12,
+        "quotes_verified": 19,
+        "quotes_checkable": 20,
+        "gate": "block",
+        "dependents": 4,
+        "obligations": 9,
+        "owners": 5,
+        "earliest_full_removal": null,
+        "earliest_conditional_full_removal": "2026-12-30",
+        "model_seconds": 63.99,
+        "cost_usd": 0.3633,
+        "decisions": 1,
+        "sent": false
+      },
+      "grading": {
+        "hidden_passed": 12,
+        "hidden_total": 12,
+        "passed": true,
+        "checks": [
+          {
+            "id": "M1",
+            "name": "Map code consumers and the recovery dependent",
+            "passed": true,
+            "detail": "Map daily_sales, historical_replay, partner_statement and rollback to the shared decoder."
+          },
+          {
+            "id": "M2",
+            "name": "Keep the completed ticket scoped to live ingest",
+            "passed": true,
+            "detail": "Verified DH-510 evidence must distinguish NORTHSTAR live ingest from replay and partner delivery."
+          },
+          {
+            "id": "M3",
+            "name": "Use current usage and recognize the older snapshot",
+            "passed": true,
+            "detail": "The October 4 operational snapshot supports current usage; October 1 alone cannot do so."
+          },
+          {
+            "id": "M4",
+            "name": "Respect Cedar's inclusive delivery commitment",
+            "passed": true,
+            "detail": "Cedar's signed v1 obligation includes November 30; December 1 is only a date lower bound."
+          },
+          {
+            "id": "M5",
+            "name": "Separate partner delivery and customer approval owners",
+            "passed": true,
+            "detail": "Partner Engineering owns delivery; Customer Success obtains the approved customer migration window."
+          },
+          {
+            "id": "M6",
+            "name": "Compute the original-export replay horizon",
+            "passed": true,
+            "detail": "The last original v1 export is September 30; the inclusive age-90 window ends December 29."
+          },
+          {
+            "id": "M7",
+            "name": "Keep replay and backup readability obligations",
+            "passed": true,
+            "detail": "Existing original archives and backups lack verified conversion; dates alone do not prove readability."
+          },
+          {
+            "id": "M8",
+            "name": "Require rollback proof from its responsible owners",
+            "passed": true,
+            "detail": "A rehearsal and joint Reporting Engineering/Data Operations sign-off are still required."
+          },
+          {
+            "id": "M9",
+            "name": "Preserve both transaction sign conventions",
+            "passed": true,
+            "detail": "A signed v1 reversal contributes +5000; a v2 return magnitude of 5000 contributes -5000."
+          },
+          {
+            "id": "M10",
+            "name": "Demonstrate green CI and silent monetary loss",
+            "passed": true,
+            "detail": "CI passes after the legacy test is deleted; synthetic replay drops NORTHSTAR from $1,250 to $400 and Cedar from $180 to $0 without errors."
+          },
+          {
+            "id": "M11",
+            "name": "Apply scoped gates that a developer note cannot flip",
+            "passed": true,
+            "detail": "Cleared live ingest can pass its scoped gate while the other dependents and shared removal remain blocked."
+          },
+          {
+            "id": "M12",
+            "name": "Draft concrete unsent handoffs with a conditional date",
+            "passed": true,
+            "detail": "Full removal has no authorized date. December 30 is conditional; the unsent PR review, owner sign-off requests and decision-record update explain what remains."
+          }
+        ],
+        "label": "Twelve hidden assessment checks that the agent never saw and the release gate never used. They grade this synthetic demo; they do not authorize a release."
+      },
+      "metrics": [
+        {
+          "node": "analyze",
+          "seconds": 63.99,
+          "cost_usd": 0.36325399999999997,
+          "models": [
+            "claude-opus-5-5"
+          ],
+          "lookups": 17,
+          "tool_calls": 9,
+          "blocked": 0
+        }
+      ],
+      "spent_usd": 0.3633,
+      "phase": "matched comparison after identity corrections",
+      "recording": "demos/01-report-reconciliation/recordings/langgraph-migration/2026-10-05-opus-5-5-with-context.json"
+    },
+    {
+      "run_id": "77e9bf3c30604a29898aa2a132177df9",
+      "recorded_at": "2026-10-05T23:45:08.534676+00:00",
+      "context": false,
+      "status": "completed",
+      "outcome": "defer",
+      "model": "claude-opus-5-5",
+      "headline": {
+        "context": false,
+        "status": "completed",
+        "outcome": "defer",
+        "hidden_passed": 1,
+        "hidden_total": 12,
+        "quotes_verified": 0,
+        "quotes_checkable": 6,
+        "gate": "block",
+        "dependents": 2,
+        "obligations": 0,
+        "owners": 0,
+        "earliest_full_removal": null,
+        "earliest_conditional_full_removal": null,
+        "model_seconds": 70.0,
+        "cost_usd": 0.2899,
+        "decisions": 1,
+        "sent": false
+      },
+      "grading": {
+        "hidden_passed": 1,
+        "hidden_total": 12,
+        "passed": false,
+        "checks": [
+          {
+            "id": "M1",
+            "name": "Map code consumers and the recovery dependent",
+            "passed": false,
+            "detail": "Map daily_sales, historical_replay, partner_statement and rollback to the shared decoder."
+          },
+          {
+            "id": "M2",
+            "name": "Keep the completed ticket scoped to live ingest",
+            "passed": false,
+            "detail": "Verified DH-510 evidence must distinguish NORTHSTAR live ingest from replay and partner delivery."
+          },
+          {
+            "id": "M3",
+            "name": "Use current usage and recognize the older snapshot",
+            "passed": false,
+            "detail": "The October 4 operational snapshot supports current usage; October 1 alone cannot do so."
+          },
+          {
+            "id": "M4",
+            "name": "Respect Cedar's inclusive delivery commitment",
+            "passed": false,
+            "detail": "Cedar's signed v1 obligation includes November 30; December 1 is only a date lower bound."
+          },
+          {
+            "id": "M5",
+            "name": "Separate partner delivery and customer approval owners",
+            "passed": false,
+            "detail": "Partner Engineering owns delivery; Customer Success obtains the approved customer migration window."
+          },
+          {
+            "id": "M6",
+            "name": "Compute the original-export replay horizon",
+            "passed": false,
+            "detail": "The last original v1 export is September 30; the inclusive age-90 window ends December 29."
+          },
+          {
+            "id": "M7",
+            "name": "Keep replay and backup readability obligations",
+            "passed": false,
+            "detail": "Existing original archives and backups lack verified conversion; dates alone do not prove readability."
+          },
+          {
+            "id": "M8",
+            "name": "Require rollback proof from its responsible owners",
+            "passed": false,
+            "detail": "A rehearsal and joint Reporting Engineering/Data Operations sign-off are still required."
+          },
+          {
+            "id": "M9",
+            "name": "Preserve both transaction sign conventions",
+            "passed": false,
+            "detail": "A signed v1 reversal contributes +5000; a v2 return magnitude of 5000 contributes -5000."
+          },
+          {
+            "id": "M10",
+            "name": "Demonstrate green CI and silent monetary loss",
+            "passed": true,
+            "detail": "CI passes after the legacy test is deleted; synthetic replay drops NORTHSTAR from $1,250 to $400 and Cedar from $180 to $0 without errors."
+          },
+          {
+            "id": "M11",
+            "name": "Apply scoped gates that a developer note cannot flip",
+            "passed": false,
+            "detail": "Cleared live ingest can pass its scoped gate while the other dependents and shared removal remain blocked."
+          },
+          {
+            "id": "M12",
+            "name": "Draft concrete unsent handoffs with a conditional date",
+            "passed": false,
+            "detail": "Full removal has no authorized date. December 30 is conditional; the unsent PR review, owner sign-off requests and decision-record update explain what remains."
+          }
+        ],
+        "label": "Twelve hidden assessment checks that the agent never saw and the release gate never used. They grade this synthetic demo; they do not authorize a release."
+      },
+      "metrics": [
+        {
+          "node": "analyze",
+          "seconds": 70.0,
+          "cost_usd": 0.2899268,
+          "models": [
+            "claude-opus-5-5"
+          ],
+          "lookups": 0,
+          "tool_calls": 10,
+          "blocked": 0
+        }
+      ],
+      "spent_usd": 0.2899,
+      "phase": "matched comparison after identity corrections",
+      "recording": "demos/01-report-reconciliation/recordings/langgraph-migration/2026-10-05-opus-5-5-no-context.json"
+    }
+  ],
+  "interpretation": "Both conditions block full removal. Context provides supported obligations, sign-off owners and conditional dates. This is one synthetic comparison, not a productivity estimate.",
+  "source_commit_base": "f4ca32ed1320cf436d03344d87b83368ed28dc3c",
+  "working_tree_changes": true,
+  "source_versions": "The corrected recordings include input and software hashes captured by the workflow; software adapters were tightened during integration. No model output was edited."
+}

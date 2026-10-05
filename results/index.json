@@ -29,6 +29,64 @@
     "path": "runs/2026-10-05_report-reconciliation_live-comparison_opus-5-5"
   },
   {
+    "id": "2026-10-05_format-retirement_live-comparison_opus-5-5",
+    "date": "2026-10-05",
+    "demo": "format-retirement",
+    "kind": "live-comparison",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "conditions": [
+      "context-on",
+      "context-off"
+    ],
+    "headline": "One read-only Opus session per condition: context on 12/12 and context off 1/12; both block shared removal, but only context establishes obligations, approval owners and a conditional date. All four attempts are retained.",
+    "metrics": {
+      "context_on_hidden_passed": 12,
+      "context_off_hidden_passed": 1,
+      "hidden_total": 12,
+      "context_on_model_seconds": 63.99,
+      "context_off_model_seconds": 70.0,
+      "context_on_cost_usd": 0.3633,
+      "context_off_cost_usd": 0.2899,
+      "attempts": 4
+    },
+    "cost_usd": 1.1631,
+    "human_review": "done",
+    "tags": [
+      "opus-5-5",
+      "langgraph",
+      "release-check",
+      "synthetic",
+      "control"
+    ],
+    "path": "runs/2026-10-05_format-retirement_live-comparison_opus-5-5"
+  },
+  {
+    "id": "2026-10-05_format-retirement_controls",
+    "date": "2026-10-05",
+    "demo": "format-retirement",
+    "kind": "controls",
+    "status": "completed",
+    "provenance": "deterministic",
+    "models": [],
+    "conditions": [
+      "prepared-context-on",
+      "prepared-context-off"
+    ],
+    "headline": "Actual synthetic CI and job execution plus a prepared assessment exercise the graph: 12/12 with prepared sources and 2/12 without; no model called.",
+    "metrics": {
+      "model_requests": 0,
+      "passed": true
+    },
+    "cost_usd": null,
+    "human_review": "done",
+    "tags": null,
+    "path": "runs/2026-10-05_format-retirement_controls"
+  },
+  {
     "id": "2026-10-05_customer-export_rehearsal_opus-5-5-2",
     "date": "2026-10-05",
     "demo": "customer-export",

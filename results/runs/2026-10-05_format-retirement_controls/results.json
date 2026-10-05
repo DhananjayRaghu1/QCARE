@@ -1,0 +1,2146 @@
+{
+  "provenance": "actual_deterministic_graph_and_job_execution",
+  "model_requests": 0,
+  "passed": true,
+  "runs": [
+    {
+      "id": "3b42865fb1564d07964c8995bacc9ff6",
+      "case_id": "DH-501",
+      "status": "completed",
+      "outcome": "defer",
+      "context": true,
+      "recorded_at": "2026-10-05T23:49:32.852734+00:00",
+      "model": null,
+      "developer_note": "A developer note cannot waive obligations.",
+      "elapsed_seconds": 0.145,
+      "spent_usd": 0,
+      "error": null,
+      "summary": {
+        "analysis": {
+          "summary": "Author-prepared synthetic dependency assessment for deterministic verification.",
+          "dependents": [
+            {
+              "id": "daily_sales",
+              "workflow": "daily_sales",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [
+                {
+                  "source_id": "DH-510",
+                  "quote": "Done on 2026-10-02: daily_sales now accepts v2 for NORTHSTAR live ingest. Scope excludes historical_replay and partner_statement. Data Integrations owns live ingest confirmation."
+                }
+              ],
+              "usage": [
+                {
+                  "source_id": "OPS-USAGE-1004",
+                  "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts."
+                },
+                {
+                  "source_id": "OPS-USAGE-1001",
+                  "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision."
+                }
+              ],
+              "owners": [
+                "Data Integrations"
+              ],
+              "earliest_removal": "2026-10-15",
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "historical_replay",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [
+                {
+                  "source_id": "OPS-REPLAY",
+                  "quote": "Data Operations must support replay of the previous 90 days of original ATLAS exports. Archives for July through September 2026 include schema v1. Backups must remain readable during migration. No verified v1-to-v2 archive conversion has been completed. A shared v1 decoder removal would affect historical_replay even if no new v1 files arrive. The latest original NORTHSTAR v1 export is dated 2026-09-30. For the 90-day replay window, the original export day is day 0 and exports aged 90 days remain in scope through the end of that day. No conversion or replay acceptance evidence has been approved as of 2026-10-04."
+                }
+              ],
+              "usage": [
+                {
+                  "source_id": "OPS-USAGE-1004",
+                  "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts."
+                },
+                {
+                  "source_id": "OPS-USAGE-1001",
+                  "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision."
+                }
+              ],
+              "owners": [
+                "Data Operations"
+              ],
+              "earliest_removal": "2026-12-30",
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "partner_statement",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [
+                {
+                  "source_id": "CONTRACT-CEDAR",
+                  "quote": "CEDAR partner_statement remains on ATLAS v1 through 2026-11-30 inclusive. No customer-signed amendment exists as of 2026-10-04. Partner Engineering owns delivery; Customer Success must obtain approval of a migration window before changing the format."
+                }
+              ],
+              "usage": [
+                {
+                  "source_id": "OPS-USAGE-1004",
+                  "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts."
+                },
+                {
+                  "source_id": "OPS-USAGE-1001",
+                  "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision."
+                }
+              ],
+              "owners": [
+                "Partner Engineering",
+                "Customer Success"
+              ],
+              "earliest_removal": "2026-12-01",
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "rollback",
+              "workflow": "rollback",
+              "customer": null,
+              "code_path": "app/decoder.py",
+              "obligations": [
+                {
+                  "source_id": "RUNBOOK-ROLLBACK",
+                  "quote": "Before any removal: obtain customer approvals, prove archived v1 data remains replayable, refresh per-job traffic evidence, test signed v1 reversals (+5000 must remain +5000) against v2 return magnitudes (5000 becomes -5000), and rehearse rollback. Reporting Engineering owns rollout; Data Operations owns replay and rollback evidence. As of 2026-10-04, no decoder retirement rollback rehearsal result has been approved. Reporting Engineering and Data Operations must jointly sign the retained-decoder rollback evidence before the shared decoder is retired."
+                }
+              ],
+              "usage": [],
+              "owners": [
+                "Reporting Engineering",
+                "Data Operations"
+              ],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            }
+          ],
+          "earliest_full_removal": null,
+          "earliest_conditional_full_removal": "2026-12-30",
+          "missing_evidence": [
+            "Customer migration, archive/backup acceptance and rollback proof."
+          ],
+          "recommendation": "Defer shared removal; investigate only a proven live path."
+        },
+        "grounding": {
+          "verified": 10,
+          "checkable": 10,
+          "results": [
+            {
+              "dependent": "daily_sales",
+              "kind": "obligations",
+              "source_id": "DH-510",
+              "quote": "Done on 2026-10-02: daily_sales now accepts v2 for NORTHSTAR live ingest. Scope excludes historical_replay and partner_statement. Data Integrations owns live ingest confirmation.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "daily_sales",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1004",
+              "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "daily_sales",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1001",
+              "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "historical_replay",
+              "kind": "obligations",
+              "source_id": "OPS-REPLAY",
+              "quote": "Data Operations must support replay of the previous 90 days of original ATLAS exports. Archives for July through September 2026 include schema v1. Backups must remain readable during migration. No verified v1-to-v2 archive conversion has been completed. A shared v1 decoder removal would affect historical_replay even if no new v1 files arrive. The latest original NORTHSTAR v1 export is dated 2026-09-30. For the 90-day replay window, the original export day is day 0 and exports aged 90 days remain in scope through the end of that day. No conversion or replay acceptance evidence has been approved as of 2026-10-04.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "historical_replay",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1004",
+              "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "historical_replay",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1001",
+              "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "partner_statement",
+              "kind": "obligations",
+              "source_id": "CONTRACT-CEDAR",
+              "quote": "CEDAR partner_statement remains on ATLAS v1 through 2026-11-30 inclusive. No customer-signed amendment exists as of 2026-10-04. Partner Engineering owns delivery; Customer Success must obtain approval of a migration window before changing the format.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "partner_statement",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1004",
+              "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "partner_statement",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1001",
+              "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "rollback",
+              "kind": "obligations",
+              "source_id": "RUNBOOK-ROLLBACK",
+              "quote": "Before any removal: obtain customer approvals, prove archived v1 data remains replayable, refresh per-job traffic evidence, test signed v1 reversals (+5000 must remain +5000) against v2 return magnitudes (5000 becomes -5000), and rehearse rollback. Reporting Engineering owns rollout; Data Operations owns replay and rollback evidence. As of 2026-10-04, no decoder retirement rollback rehearsal result has been approved. Reporting Engineering and Data Operations must jointly sign the retained-decoder rollback evidence before the shared decoder is retired.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            }
+          ],
+          "context": true,
+          "text": "10 of 10 exact quotes verified against opened original records."
+        },
+        "gate": {
+          "decision": "block",
+          "dependents": [
+            {
+              "id": "daily_sales",
+              "workflow": "daily_sales",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "allow",
+              "owners": [
+                "Data Integrations"
+              ],
+              "earliest_removal": "2026-10-15",
+              "scope": "v2-only live-ingest canary; shared decoder retained",
+              "missing_evidence": [],
+              "conditions": [
+                "Limit the change to NORTHSTAR daily_sales live ingest and retain the shared v1 decoder.",
+                "Refresh traffic evidence within one day of the actual release and obtain the live-path owner's sign-off."
+              ],
+              "sources": [
+                "DH-510",
+                "OPS-USAGE-1001",
+                "OPS-USAGE-1004"
+              ]
+            },
+            {
+              "id": "historical_replay",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [
+                "Data Operations"
+              ],
+              "earliest_removal": "2026-12-30",
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Approved archive conversion/replay and backup-readability acceptance evidence is absent."
+              ],
+              "conditions": [
+                "Keep original v1 exports replayable through 2026-12-29 inclusive; 2026-12-30 is the earliest expiry-based removal date.",
+                "Data Operations must prove archived exports and backups remain readable, including signed v1 reversals.",
+                "Replay-window expiry alone does not clear current jobs, backups or rollback."
+              ],
+              "sources": [
+                "OPS-REPLAY",
+                "OPS-USAGE-1001",
+                "OPS-USAGE-1004"
+              ]
+            },
+            {
+              "id": "partner_statement",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [
+                "Partner Engineering",
+                "Customer Success"
+              ],
+              "earliest_removal": "2026-12-01",
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Customer agreement still requires v1 through 2026-11-30 inclusive.",
+                "Customer-signed migration window/amendment and verified v2 partner delivery are absent."
+              ],
+              "conditions": [
+                "Partner Engineering and Customer Success must obtain Cedar approval and verify delivery before format changes.",
+                "Agreement expiry alone does not prove migration or zero v1 traffic."
+              ],
+              "sources": [
+                "CONTRACT-CEDAR",
+                "OPS-USAGE-1001",
+                "OPS-USAGE-1004"
+              ]
+            },
+            {
+              "id": "rollback",
+              "workflow": "rollback",
+              "customer": null,
+              "code_path": "app/decoder.py",
+              "decision": "block",
+              "owners": [
+                "Reporting Engineering",
+                "Data Operations"
+              ],
+              "earliest_removal": null,
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "An approved decoder-retirement rollback rehearsal result is absent."
+              ],
+              "conditions": [
+                "Reporting Engineering and Data Operations must jointly sign rollback rehearsal evidence.",
+                "Verify retained-decoder recovery and both v1 signed reversals and v2 return magnitudes."
+              ],
+              "sources": [
+                "RUNBOOK-ROLLBACK"
+              ]
+            }
+          ],
+          "earliest_full_removal": null,
+          "earliest_conditional_full_removal": "2026-12-30",
+          "conditions": [
+            "Clear every dependent separately with approved scoped evidence and owner sign-offs.",
+            "Refresh per-job telemetry at release; verify archive/backup readability, customer migration and rollback.",
+            "The conditional calendar bound is not authorization for full removal."
+          ],
+          "evaluated_as_of": "2026-10-04",
+          "developer_note_can_override": false,
+          "synthetic": true
+        },
+        "replay": {
+          "synthetic": true,
+          "label": "Deterministic replay of synthetic recent jobs; no production data",
+          "jobs": [
+            {
+              "id": "northstar-september",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "month": "2026-09",
+              "before_cents": 125000,
+              "after_cents": 40000,
+              "lost_cents": 85000,
+              "skipped_ids": [
+                "A-1",
+                "A-2",
+                "A-3"
+              ],
+              "before_skipped_ids": [],
+              "before_error": null,
+              "after_error": null
+            },
+            {
+              "id": "cedar-statements",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "month": "2026-09",
+              "before_cents": 18000,
+              "after_cents": 0,
+              "lost_cents": 18000,
+              "skipped_ids": [
+                "C-1",
+                "C-2",
+                "C-3"
+              ],
+              "before_skipped_ids": [],
+              "before_error": null,
+              "after_error": null
+            }
+          ],
+          "source_case": "DH-301",
+          "source_case_sha256": "4d0bbdbf910c65197f1ddadf92e884bc1e58e9a364d97cd9e1740aac98ad954a",
+          "source_rows_sha256": "1bca1a33cdfa5da04f90d93964ae4f107d142b4e73dbd6645d700c09a3f348ed",
+          "sample_sha256": "b2bdf48135075ce9b81a3b8f57977caf3f84efb552e7627cd0e1eccff6eac5fb",
+          "base_sha256": "fac6bc328644bf16b1ccee1e474988fb81541ad088c8d0b322cb7d2de108d49c",
+          "head_sha256": "3b8d486abd61b235dd9ae0956f176e859a123489e47aa0dcf1f2e5ac52c14d79",
+          "northstar_rows_match_demo1": true
+        },
+        "ci": {
+          "synthetic": true,
+          "label": "Local CI rehearsal of prepared cleanup PR",
+          "passed": true,
+          "head": {
+            "passed": true,
+            "exit_code": 0,
+            "test_count": 1,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n"
+          },
+          "base": {
+            "passed": true,
+            "exit_code": 0,
+            "test_count": 2,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\ntest_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n"
+          },
+          "retained_test_failure": {
+            "passed": false,
+            "exit_code": 1,
+            "test_count": 2,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\ntest_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal) ... FAIL\n\n======================================================================\nFAIL: test_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"<workspace>/tests/test_existing.py\", line 7, in test_replay_v1_reversal\n    self.assertEqual(run_job(\"historical_replay\", [{\"schema_version\":\"1\", \"kind\":\"RETURN\", \"amount_cents\":5000}]),5000)\nAssertionError: 0 != 5000\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n"
+          },
+          "deleted_tests": [
+            "test_replay_v1_reversal"
+          ],
+          "base_sha256": "fac6bc328644bf16b1ccee1e474988fb81541ad088c8d0b322cb7d2de108d49c",
+          "head_sha256": "3b8d486abd61b235dd9ae0956f176e859a123489e47aa0dcf1f2e5ac52c14d79"
+        },
+        "diff": "--- a/app/decoder.py\n+++ b/app/decoder.py\n@@ -1,7 +1,5 @@\n-\"\"\"Normalizes both supported Atlas transaction formats.\"\"\"\n+\"\"\"Normalizes the Atlas transaction format.\"\"\"\n def normalize(row):\n-    if row[\"schema_version\"] == \"1\":\n-        return row[\"amount_cents\"]\n     if row[\"schema_version\"] == \"2\":\n         if row[\"amount_cents\"] < 0:\n             raise ValueError(\"Invalid magnitude\")\n--- a/app/jobs.py\n+++ b/app/jobs.py\n@@ -2,9 +2,9 @@\n \n # These are capabilities, not evidence of which feeds are active today.\n JOBS = {\n-    \"daily_sales\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Reporting Engineering\"},\n-    \"historical_replay\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Data Operations\"},\n-    \"partner_statement\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Partner Engineering\"},\n+    \"daily_sales\": {\"accepted_versions\": [\"2\"], \"owner\": \"Reporting Engineering\"},\n+    \"historical_replay\": {\"accepted_versions\": [\"2\"], \"owner\": \"Data Operations\"},\n+    \"partner_statement\": {\"accepted_versions\": [\"2\"], \"owner\": \"Partner Engineering\"},\n }\n \n def run_job(name, rows):\n--- a/tests/test_existing.py\n+++ b/tests/test_existing.py\n@@ -3,5 +3,3 @@\n class DecoderBehavior(unittest.TestCase):\n     def test_daily_v2(self):\n         self.assertEqual(run_job(\"daily_sales\", [{\"schema_version\":\"2\", \"kind\":\"SALE\", \"amount_cents\":10000}]),10000)\n-    def test_replay_v1_reversal(self):\n-        self.assertEqual(run_job(\"historical_replay\", [{\"schema_version\":\"1\", \"kind\":\"RETURN\", \"amount_cents\":5000}]),5000)\n",
+        "decision": {
+          "choice": "defer",
+          "message": "",
+          "gate_unchanged": true,
+          "release_authorized": false
+        },
+        "drafts": {
+          "sent": false,
+          "pr_review_comment": "Draft review for DH-501 \u2014 global v1 removal is block.\nPrepared PR CI passes after deleting the v1 reversal regression. Synthetic job replays: NORTHSTAR historical_replay: $1,250.00 \u2192 $400.00; CEDAR partner_statement: $180.00 \u2192 $0.00. Old rows are silently filtered; green CI does not cover these dependencies.\n- daily_sales: allow. Limit the change to NORTHSTAR daily_sales live ingest and retain the shared v1 decoder.; Refresh traffic evidence within one day of the actual release and obtain the live-path owner's sign-off.\n- historical_replay: block. Approved archive conversion/replay and backup-readability acceptance evidence is absent.; Keep original v1 exports replayable through 2026-12-29 inclusive; 2026-12-30 is the earliest expiry-based removal date.; Data Operations must prove archived exports and backups remain readable, including signed v1 reversals.; Replay-window expiry alone does not clear current jobs, backups or rollback.\n- partner_statement: block. Customer agreement still requires v1 through 2026-11-30 inclusive.; Customer-signed migration window/amendment and verified v2 partner delivery are absent.; Partner Engineering and Customer Success must obtain Cedar approval and verify delivery before format changes.; Agreement expiry alone does not prove migration or zero v1 traffic.\n- rollback: block. An approved decoder-retirement rollback rehearsal result is absent.; Reporting Engineering and Data Operations must jointly sign rollback rehearsal evidence.; Verify retained-decoder recovery and both v1 signed reversals and v2 return magnitudes.\nConditional earliest full removal: 2026-12-30. No unconditional removal date is cleared.\nChosen next action: defer.\nVerified source quotes:\n- DH-510: \u201cDone on 2026-10-02: daily_sales now accepts v2 for NORTHSTAR live ingest. Scope excludes historical_replay and partner_statement. Data Integrations owns live ingest confirmation.\u201d\n- OPS-USAGE-1004: \u201cSnapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.\u201d\n- OPS-USAGE-1001: \u201cSnapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.\u201d\n- OPS-REPLAY: \u201cData Operations must support replay of the previous 90 days of original ATLAS exports. Archives for July through September 2026 include schema v1. Backups must remain readable during migration. No verified v1-to-v2 archive conversion has been completed. A shared v1 decoder removal would affect historical_replay even if no new v1 files arrive. The latest original NORTHSTAR v1 export is dated 2026-09-30. For the 90-day replay window, the original export day is day 0 and exports aged 90 days remain in scope through the end of that day. No conversion or replay acceptance evidence has been approved as of 2026-10-04.\u201d\n- OPS-USAGE-1004: \u201cSnapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.\u201d\n- OPS-USAGE-1001: \u201cSnapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.\u201d\n- CONTRACT-CEDAR: \u201cCEDAR partner_statement remains on ATLAS v1 through 2026-11-30 inclusive. No customer-signed amendment exists as of 2026-10-04. Partner Engineering owns delivery; Customer Success must obtain approval of a migration window before changing the format.\u201d\n- OPS-USAGE-1004: \u201cSnapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.\u201d\n- OPS-USAGE-1001: \u201cSnapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.\u201d\n- RUNBOOK-ROLLBACK: \u201cBefore any removal: obtain customer approvals, prove archived v1 data remains replayable, refresh per-job traffic evidence, test signed v1 reversals (+5000 must remain +5000) against v2 return magnitudes (5000 becomes -5000), and rehearse rollback. Reporting Engineering owns rollout; Data Operations owns replay and rollback evidence. As of 2026-10-04, no decoder retirement rollback rehearsal result has been approved. Reporting Engineering and Data Operations must jointly sign the retained-decoder rollback evidence before the shared decoder is retired.\u201d\nThis is a local draft. No comment, approval, change or message has been sent.",
+          "signoff_requests": [
+            {
+              "owner": "Customer Success",
+              "subject": "DH-501: evidence needed for ATLAS retirement",
+              "body": "Local draft request to Customer Success:\npartner_statement: Customer agreement still requires v1 through 2026-11-30 inclusive.; Customer-signed migration window/amendment and verified v2 partner delivery are absent.; Partner Engineering and Customer Success must obtain Cedar approval and verify delivery before format changes.; Agreement expiry alone does not prove migration or zero v1 traffic.\nPlease provide dated evidence and the approval trail; a developer note cannot waive the release gate."
+            },
+            {
+              "owner": "Data Integrations",
+              "subject": "DH-501: evidence needed for ATLAS retirement",
+              "body": "Local draft request to Data Integrations:\ndaily_sales: Limit the change to NORTHSTAR daily_sales live ingest and retain the shared v1 decoder.; Refresh traffic evidence within one day of the actual release and obtain the live-path owner's sign-off.\nPlease provide dated evidence and the approval trail; a developer note cannot waive the release gate."
+            },
+            {
+              "owner": "Data Operations",
+              "subject": "DH-501: evidence needed for ATLAS retirement",
+              "body": "Local draft request to Data Operations:\nhistorical_replay: Approved archive conversion/replay and backup-readability acceptance evidence is absent.; Keep original v1 exports replayable through 2026-12-29 inclusive; 2026-12-30 is the earliest expiry-based removal date.; Data Operations must prove archived exports and backups remain readable, including signed v1 reversals.; Replay-window expiry alone does not clear current jobs, backups or rollback.\nrollback: An approved decoder-retirement rollback rehearsal result is absent.; Reporting Engineering and Data Operations must jointly sign rollback rehearsal evidence.; Verify retained-decoder recovery and both v1 signed reversals and v2 return magnitudes.\nPlease provide dated evidence and the approval trail; a developer note cannot waive the release gate."
+            },
+            {
+              "owner": "Partner Engineering",
+              "subject": "DH-501: evidence needed for ATLAS retirement",
+              "body": "Local draft request to Partner Engineering:\npartner_statement: Customer agreement still requires v1 through 2026-11-30 inclusive.; Customer-signed migration window/amendment and verified v2 partner delivery are absent.; Partner Engineering and Customer Success must obtain Cedar approval and verify delivery before format changes.; Agreement expiry alone does not prove migration or zero v1 traffic.\nPlease provide dated evidence and the approval trail; a developer note cannot waive the release gate."
+            },
+            {
+              "owner": "Reporting Engineering",
+              "subject": "DH-501: evidence needed for ATLAS retirement",
+              "body": "Local draft request to Reporting Engineering:\nrollback: An approved decoder-retirement rollback rehearsal result is absent.; Reporting Engineering and Data Operations must jointly sign rollback rehearsal evidence.; Verify retained-decoder recovery and both v1 signed reversals and v2 return magnitudes.\nPlease provide dated evidence and the approval trail; a developer note cannot waive the release gate."
+            }
+          ],
+          "decision_record_update": "Draft MIG-OVERVIEW update.\nDecision: defer. Global gate: block.\nSynthetic replay evidence: NORTHSTAR historical_replay: $1,250.00 \u2192 $400.00; CEDAR partner_statement: $180.00 \u2192 $0.00.\nConditional earliest full removal: 2026-12-30. No unconditional removal date is cleared.\nOpen conditions: Clear every dependent separately with approved scoped evidence and owner sign-offs.; Refresh per-job telemetry at release; verify archive/backup readability, customer migration and rollback.; The conditional calendar bound is not authorization for full removal.\nNo release approved. No record has been updated."
+        },
+        "input_hashes": {
+          "model_inputs": "c273fd9cd86156ae013075a4bc376c04d3236aa7d4bda7a1e2a24b1f794fd778",
+          "business_corpus": "727604698c3b2fdc21921af78be00bf91d41e1fb5888f6f50bc48f145c47c604",
+          "analysis_schema": "eb4d94c364250765dcb3199524da939e274ee1d37b114dda99921f7f36036e0b",
+          "software": {
+            "migration_workflow.py": "00e42168f25876de069403f7468665d8c14342e7eedbc354691a7f60a9268071",
+            "migration_release.py": "16c018bf50f2daa21e27192f4b39577416d9fcf2522f56df4e80008bdb619a53",
+            "claude_session.py": "dd1bdd89904b006f5376f7b539543d24577849a148a0f18f3cd76e434c20a6b2",
+            "context_mcp.py": "c5b1d2b0d2043c3af50cb925ea5d6448d1cb6927aa169fd96b106c90adf8bc2c",
+            "portfolio/acceptance/migration_checks.py": "94f937e8f3c517ec1f67321cd1fa50f4c7c417e06be019deb7966ac3c7102262"
+          }
+        },
+        "source_snapshots": {
+          "FEED-ATLAS-1": {
+            "status": "ok",
+            "source_id": "FEED-ATLAS-1",
+            "system": "confluence",
+            "sha256": "b5000e1e6c1eb0d39bf69079fb99aef0898e5a477ef3a03f15dbd4b2257f5076",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "FEED-ATLAS-1",
+              "title": "Atlas export schema 1: signed accounting amounts",
+              "status": "approved",
+              "owner": "Data Integrations",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "version": "1.0",
+              "body": "For ATLAS schema 1, amount_cents is the signed contribution to sales. Preserve its sign for SALE and RETURN records. A negative RETURN reduces sales; a positive RETURN reverses a previous return and increases sales. Do not negate every RETURN and do not force every RETURN negative. The schema version on each row selects the contract. Amounts are integral US cents.",
+              "system": "confluence",
+              "scope": "ATLAS transaction exports \u00b7 file version 1"
+            }
+          },
+          "FEED-ATLAS-2": {
+            "status": "ok",
+            "source_id": "FEED-ATLAS-2",
+            "system": "confluence",
+            "sha256": "faa8aa11141edc42c64d3c86cedbaef4a7aaf4e6042de7a6471f94020c74b6b6",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "FEED-ATLAS-2",
+              "title": "Atlas export schema 2: magnitude amounts",
+              "status": "approved",
+              "owner": "Data Integrations",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "version": "2.0",
+              "body": "For ATLAS schema 2, amount_cents is a nonnegative magnitude. SALE increases sales and RETURN reduces sales. A negative magnitude is invalid source data: quarantine it and request a corrected export. Never silently use abs() to repair it. Schema 1 and schema 2 files coexist; the feed name alone does not determine encoding. Amounts are integral US cents.",
+              "system": "confluence",
+              "scope": "ATLAS transaction exports \u00b7 file version 2"
+            }
+          },
+          "FEED-ATLAS-3-DRAFT": {
+            "status": "ok",
+            "source_id": "FEED-ATLAS-3-DRAFT",
+            "system": "confluence",
+            "sha256": "c86c3a1eedfd7bd4c1a7e5b4942cece7836046beb74d11fd1e965c4d3675124d",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "FEED-ATLAS-3-DRAFT",
+              "title": "Proposed Atlas schema 3 format",
+              "status": "draft",
+              "owner": "Data Integrations",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "version": "0.2",
+              "body": "DRAFT ONLY. The team is considering nonnegative magnitudes for schema 3. No schema 3 contract has been approved. Do not infer its meaning from positive sample amounts or treat this proposal as a current requirement.",
+              "system": "confluence",
+              "scope": "ATLAS transaction exports \u00b7 file version 3"
+            }
+          },
+          "REPORT-STD-SEP": {
+            "status": "ok",
+            "source_id": "REPORT-STD-SEP",
+            "system": "confluence",
+            "sha256": "48f6d61eccf2cf8dd95ed548f73af4169cd0b40a35307bf24254b49326751a1a",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "REPORT-STD-SEP",
+              "title": "Standard net sales through September 2026",
+              "status": "approved",
+              "owner": "Reporting Product",
+              "effective_from": "2026-01-01",
+              "effective_to": "2026-10-01",
+              "version": "1.0",
+              "body": "For reporting months before October 2026, standard net sales uses the posted_on calendar month and includes SALE and RETURN. Exclude TRANSFER: it is internal movement. A single applicable approved customer addendum overrides this standard; equally applicable conflicting addenda require owner resolution. Dates are inclusive from effective_from and exclusive of effective_to, assessed at the report month's first day. Source schema contracts govern signed contribution.",
+              "system": "confluence",
+              "scope": "Customers using the standard reporting profile \u00b7 net sales"
+            }
+          },
+          "REPORT-STD-OCT": {
+            "status": "ok",
+            "source_id": "REPORT-STD-OCT",
+            "system": "confluence",
+            "sha256": "6cda498a391c918bf8be82ce3691b13242ace0100390b4c6080dae87258ed3d8",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "REPORT-STD-OCT",
+              "title": "Standard net sales from October 2026",
+              "status": "approved",
+              "owner": "Reporting Product",
+              "effective_from": "2026-10-01",
+              "effective_to": null,
+              "version": "2.0",
+              "body": "Effective for October 2026 reporting months onward, standard net sales uses invoice_on rather than posted_on. This is prospective: do not recalculate September using this definition. SALE and RETURN are included; TRANSFER is excluded. A single applicable approved customer addendum takes precedence. Equally applicable conflicting addenda block reconciliation. Source schema contracts still govern signed contribution.",
+              "system": "confluence",
+              "scope": "Customers using the standard reporting profile \u00b7 net sales"
+            }
+          },
+          "REPORT-BLUEBIRD": {
+            "status": "ok",
+            "source_id": "REPORT-BLUEBIRD",
+            "system": "confluence",
+            "sha256": "95e7cd99e01fad83bea779057a5ef641753728442b998b6ca01415f5304748a1",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "REPORT-BLUEBIRD",
+              "title": "Bluebird customer reporting addendum",
+              "status": "approved",
+              "owner": "Customer Reporting",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1.0",
+              "body": "Bluebird's approved addendum uses invoice_on to assign SALE and RETURN to reporting months, including September 2026. TRANSFER remains excluded. This customer-specific addendum overrides the standard posted_on definition. It does not change source sign conventions. Do not apply Bluebird's rule to Northstar.",
+              "system": "confluence",
+              "scope": "BLUEBIRD \u00b7 net sales"
+            }
+          },
+          "REPORT-CEDAR-A": {
+            "status": "ok",
+            "source_id": "REPORT-CEDAR-A",
+            "system": "confluence",
+            "sha256": "3ad37a952961798eaf9823079cdc00e3a2727731b189fe6803f7a2d37ff8665a",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "REPORT-CEDAR-A",
+              "title": "Cedar addendum A",
+              "status": "approved",
+              "owner": "Customer Reporting",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1.0",
+              "body": "Cedar net sales uses invoice_on. This record is approved but has no supersedes or precedence relationship with the other Cedar addendum. If another applicable approved record conflicts, obtain an owner decision rather than guessing.",
+              "system": "confluence",
+              "scope": "CEDAR \u00b7 net sales"
+            }
+          },
+          "REPORT-CEDAR-B": {
+            "status": "ok",
+            "source_id": "REPORT-CEDAR-B",
+            "system": "confluence",
+            "sha256": "1c85eec33156e568546c88cdbd67320196455edb86e00a4fb8135b9a5678c8dd",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "REPORT-CEDAR-B",
+              "title": "Cedar addendum B",
+              "status": "approved",
+              "owner": "Customer Reporting",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1.0",
+              "body": "Cedar net sales uses posted_on. This record is approved but has no supersedes or precedence relationship with the other Cedar addendum. Do not choose whichever document search returns first.",
+              "system": "confluence",
+              "scope": "CEDAR \u00b7 net sales"
+            }
+          },
+          "DH-204": {
+            "status": "ok",
+            "source_id": "DH-204",
+            "system": "jira",
+            "sha256": "973cd7c61028da0f215c1b1f5379f5085cfc00cbde2aad703388f3ef724c6981",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "DH-204",
+              "title": "Northstar requests transfer inclusion",
+              "status": "pending_approval",
+              "owner": "Reporting Product",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "Northstar asked to include internal TRANSFER rows in net sales. Status: pending business approval. No approved contract amendment exists in this snapshot. Engineering must preserve the approved exclusion until the reporting owner approves a change. A customer request is not authorization to change the metric.",
+              "system": "jira",
+              "scope": "NORTHSTAR \u00b7 net sales"
+            }
+          },
+          "DH-188": {
+            "status": "ok",
+            "source_id": "DH-188",
+            "system": "jira",
+            "sha256": "1f2b091e639be287a5e24556047e4a28268cf540b86cfffba07399161229c58a",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "DH-188",
+              "title": "Atlas schema 2 onboarding rollout",
+              "status": "done",
+              "owner": "Data Integrations",
+              "effective_from": "2026-08-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "Schema 2 onboarding is complete. Existing customer exports remain on schema 1, and both versions may occur in the same monthly report. This ticket does not authorize rewriting schema 1 semantics. Reporting Engineering owns normalization defects; Data Integrations owns invalid exports. Done means this rollout task is complete, not that all customer feeds use schema 2.",
+              "system": "jira",
+              "scope": "ATLAS transaction exports \u00b7 all file versions"
+            }
+          },
+          "EXPORT-NS-1": {
+            "status": "ok",
+            "source_id": "EXPORT-NS-1",
+            "system": "confluence",
+            "sha256": "9f82e57b3358ab4ac6753c5d3302a2e661312b85223a7d07e83ed991e7ef40c1",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "EXPORT-NS-1",
+              "title": "Northstar settlement export agreement",
+              "status": "approved",
+              "owner": "Reporting Product",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "Effective September 2026, NORTHSTAR receives settlements, not invoices. Select the reporting month by settled_at converted to America/New_York (including daylight saving), not invoice_at or UTC month. Include PAID and REFUNDED records only; ignore PENDING and VOID before reading settled_at. Export this customer only. All other customers keep their existing invoice export unchanged. CSV columns in order: invoice_id,settlement_date,net_cents. settlement_date is the local YYYY-MM-DD. Sort by settlement_date, then invoice_id. Use standard CSV quoting and newline-terminated rows. For reporting periods before 2026-09, retain the existing invoice export format for NORTHSTAR too.",
+              "system": "confluence",
+              "scope": "NORTHSTAR settlement export"
+            }
+          },
+          "FIN-SETTLEMENT-2": {
+            "status": "ok",
+            "source_id": "FIN-SETTLEMENT-2",
+            "system": "confluence",
+            "sha256": "ef4fa1cb54a2ea823ba26923a06c3baf858c62ef67d1016c7fcd60398a2abb8e",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "FIN-SETTLEMENT-2",
+              "title": "Settlement amounts and refunds",
+              "status": "approved",
+              "owner": "Finance Operations",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "For PAID rows, net_cents = gross_cents - fee_cents. For REFUNDED rows, net_cents = -gross_cents: processing fees are NOT returned. gross_cents and fee_cents must be nonnegative integer USD cents, not booleans or floats. Reject included non-USD rows rather than performing currency conversion. settled_at must include a UTC offset. Never silently guess missing settlement dates.",
+              "system": "confluence",
+              "scope": "NORTHSTAR settlement export"
+            }
+          },
+          "DH-411": {
+            "status": "ok",
+            "source_id": "DH-411",
+            "system": "jira",
+            "sha256": "65c3b81b9ac4c335f9e016aa0b1079c53c3221c4c8aa8e98fd6923d89df22fb8",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "DH-411",
+              "title": "Northstar export approval and delivery scope",
+              "status": "done",
+              "owner": "Reporting Engineering",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "Approved implementation scope: EXPORT-NS-1 and FIN-SETTLEMENT-2. Implement in app/exporter.py using the existing interface; add tests. Keep BLUEBIRD and other customers on their existing invoice CSV. Delivery means a reviewed code change and test evidence, not sending a customer file or changing production. The proposal EXPORT-NS-2-DRAFT is not approved.",
+              "system": "jira",
+              "scope": "NORTHSTAR settlement export"
+            }
+          },
+          "EXPORT-NS-2-DRAFT": {
+            "status": "ok",
+            "source_id": "EXPORT-NS-2-DRAFT",
+            "system": "confluence",
+            "sha256": "86deb5dfb2d540c87e3f92e04a464dd5ec07229e83c60188ef304aa81125c49f",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "EXPORT-NS-2-DRAFT",
+              "title": "Proposed UTC settlement export",
+              "status": "draft",
+              "owner": "Reporting Product",
+              "effective_from": "2026-11-01",
+              "effective_to": null,
+              "version": "2",
+              "body": "Proposal for a future export: use UTC month and refund processing fees. This is awaiting customer and Finance approval. Do not apply it to September or existing exports.",
+              "system": "confluence",
+              "scope": "NORTHSTAR settlement export"
+            }
+          },
+          "MIG-OVERVIEW": {
+            "status": "ok",
+            "source_id": "MIG-OVERVIEW",
+            "system": "confluence",
+            "sha256": "8d17ffcdbe12e92bc9e2c7c6b4d4f18bd8baa4c432c49867d62d28a4bbc8bb49",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "MIG-OVERVIEW",
+              "title": "ATLAS migration decision record",
+              "status": "approved",
+              "owner": "Data Integrations",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "Schema v2 is the target format. Removing v1 requires separate evidence for live ingest, partner delivery, historical replay and rollback. A completed engineering ticket proves code delivery, not that every customer and recovery path has migrated. Confirm current usage with Data Operations before removal.",
+              "system": "confluence",
+              "scope": "ATLAS v1 retirement"
+            }
+          },
+          "DH-510": {
+            "status": "ok",
+            "source_id": "DH-510",
+            "system": "jira",
+            "sha256": "452e19aaca2d176c7ff0aeaa9f1f9199293610e583a7cbd43b80c9616aeb96e2",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "DH-510",
+              "title": "Daily-sales migration delivery",
+              "status": "done",
+              "owner": "Data Integrations",
+              "effective_from": "2026-10-02",
+              "effective_to": null,
+              "version": "1",
+              "body": "Done on 2026-10-02: daily_sales now accepts v2 for NORTHSTAR live ingest. Scope excludes historical_replay and partner_statement. Data Integrations owns live ingest confirmation.",
+              "system": "jira",
+              "scope": "NORTHSTAR daily_sales"
+            }
+          },
+          "OPS-REPLAY": {
+            "status": "ok",
+            "source_id": "OPS-REPLAY",
+            "system": "confluence",
+            "sha256": "f53c7c4ed0681cb6ad1a409c0f528fafe0ab4485dc9f04e8e1cffef97dccde17",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "OPS-REPLAY",
+              "title": "Replay and recovery obligations",
+              "status": "approved",
+              "owner": "Data Operations",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "Data Operations must support replay of the previous 90 days of original ATLAS exports. Archives for July through September 2026 include schema v1. Backups must remain readable during migration. No verified v1-to-v2 archive conversion has been completed. A shared v1 decoder removal would affect historical_replay even if no new v1 files arrive. The latest original NORTHSTAR v1 export is dated 2026-09-30. For the 90-day replay window, the original export day is day 0 and exports aged 90 days remain in scope through the end of that day. No conversion or replay acceptance evidence has been approved as of 2026-10-04.",
+              "system": "confluence",
+              "scope": "historical_replay"
+            }
+          },
+          "CONTRACT-CEDAR": {
+            "status": "ok",
+            "source_id": "CONTRACT-CEDAR",
+            "system": "confluence",
+            "sha256": "038b260ab39dba7cc23285ad89efed857b67dbba77751f89a30839fb4ca5e4fb",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "CONTRACT-CEDAR",
+              "title": "Cedar partner delivery agreement",
+              "status": "approved",
+              "owner": "Customer Success",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "CEDAR partner_statement remains on ATLAS v1 through 2026-11-30 inclusive. No customer-signed amendment exists as of 2026-10-04. Partner Engineering owns delivery; Customer Success must obtain approval of a migration window before changing the format.",
+              "system": "confluence",
+              "scope": "CEDAR partner_statement"
+            }
+          },
+          "OPS-USAGE-1001": {
+            "status": "ok",
+            "source_id": "OPS-USAGE-1001",
+            "system": "confluence",
+            "sha256": "06e70be04b2aada9348165c30b4a8a6d67f5e3ca31754c0275c10ddb5e4c068a",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "OPS-USAGE-1001",
+              "title": "Operational usage snapshot from October 1",
+              "status": "approved",
+              "owner": "Data Operations",
+              "effective_from": "2026-10-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.",
+              "system": "confluence",
+              "scope": "ATLAS workflows"
+            }
+          },
+          "RUNBOOK-ROLLBACK": {
+            "status": "ok",
+            "source_id": "RUNBOOK-ROLLBACK",
+            "system": "confluence",
+            "sha256": "2181812fd233dc0b686b2ce187e24ed115466b161aeaec63e688fa492ae4fde1",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "RUNBOOK-ROLLBACK",
+              "title": "Decoder retirement rollout and rollback",
+              "status": "approved",
+              "owner": "Reporting Engineering",
+              "effective_from": "2026-09-01",
+              "effective_to": null,
+              "version": "1",
+              "body": "Before any removal: obtain customer approvals, prove archived v1 data remains replayable, refresh per-job traffic evidence, test signed v1 reversals (+5000 must remain +5000) against v2 return magnitudes (5000 becomes -5000), and rehearse rollback. Reporting Engineering owns rollout; Data Operations owns replay and rollback evidence. As of 2026-10-04, no decoder retirement rollback rehearsal result has been approved. Reporting Engineering and Data Operations must jointly sign the retained-decoder rollback evidence before the shared decoder is retired.",
+              "system": "confluence",
+              "scope": "ATLAS v1 retirement"
+            }
+          },
+          "OPS-USAGE-1004": {
+            "status": "ok",
+            "source_id": "OPS-USAGE-1004",
+            "system": "confluence",
+            "sha256": "b06da8c1ecf2d47b5696cf8931bd36add4a5864bfe9ea7d1c27aa8245e21c6fe",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "OPS-USAGE-1004",
+              "title": "Operational usage and live-ingest confirmation from October 4",
+              "status": "approved",
+              "owner": "Data Operations",
+              "effective_from": "2026-10-04",
+              "effective_to": null,
+              "version": "1",
+              "body": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.",
+              "system": "confluence",
+              "scope": "ATLAS workflows"
+            }
+          },
+          "DH-401": {
+            "status": "ok",
+            "source_id": "DH-401",
+            "system": "jira",
+            "sha256": "8136b0bba3a8d054f3d57b053517bfc88368d5e64b566f3429525f292fa29cd7",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "DH-401",
+              "issue_type": "Story",
+              "title": "NORTHSTAR monthly settlement CSV export",
+              "status": "ready_for_development",
+              "owner": "Reporting Engineering",
+              "reporter": "Reporting Product",
+              "created": "2026-10-01",
+              "links": [
+                {
+                  "type": "relates to",
+                  "id": "DH-411"
+                }
+              ],
+              "attachments": [
+                {
+                  "name": "sample.json",
+                  "description": "September 2026 sample transactions (synthetic)"
+                }
+              ],
+              "system": "jira",
+              "body": "Add the monthly settlement CSV export for NORTHSTAR through the existing export_csv(rows, customer, month) function. Use the approved customer requirements and preserve existing exports for other customers. September sample transactions are attached. Identify missing requirements before assuming behavior.",
+              "customer": "NORTHSTAR",
+              "month": "2026-09",
+              "scope": "NORTHSTAR settlement export",
+              "effective_from": null,
+              "effective_to": null,
+              "version": "1"
+            }
+          },
+          "DH-501": {
+            "status": "ok",
+            "source_id": "DH-501",
+            "system": "jira",
+            "sha256": "0ef4c1d59c15bd4e1abfcdedbb4060bafbefbe733173be8bdb6894b3c198807f",
+            "retrieved_at": "2026-10-05T23:49:32+00:00",
+            "document": {
+              "id": "DH-501",
+              "title": "Assess ATLAS schema v1 retirement",
+              "system": "jira",
+              "status": "open",
+              "owner": "Data Integrations",
+              "body": "Assess whether ATLAS schema v1 support can be removed on 2026-10-15. Inspect the repository and available business evidence. Identify affected workflows and customers, unresolved dependencies, owners, verification steps and a safe rollout or deferral recommendation. Do not change files.",
+              "scope": "ATLAS v1 retirement",
+              "effective_from": null,
+              "effective_to": null,
+              "version": "1",
+              "links": [
+                {
+                  "id": "MIG-OVERVIEW",
+                  "type": "related evidence"
+                },
+                {
+                  "id": "DH-510",
+                  "type": "related evidence"
+                },
+                {
+                  "id": "OPS-REPLAY",
+                  "type": "related evidence"
+                },
+                {
+                  "id": "CONTRACT-CEDAR",
+                  "type": "related evidence"
+                },
+                {
+                  "id": "OPS-USAGE-1001",
+                  "type": "related evidence"
+                },
+                {
+                  "id": "RUNBOOK-ROLLBACK",
+                  "type": "related evidence"
+                }
+              ]
+            }
+          }
+        },
+        "model_seconds": 0
+      },
+      "grading": {
+        "hidden_passed": 12,
+        "hidden_total": 12,
+        "passed": true,
+        "checks": [
+          {
+            "id": "M1",
+            "name": "Map code consumers and the recovery dependent",
+            "passed": true,
+            "detail": "Map daily_sales, historical_replay, partner_statement and rollback to the shared decoder."
+          },
+          {
+            "id": "M2",
+            "name": "Keep the completed ticket scoped to live ingest",
+            "passed": true,
+            "detail": "Verified DH-510 evidence must distinguish NORTHSTAR live ingest from replay and partner delivery."
+          },
+          {
+            "id": "M3",
+            "name": "Use current usage and recognize the older snapshot",
+            "passed": true,
+            "detail": "The October 4 operational snapshot supports current usage; October 1 alone cannot do so."
+          },
+          {
+            "id": "M4",
+            "name": "Respect Cedar's inclusive delivery commitment",
+            "passed": true,
+            "detail": "Cedar's signed v1 obligation includes November 30; December 1 is only a date lower bound."
+          },
+          {
+            "id": "M5",
+            "name": "Separate partner delivery and customer approval owners",
+            "passed": true,
+            "detail": "Partner Engineering owns delivery; Customer Success obtains the approved customer migration window."
+          },
+          {
+            "id": "M6",
+            "name": "Compute the original-export replay horizon",
+            "passed": true,
+            "detail": "The last original v1 export is September 30; the inclusive age-90 window ends December 29."
+          },
+          {
+            "id": "M7",
+            "name": "Keep replay and backup readability obligations",
+            "passed": true,
+            "detail": "Existing original archives and backups lack verified conversion; dates alone do not prove readability."
+          },
+          {
+            "id": "M8",
+            "name": "Require rollback proof from its responsible owners",
+            "passed": true,
+            "detail": "A rehearsal and joint Reporting Engineering/Data Operations sign-off are still required."
+          },
+          {
+            "id": "M9",
+            "name": "Preserve both transaction sign conventions",
+            "passed": true,
+            "detail": "A signed v1 reversal contributes +5000; a v2 return magnitude of 5000 contributes -5000."
+          },
+          {
+            "id": "M10",
+            "name": "Demonstrate green CI and silent monetary loss",
+            "passed": true,
+            "detail": "CI passes after the legacy test is deleted; synthetic replay drops NORTHSTAR from $1,250 to $400 and Cedar from $180 to $0 without errors."
+          },
+          {
+            "id": "M11",
+            "name": "Apply scoped gates that a developer note cannot flip",
+            "passed": true,
+            "detail": "Cleared live ingest can pass its scoped gate while the other dependents and shared removal remain blocked."
+          },
+          {
+            "id": "M12",
+            "name": "Draft concrete unsent handoffs with a conditional date",
+            "passed": true,
+            "detail": "Full removal has no authorized date. December 30 is conditional; the unsent PR review, owner sign-off requests and decision-record update explain what remains."
+          }
+        ],
+        "label": "Twelve hidden assessment checks that the agent never saw and the release gate never used. They grade this synthetic demo; they do not authorize a release."
+      },
+      "rounds": [],
+      "metrics": [
+        {
+          "node": "analyze",
+          "seconds": 0,
+          "cost_usd": null,
+          "models": [],
+          "lookups": 0,
+          "tool_calls": 0,
+          "blocked": 0
+        }
+      ],
+      "decisions": [
+        {
+          "choice": "defer",
+          "message": "",
+          "gate_unchanged": true,
+          "release_authorized": false
+        }
+      ],
+      "developer_notes": [
+        {
+          "stage": "intake",
+          "text": "A developer note cannot waive obligations."
+        }
+      ],
+      "diff": "",
+      "git": {},
+      "applied": false,
+      "artifact_directory": "~/dataHoneyAuto/demos/01-report-reconciliation/artifacts/live/workflows/3b42865fb1564d07964c8995bacc9ff6",
+      "headline": {
+        "context": true,
+        "status": "completed",
+        "outcome": "defer",
+        "hidden_passed": 12,
+        "hidden_total": 12,
+        "quotes_verified": 10,
+        "quotes_checkable": 10,
+        "gate": "block",
+        "dependents": 4,
+        "obligations": 4,
+        "owners": 5,
+        "earliest_full_removal": null,
+        "earliest_conditional_full_removal": "2026-12-30",
+        "model_seconds": 0,
+        "cost_usd": 0,
+        "decisions": 1,
+        "sent": false
+      },
+      "provenance": "deterministic_harness_verification_with_author_prepared_assessment",
+      "partial_evidence": {
+        "ci": {
+          "synthetic": true,
+          "label": "Local CI rehearsal of prepared cleanup PR",
+          "passed": true,
+          "head": {
+            "passed": true,
+            "exit_code": 0,
+            "test_count": 1,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n"
+          },
+          "base": {
+            "passed": true,
+            "exit_code": 0,
+            "test_count": 2,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\ntest_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n"
+          },
+          "retained_test_failure": {
+            "passed": false,
+            "exit_code": 1,
+            "test_count": 2,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\ntest_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal) ... FAIL\n\n======================================================================\nFAIL: test_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"<workspace>/tests/test_existing.py\", line 7, in test_replay_v1_reversal\n    self.assertEqual(run_job(\"historical_replay\", [{\"schema_version\":\"1\", \"kind\":\"RETURN\", \"amount_cents\":5000}]),5000)\nAssertionError: 0 != 5000\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n"
+          },
+          "deleted_tests": [
+            "test_replay_v1_reversal"
+          ],
+          "base_sha256": "fac6bc328644bf16b1ccee1e474988fb81541ad088c8d0b322cb7d2de108d49c",
+          "head_sha256": "3b8d486abd61b235dd9ae0956f176e859a123489e47aa0dcf1f2e5ac52c14d79"
+        },
+        "diff": "--- a/app/decoder.py\n+++ b/app/decoder.py\n@@ -1,7 +1,5 @@\n-\"\"\"Normalizes both supported Atlas transaction formats.\"\"\"\n+\"\"\"Normalizes the Atlas transaction format.\"\"\"\n def normalize(row):\n-    if row[\"schema_version\"] == \"1\":\n-        return row[\"amount_cents\"]\n     if row[\"schema_version\"] == \"2\":\n         if row[\"amount_cents\"] < 0:\n             raise ValueError(\"Invalid magnitude\")\n--- a/app/jobs.py\n+++ b/app/jobs.py\n@@ -2,9 +2,9 @@\n \n # These are capabilities, not evidence of which feeds are active today.\n JOBS = {\n-    \"daily_sales\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Reporting Engineering\"},\n-    \"historical_replay\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Data Operations\"},\n-    \"partner_statement\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Partner Engineering\"},\n+    \"daily_sales\": {\"accepted_versions\": [\"2\"], \"owner\": \"Reporting Engineering\"},\n+    \"historical_replay\": {\"accepted_versions\": [\"2\"], \"owner\": \"Data Operations\"},\n+    \"partner_statement\": {\"accepted_versions\": [\"2\"], \"owner\": \"Partner Engineering\"},\n }\n \n def run_job(name, rows):\n--- a/tests/test_existing.py\n+++ b/tests/test_existing.py\n@@ -3,5 +3,3 @@\n class DecoderBehavior(unittest.TestCase):\n     def test_daily_v2(self):\n         self.assertEqual(run_job(\"daily_sales\", [{\"schema_version\":\"2\", \"kind\":\"SALE\", \"amount_cents\":10000}]),10000)\n-    def test_replay_v1_reversal(self):\n-        self.assertEqual(run_job(\"historical_replay\", [{\"schema_version\":\"1\", \"kind\":\"RETURN\", \"amount_cents\":5000}]),5000)\n",
+        "replay": {
+          "synthetic": true,
+          "label": "Deterministic replay of synthetic recent jobs; no production data",
+          "jobs": [
+            {
+              "id": "northstar-september",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "month": "2026-09",
+              "before_cents": 125000,
+              "after_cents": 40000,
+              "lost_cents": 85000,
+              "skipped_ids": [
+                "A-1",
+                "A-2",
+                "A-3"
+              ],
+              "before_skipped_ids": [],
+              "before_error": null,
+              "after_error": null
+            },
+            {
+              "id": "cedar-statements",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "month": "2026-09",
+              "before_cents": 18000,
+              "after_cents": 0,
+              "lost_cents": 18000,
+              "skipped_ids": [
+                "C-1",
+                "C-2",
+                "C-3"
+              ],
+              "before_skipped_ids": [],
+              "before_error": null,
+              "after_error": null
+            }
+          ],
+          "source_case": "DH-301",
+          "source_case_sha256": "4d0bbdbf910c65197f1ddadf92e884bc1e58e9a364d97cd9e1740aac98ad954a",
+          "source_rows_sha256": "1bca1a33cdfa5da04f90d93964ae4f107d142b4e73dbd6645d700c09a3f348ed",
+          "sample_sha256": "b2bdf48135075ce9b81a3b8f57977caf3f84efb552e7627cd0e1eccff6eac5fb",
+          "base_sha256": "fac6bc328644bf16b1ccee1e474988fb81541ad088c8d0b322cb7d2de108d49c",
+          "head_sha256": "3b8d486abd61b235dd9ae0956f176e859a123489e47aa0dcf1f2e5ac52c14d79",
+          "northstar_rows_match_demo1": true
+        },
+        "analysis": {
+          "summary": "Author-prepared synthetic dependency assessment for deterministic verification.",
+          "dependents": [
+            {
+              "id": "daily_sales",
+              "workflow": "daily_sales",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [
+                {
+                  "source_id": "DH-510",
+                  "quote": "Done on 2026-10-02: daily_sales now accepts v2 for NORTHSTAR live ingest. Scope excludes historical_replay and partner_statement. Data Integrations owns live ingest confirmation."
+                }
+              ],
+              "usage": [
+                {
+                  "source_id": "OPS-USAGE-1004",
+                  "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts."
+                },
+                {
+                  "source_id": "OPS-USAGE-1001",
+                  "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision."
+                }
+              ],
+              "owners": [
+                "Data Integrations"
+              ],
+              "earliest_removal": "2026-10-15",
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "historical_replay",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [
+                {
+                  "source_id": "OPS-REPLAY",
+                  "quote": "Data Operations must support replay of the previous 90 days of original ATLAS exports. Archives for July through September 2026 include schema v1. Backups must remain readable during migration. No verified v1-to-v2 archive conversion has been completed. A shared v1 decoder removal would affect historical_replay even if no new v1 files arrive. The latest original NORTHSTAR v1 export is dated 2026-09-30. For the 90-day replay window, the original export day is day 0 and exports aged 90 days remain in scope through the end of that day. No conversion or replay acceptance evidence has been approved as of 2026-10-04."
+                }
+              ],
+              "usage": [
+                {
+                  "source_id": "OPS-USAGE-1004",
+                  "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts."
+                },
+                {
+                  "source_id": "OPS-USAGE-1001",
+                  "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision."
+                }
+              ],
+              "owners": [
+                "Data Operations"
+              ],
+              "earliest_removal": "2026-12-30",
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "partner_statement",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [
+                {
+                  "source_id": "CONTRACT-CEDAR",
+                  "quote": "CEDAR partner_statement remains on ATLAS v1 through 2026-11-30 inclusive. No customer-signed amendment exists as of 2026-10-04. Partner Engineering owns delivery; Customer Success must obtain approval of a migration window before changing the format."
+                }
+              ],
+              "usage": [
+                {
+                  "source_id": "OPS-USAGE-1004",
+                  "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts."
+                },
+                {
+                  "source_id": "OPS-USAGE-1001",
+                  "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision."
+                }
+              ],
+              "owners": [
+                "Partner Engineering",
+                "Customer Success"
+              ],
+              "earliest_removal": "2026-12-01",
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "rollback",
+              "workflow": "rollback",
+              "customer": null,
+              "code_path": "app/decoder.py",
+              "obligations": [
+                {
+                  "source_id": "RUNBOOK-ROLLBACK",
+                  "quote": "Before any removal: obtain customer approvals, prove archived v1 data remains replayable, refresh per-job traffic evidence, test signed v1 reversals (+5000 must remain +5000) against v2 return magnitudes (5000 becomes -5000), and rehearse rollback. Reporting Engineering owns rollout; Data Operations owns replay and rollback evidence. As of 2026-10-04, no decoder retirement rollback rehearsal result has been approved. Reporting Engineering and Data Operations must jointly sign the retained-decoder rollback evidence before the shared decoder is retired."
+                }
+              ],
+              "usage": [],
+              "owners": [
+                "Reporting Engineering",
+                "Data Operations"
+              ],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            }
+          ],
+          "earliest_full_removal": null,
+          "earliest_conditional_full_removal": "2026-12-30",
+          "missing_evidence": [
+            "Customer migration, archive/backup acceptance and rollback proof."
+          ],
+          "recommendation": "Defer shared removal; investigate only a proven live path."
+        },
+        "grounding": {
+          "verified": 10,
+          "checkable": 10,
+          "results": [
+            {
+              "dependent": "daily_sales",
+              "kind": "obligations",
+              "source_id": "DH-510",
+              "quote": "Done on 2026-10-02: daily_sales now accepts v2 for NORTHSTAR live ingest. Scope excludes historical_replay and partner_statement. Data Integrations owns live ingest confirmation.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "daily_sales",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1004",
+              "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "daily_sales",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1001",
+              "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "historical_replay",
+              "kind": "obligations",
+              "source_id": "OPS-REPLAY",
+              "quote": "Data Operations must support replay of the previous 90 days of original ATLAS exports. Archives for July through September 2026 include schema v1. Backups must remain readable during migration. No verified v1-to-v2 archive conversion has been completed. A shared v1 decoder removal would affect historical_replay even if no new v1 files arrive. The latest original NORTHSTAR v1 export is dated 2026-09-30. For the 90-day replay window, the original export day is day 0 and exports aged 90 days remain in scope through the end of that day. No conversion or replay acceptance evidence has been approved as of 2026-10-04.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "historical_replay",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1004",
+              "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "historical_replay",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1001",
+              "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "partner_statement",
+              "kind": "obligations",
+              "source_id": "CONTRACT-CEDAR",
+              "quote": "CEDAR partner_statement remains on ATLAS v1 through 2026-11-30 inclusive. No customer-signed amendment exists as of 2026-10-04. Partner Engineering owns delivery; Customer Success must obtain approval of a migration window before changing the format.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "partner_statement",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1004",
+              "quote": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "partner_statement",
+              "kind": "usage",
+              "source_id": "OPS-USAGE-1001",
+              "quote": "Snapshot taken 2026-10-01: NORTHSTAR daily_sales processed 1,240 v2 files; CEDAR partner_statement processed 18 v1 files; historical_replay processed 3 v1 batches. This is a snapshot, not live telemetry or proof of zero v1 traffic after this date. Refresh it for the proposed removal decision.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            },
+            {
+              "dependent": "rollback",
+              "kind": "obligations",
+              "source_id": "RUNBOOK-ROLLBACK",
+              "quote": "Before any removal: obtain customer approvals, prove archived v1 data remains replayable, refresh per-job traffic evidence, test signed v1 reversals (+5000 must remain +5000) against v2 return magnitudes (5000 becomes -5000), and rehearse rollback. Reporting Engineering owns rollout; Data Operations owns replay and rollback evidence. As of 2026-10-04, no decoder retirement rollback rehearsal result has been approved. Reporting Engineering and Data Operations must jointly sign the retained-decoder rollback evidence before the shared decoder is retired.",
+              "status": "verified",
+              "detail": "Exact quote, fetched SHA256, approval, scope and effective dates verified."
+            }
+          ],
+          "context": true,
+          "text": "10 of 10 exact quotes verified against opened original records."
+        },
+        "gate": {
+          "decision": "block",
+          "dependents": [
+            {
+              "id": "daily_sales",
+              "workflow": "daily_sales",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "allow",
+              "owners": [
+                "Data Integrations"
+              ],
+              "earliest_removal": "2026-10-15",
+              "scope": "v2-only live-ingest canary; shared decoder retained",
+              "missing_evidence": [],
+              "conditions": [
+                "Limit the change to NORTHSTAR daily_sales live ingest and retain the shared v1 decoder.",
+                "Refresh traffic evidence within one day of the actual release and obtain the live-path owner's sign-off."
+              ],
+              "sources": [
+                "DH-510",
+                "OPS-USAGE-1001",
+                "OPS-USAGE-1004"
+              ]
+            },
+            {
+              "id": "historical_replay",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [
+                "Data Operations"
+              ],
+              "earliest_removal": "2026-12-30",
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Approved archive conversion/replay and backup-readability acceptance evidence is absent."
+              ],
+              "conditions": [
+                "Keep original v1 exports replayable through 2026-12-29 inclusive; 2026-12-30 is the earliest expiry-based removal date.",
+                "Data Operations must prove archived exports and backups remain readable, including signed v1 reversals.",
+                "Replay-window expiry alone does not clear current jobs, backups or rollback."
+              ],
+              "sources": [
+                "OPS-REPLAY",
+                "OPS-USAGE-1001",
+                "OPS-USAGE-1004"
+              ]
+            },
+            {
+              "id": "partner_statement",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [
+                "Partner Engineering",
+                "Customer Success"
+              ],
+              "earliest_removal": "2026-12-01",
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Customer agreement still requires v1 through 2026-11-30 inclusive.",
+                "Customer-signed migration window/amendment and verified v2 partner delivery are absent."
+              ],
+              "conditions": [
+                "Partner Engineering and Customer Success must obtain Cedar approval and verify delivery before format changes.",
+                "Agreement expiry alone does not prove migration or zero v1 traffic."
+              ],
+              "sources": [
+                "CONTRACT-CEDAR",
+                "OPS-USAGE-1001",
+                "OPS-USAGE-1004"
+              ]
+            },
+            {
+              "id": "rollback",
+              "workflow": "rollback",
+              "customer": null,
+              "code_path": "app/decoder.py",
+              "decision": "block",
+              "owners": [
+                "Reporting Engineering",
+                "Data Operations"
+              ],
+              "earliest_removal": null,
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "An approved decoder-retirement rollback rehearsal result is absent."
+              ],
+              "conditions": [
+                "Reporting Engineering and Data Operations must jointly sign rollback rehearsal evidence.",
+                "Verify retained-decoder recovery and both v1 signed reversals and v2 return magnitudes."
+              ],
+              "sources": [
+                "RUNBOOK-ROLLBACK"
+              ]
+            }
+          ],
+          "earliest_full_removal": null,
+          "earliest_conditional_full_removal": "2026-12-30",
+          "conditions": [
+            "Clear every dependent separately with approved scoped evidence and owner sign-offs.",
+            "Refresh per-job telemetry at release; verify archive/backup readability, customer migration and rollback.",
+            "The conditional calendar bound is not authorization for full removal."
+          ],
+          "evaluated_as_of": "2026-10-04",
+          "developer_note_can_override": false,
+          "synthetic": true
+        },
+        "input_hashes": {
+          "model_inputs": "c273fd9cd86156ae013075a4bc376c04d3236aa7d4bda7a1e2a24b1f794fd778",
+          "business_corpus": "727604698c3b2fdc21921af78be00bf91d41e1fb5888f6f50bc48f145c47c604",
+          "analysis_schema": "eb4d94c364250765dcb3199524da939e274ee1d37b114dda99921f7f36036e0b",
+          "software": {
+            "migration_workflow.py": "00e42168f25876de069403f7468665d8c14342e7eedbc354691a7f60a9268071",
+            "migration_release.py": "16c018bf50f2daa21e27192f4b39577416d9fcf2522f56df4e80008bdb619a53",
+            "claude_session.py": "dd1bdd89904b006f5376f7b539543d24577849a148a0f18f3cd76e434c20a6b2",
+            "context_mcp.py": "c5b1d2b0d2043c3af50cb925ea5d6448d1cb6927aa169fd96b106c90adf8bc2c",
+            "portfolio/acceptance/migration_checks.py": "94f937e8f3c517ec1f67321cd1fa50f4c7c417e06be019deb7966ac3c7102262"
+          }
+        }
+      },
+      "label": "Prepared deterministic rehearsal \u2014 no model called."
+    },
+    {
+      "id": "19b63cebbb3e4dcea43cd6728a9456df",
+      "case_id": "DH-501",
+      "status": "completed",
+      "outcome": "defer",
+      "context": false,
+      "recorded_at": "2026-10-05T23:49:33.001394+00:00",
+      "model": null,
+      "developer_note": "A developer note cannot waive obligations.",
+      "elapsed_seconds": 0.135,
+      "spent_usd": 0,
+      "error": null,
+      "summary": {
+        "analysis": {
+          "summary": "Author-prepared synthetic dependency assessment for deterministic verification.",
+          "dependents": [
+            {
+              "id": "daily_sales",
+              "workflow": "daily_sales",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [],
+              "usage": [],
+              "owners": [],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "historical_replay",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [],
+              "usage": [],
+              "owners": [],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "partner_statement",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [],
+              "usage": [],
+              "owners": [],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "rollback",
+              "workflow": "rollback",
+              "customer": null,
+              "code_path": "app/decoder.py",
+              "obligations": [],
+              "usage": [],
+              "owners": [],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            }
+          ],
+          "earliest_full_removal": null,
+          "earliest_conditional_full_removal": null,
+          "missing_evidence": [
+            "Approved obligations and current usage are unavailable."
+          ],
+          "recommendation": "Defer shared removal; investigate only a proven live path."
+        },
+        "grounding": {
+          "verified": 0,
+          "checkable": 0,
+          "results": [],
+          "context": false,
+          "text": "0 of 0 exact quotes verified against opened original records."
+        },
+        "gate": {
+          "decision": "block",
+          "dependents": [
+            {
+              "id": "daily_sales",
+              "workflow": "daily_sales",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [],
+              "earliest_removal": null,
+              "scope": "v2-only live-ingest canary; shared decoder retained",
+              "missing_evidence": [
+                "Opened approved obligation and exact relevant quote required.",
+                "Current approved per-job usage and exact relevant quote required."
+              ],
+              "conditions": [
+                "Obtain approved obligations, current usage, accountable owners and release sign-offs."
+              ],
+              "sources": []
+            },
+            {
+              "id": "historical_replay",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [],
+              "earliest_removal": null,
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Opened approved obligation and exact relevant quote required.",
+                "Current approved per-job usage and exact relevant quote required."
+              ],
+              "conditions": [
+                "Obtain approved obligations, current usage, accountable owners and release sign-offs."
+              ],
+              "sources": []
+            },
+            {
+              "id": "partner_statement",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [],
+              "earliest_removal": null,
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Opened approved obligation and exact relevant quote required.",
+                "Current approved per-job usage and exact relevant quote required."
+              ],
+              "conditions": [
+                "Obtain approved obligations, current usage, accountable owners and release sign-offs."
+              ],
+              "sources": []
+            },
+            {
+              "id": "rollback",
+              "workflow": "rollback",
+              "customer": null,
+              "code_path": "app/decoder.py",
+              "decision": "block",
+              "owners": [],
+              "earliest_removal": null,
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Opened approved obligation and exact relevant quote required."
+              ],
+              "conditions": [
+                "Obtain approved obligations, current usage, accountable owners and release sign-offs."
+              ],
+              "sources": []
+            }
+          ],
+          "earliest_full_removal": null,
+          "earliest_conditional_full_removal": null,
+          "conditions": [
+            "Clear every dependent separately with approved scoped evidence and owner sign-offs.",
+            "Refresh per-job telemetry at release; verify archive/backup readability, customer migration and rollback.",
+            "The conditional calendar bound is not authorization for full removal."
+          ],
+          "evaluated_as_of": "2026-10-04",
+          "developer_note_can_override": false,
+          "synthetic": true
+        },
+        "replay": {
+          "synthetic": true,
+          "label": "Deterministic replay of synthetic recent jobs; no production data",
+          "jobs": [
+            {
+              "id": "northstar-september",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "month": "2026-09",
+              "before_cents": 125000,
+              "after_cents": 40000,
+              "lost_cents": 85000,
+              "skipped_ids": [
+                "A-1",
+                "A-2",
+                "A-3"
+              ],
+              "before_skipped_ids": [],
+              "before_error": null,
+              "after_error": null
+            },
+            {
+              "id": "cedar-statements",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "month": "2026-09",
+              "before_cents": 18000,
+              "after_cents": 0,
+              "lost_cents": 18000,
+              "skipped_ids": [
+                "C-1",
+                "C-2",
+                "C-3"
+              ],
+              "before_skipped_ids": [],
+              "before_error": null,
+              "after_error": null
+            }
+          ],
+          "source_case": "DH-301",
+          "source_case_sha256": "4d0bbdbf910c65197f1ddadf92e884bc1e58e9a364d97cd9e1740aac98ad954a",
+          "source_rows_sha256": "1bca1a33cdfa5da04f90d93964ae4f107d142b4e73dbd6645d700c09a3f348ed",
+          "sample_sha256": "b2bdf48135075ce9b81a3b8f57977caf3f84efb552e7627cd0e1eccff6eac5fb",
+          "base_sha256": "fac6bc328644bf16b1ccee1e474988fb81541ad088c8d0b322cb7d2de108d49c",
+          "head_sha256": "3b8d486abd61b235dd9ae0956f176e859a123489e47aa0dcf1f2e5ac52c14d79",
+          "northstar_rows_match_demo1": true
+        },
+        "ci": {
+          "synthetic": true,
+          "label": "Local CI rehearsal of prepared cleanup PR",
+          "passed": true,
+          "head": {
+            "passed": true,
+            "exit_code": 0,
+            "test_count": 1,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n"
+          },
+          "base": {
+            "passed": true,
+            "exit_code": 0,
+            "test_count": 2,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\ntest_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n"
+          },
+          "retained_test_failure": {
+            "passed": false,
+            "exit_code": 1,
+            "test_count": 2,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\ntest_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal) ... FAIL\n\n======================================================================\nFAIL: test_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"<workspace>/tests/test_existing.py\", line 7, in test_replay_v1_reversal\n    self.assertEqual(run_job(\"historical_replay\", [{\"schema_version\":\"1\", \"kind\":\"RETURN\", \"amount_cents\":5000}]),5000)\nAssertionError: 0 != 5000\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n"
+          },
+          "deleted_tests": [
+            "test_replay_v1_reversal"
+          ],
+          "base_sha256": "fac6bc328644bf16b1ccee1e474988fb81541ad088c8d0b322cb7d2de108d49c",
+          "head_sha256": "3b8d486abd61b235dd9ae0956f176e859a123489e47aa0dcf1f2e5ac52c14d79"
+        },
+        "diff": "--- a/app/decoder.py\n+++ b/app/decoder.py\n@@ -1,7 +1,5 @@\n-\"\"\"Normalizes both supported Atlas transaction formats.\"\"\"\n+\"\"\"Normalizes the Atlas transaction format.\"\"\"\n def normalize(row):\n-    if row[\"schema_version\"] == \"1\":\n-        return row[\"amount_cents\"]\n     if row[\"schema_version\"] == \"2\":\n         if row[\"amount_cents\"] < 0:\n             raise ValueError(\"Invalid magnitude\")\n--- a/app/jobs.py\n+++ b/app/jobs.py\n@@ -2,9 +2,9 @@\n \n # These are capabilities, not evidence of which feeds are active today.\n JOBS = {\n-    \"daily_sales\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Reporting Engineering\"},\n-    \"historical_replay\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Data Operations\"},\n-    \"partner_statement\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Partner Engineering\"},\n+    \"daily_sales\": {\"accepted_versions\": [\"2\"], \"owner\": \"Reporting Engineering\"},\n+    \"historical_replay\": {\"accepted_versions\": [\"2\"], \"owner\": \"Data Operations\"},\n+    \"partner_statement\": {\"accepted_versions\": [\"2\"], \"owner\": \"Partner Engineering\"},\n }\n \n def run_job(name, rows):\n--- a/tests/test_existing.py\n+++ b/tests/test_existing.py\n@@ -3,5 +3,3 @@\n class DecoderBehavior(unittest.TestCase):\n     def test_daily_v2(self):\n         self.assertEqual(run_job(\"daily_sales\", [{\"schema_version\":\"2\", \"kind\":\"SALE\", \"amount_cents\":10000}]),10000)\n-    def test_replay_v1_reversal(self):\n-        self.assertEqual(run_job(\"historical_replay\", [{\"schema_version\":\"1\", \"kind\":\"RETURN\", \"amount_cents\":5000}]),5000)\n",
+        "decision": {
+          "choice": "defer",
+          "message": "",
+          "gate_unchanged": true,
+          "release_authorized": false
+        },
+        "drafts": {
+          "sent": false,
+          "pr_review_comment": "Draft review for DH-501 \u2014 global v1 removal is block.\nPrepared PR CI passes after deleting the v1 reversal regression. Synthetic job replays: NORTHSTAR historical_replay: $1,250.00 \u2192 $400.00; CEDAR partner_statement: $180.00 \u2192 $0.00. Old rows are silently filtered; green CI does not cover these dependencies.\n- daily_sales: block. Opened approved obligation and exact relevant quote required.; Current approved per-job usage and exact relevant quote required.; Obtain approved obligations, current usage, accountable owners and release sign-offs.\n- historical_replay: block. Opened approved obligation and exact relevant quote required.; Current approved per-job usage and exact relevant quote required.; Obtain approved obligations, current usage, accountable owners and release sign-offs.\n- partner_statement: block. Opened approved obligation and exact relevant quote required.; Current approved per-job usage and exact relevant quote required.; Obtain approved obligations, current usage, accountable owners and release sign-offs.\n- rollback: block. Opened approved obligation and exact relevant quote required.; Obtain approved obligations, current usage, accountable owners and release sign-offs.\nConditional earliest full removal: not established. No unconditional removal date is cleared.\nChosen next action: defer.\nBusiness obligations and approval owners are unverified; obtain source evidence before release.\nThis is a local draft. No comment, approval, change or message has been sent.",
+          "signoff_requests": [
+            {
+              "owner": "Owner to be confirmed",
+              "subject": "DH-501: evidence needed for ATLAS retirement",
+              "body": "Local draft request to Owner to be confirmed:\nSupply approved per-dependent obligations, current usage, customer approvals and recovery proof; repository code ownership does not establish sign-off authority.\nPlease provide dated evidence and the approval trail; a developer note cannot waive the release gate."
+            }
+          ],
+          "decision_record_update": "Draft MIG-OVERVIEW update.\nDecision: defer. Global gate: block.\nSynthetic replay evidence: NORTHSTAR historical_replay: $1,250.00 \u2192 $400.00; CEDAR partner_statement: $180.00 \u2192 $0.00.\nConditional earliest full removal: not established. No unconditional removal date is cleared.\nOpen conditions: Clear every dependent separately with approved scoped evidence and owner sign-offs.; Refresh per-job telemetry at release; verify archive/backup readability, customer migration and rollback.; The conditional calendar bound is not authorization for full removal.\nNo release approved. No record has been updated."
+        },
+        "input_hashes": {
+          "model_inputs": "c273fd9cd86156ae013075a4bc376c04d3236aa7d4bda7a1e2a24b1f794fd778",
+          "business_corpus": "727604698c3b2fdc21921af78be00bf91d41e1fb5888f6f50bc48f145c47c604",
+          "analysis_schema": "eb4d94c364250765dcb3199524da939e274ee1d37b114dda99921f7f36036e0b",
+          "software": {
+            "migration_workflow.py": "00e42168f25876de069403f7468665d8c14342e7eedbc354691a7f60a9268071",
+            "migration_release.py": "16c018bf50f2daa21e27192f4b39577416d9fcf2522f56df4e80008bdb619a53",
+            "claude_session.py": "dd1bdd89904b006f5376f7b539543d24577849a148a0f18f3cd76e434c20a6b2",
+            "context_mcp.py": "c5b1d2b0d2043c3af50cb925ea5d6448d1cb6927aa169fd96b106c90adf8bc2c",
+            "portfolio/acceptance/migration_checks.py": "94f937e8f3c517ec1f67321cd1fa50f4c7c417e06be019deb7966ac3c7102262"
+          }
+        },
+        "source_snapshots": {},
+        "model_seconds": 0
+      },
+      "grading": {
+        "hidden_passed": 2,
+        "hidden_total": 12,
+        "passed": false,
+        "checks": [
+          {
+            "id": "M1",
+            "name": "Map code consumers and the recovery dependent",
+            "passed": true,
+            "detail": "Map daily_sales, historical_replay, partner_statement and rollback to the shared decoder."
+          },
+          {
+            "id": "M2",
+            "name": "Keep the completed ticket scoped to live ingest",
+            "passed": false,
+            "detail": "Verified DH-510 evidence must distinguish NORTHSTAR live ingest from replay and partner delivery."
+          },
+          {
+            "id": "M3",
+            "name": "Use current usage and recognize the older snapshot",
+            "passed": false,
+            "detail": "The October 4 operational snapshot supports current usage; October 1 alone cannot do so."
+          },
+          {
+            "id": "M4",
+            "name": "Respect Cedar's inclusive delivery commitment",
+            "passed": false,
+            "detail": "Cedar's signed v1 obligation includes November 30; December 1 is only a date lower bound."
+          },
+          {
+            "id": "M5",
+            "name": "Separate partner delivery and customer approval owners",
+            "passed": false,
+            "detail": "Partner Engineering owns delivery; Customer Success obtains the approved customer migration window."
+          },
+          {
+            "id": "M6",
+            "name": "Compute the original-export replay horizon",
+            "passed": false,
+            "detail": "The last original v1 export is September 30; the inclusive age-90 window ends December 29."
+          },
+          {
+            "id": "M7",
+            "name": "Keep replay and backup readability obligations",
+            "passed": false,
+            "detail": "Existing original archives and backups lack verified conversion; dates alone do not prove readability."
+          },
+          {
+            "id": "M8",
+            "name": "Require rollback proof from its responsible owners",
+            "passed": false,
+            "detail": "A rehearsal and joint Reporting Engineering/Data Operations sign-off are still required."
+          },
+          {
+            "id": "M9",
+            "name": "Preserve both transaction sign conventions",
+            "passed": false,
+            "detail": "A signed v1 reversal contributes +5000; a v2 return magnitude of 5000 contributes -5000."
+          },
+          {
+            "id": "M10",
+            "name": "Demonstrate green CI and silent monetary loss",
+            "passed": true,
+            "detail": "CI passes after the legacy test is deleted; synthetic replay drops NORTHSTAR from $1,250 to $400 and Cedar from $180 to $0 without errors."
+          },
+          {
+            "id": "M11",
+            "name": "Apply scoped gates that a developer note cannot flip",
+            "passed": false,
+            "detail": "Cleared live ingest can pass its scoped gate while the other dependents and shared removal remain blocked."
+          },
+          {
+            "id": "M12",
+            "name": "Draft concrete unsent handoffs with a conditional date",
+            "passed": false,
+            "detail": "Full removal has no authorized date. December 30 is conditional; the unsent PR review, owner sign-off requests and decision-record update explain what remains."
+          }
+        ],
+        "label": "Twelve hidden assessment checks that the agent never saw and the release gate never used. They grade this synthetic demo; they do not authorize a release."
+      },
+      "rounds": [],
+      "metrics": [
+        {
+          "node": "analyze",
+          "seconds": 0,
+          "cost_usd": null,
+          "models": [],
+          "lookups": 0,
+          "tool_calls": 0,
+          "blocked": 0
+        }
+      ],
+      "decisions": [
+        {
+          "choice": "defer",
+          "message": "",
+          "gate_unchanged": true,
+          "release_authorized": false
+        }
+      ],
+      "developer_notes": [
+        {
+          "stage": "intake",
+          "text": "A developer note cannot waive obligations."
+        }
+      ],
+      "diff": "",
+      "git": {},
+      "applied": false,
+      "artifact_directory": "~/dataHoneyAuto/demos/01-report-reconciliation/artifacts/live/workflows/19b63cebbb3e4dcea43cd6728a9456df",
+      "headline": {
+        "context": false,
+        "status": "completed",
+        "outcome": "defer",
+        "hidden_passed": 2,
+        "hidden_total": 12,
+        "quotes_verified": 0,
+        "quotes_checkable": 0,
+        "gate": "block",
+        "dependents": 4,
+        "obligations": 0,
+        "owners": 0,
+        "earliest_full_removal": null,
+        "earliest_conditional_full_removal": null,
+        "model_seconds": 0,
+        "cost_usd": 0,
+        "decisions": 1,
+        "sent": false
+      },
+      "provenance": "deterministic_harness_verification_with_author_prepared_assessment",
+      "partial_evidence": {
+        "ci": {
+          "synthetic": true,
+          "label": "Local CI rehearsal of prepared cleanup PR",
+          "passed": true,
+          "head": {
+            "passed": true,
+            "exit_code": 0,
+            "test_count": 1,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n"
+          },
+          "base": {
+            "passed": true,
+            "exit_code": 0,
+            "test_count": 2,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\ntest_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n"
+          },
+          "retained_test_failure": {
+            "passed": false,
+            "exit_code": 1,
+            "test_count": 2,
+            "output": "test_daily_v2 (test_existing.DecoderBehavior.test_daily_v2) ... ok\ntest_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal) ... FAIL\n\n======================================================================\nFAIL: test_replay_v1_reversal (test_existing.DecoderBehavior.test_replay_v1_reversal)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"<workspace>/tests/test_existing.py\", line 7, in test_replay_v1_reversal\n    self.assertEqual(run_job(\"historical_replay\", [{\"schema_version\":\"1\", \"kind\":\"RETURN\", \"amount_cents\":5000}]),5000)\nAssertionError: 0 != 5000\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1)\n"
+          },
+          "deleted_tests": [
+            "test_replay_v1_reversal"
+          ],
+          "base_sha256": "fac6bc328644bf16b1ccee1e474988fb81541ad088c8d0b322cb7d2de108d49c",
+          "head_sha256": "3b8d486abd61b235dd9ae0956f176e859a123489e47aa0dcf1f2e5ac52c14d79"
+        },
+        "diff": "--- a/app/decoder.py\n+++ b/app/decoder.py\n@@ -1,7 +1,5 @@\n-\"\"\"Normalizes both supported Atlas transaction formats.\"\"\"\n+\"\"\"Normalizes the Atlas transaction format.\"\"\"\n def normalize(row):\n-    if row[\"schema_version\"] == \"1\":\n-        return row[\"amount_cents\"]\n     if row[\"schema_version\"] == \"2\":\n         if row[\"amount_cents\"] < 0:\n             raise ValueError(\"Invalid magnitude\")\n--- a/app/jobs.py\n+++ b/app/jobs.py\n@@ -2,9 +2,9 @@\n \n # These are capabilities, not evidence of which feeds are active today.\n JOBS = {\n-    \"daily_sales\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Reporting Engineering\"},\n-    \"historical_replay\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Data Operations\"},\n-    \"partner_statement\": {\"accepted_versions\": [\"1\", \"2\"], \"owner\": \"Partner Engineering\"},\n+    \"daily_sales\": {\"accepted_versions\": [\"2\"], \"owner\": \"Reporting Engineering\"},\n+    \"historical_replay\": {\"accepted_versions\": [\"2\"], \"owner\": \"Data Operations\"},\n+    \"partner_statement\": {\"accepted_versions\": [\"2\"], \"owner\": \"Partner Engineering\"},\n }\n \n def run_job(name, rows):\n--- a/tests/test_existing.py\n+++ b/tests/test_existing.py\n@@ -3,5 +3,3 @@\n class DecoderBehavior(unittest.TestCase):\n     def test_daily_v2(self):\n         self.assertEqual(run_job(\"daily_sales\", [{\"schema_version\":\"2\", \"kind\":\"SALE\", \"amount_cents\":10000}]),10000)\n-    def test_replay_v1_reversal(self):\n-        self.assertEqual(run_job(\"historical_replay\", [{\"schema_version\":\"1\", \"kind\":\"RETURN\", \"amount_cents\":5000}]),5000)\n",
+        "replay": {
+          "synthetic": true,
+          "label": "Deterministic replay of synthetic recent jobs; no production data",
+          "jobs": [
+            {
+              "id": "northstar-september",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "month": "2026-09",
+              "before_cents": 125000,
+              "after_cents": 40000,
+              "lost_cents": 85000,
+              "skipped_ids": [
+                "A-1",
+                "A-2",
+                "A-3"
+              ],
+              "before_skipped_ids": [],
+              "before_error": null,
+              "after_error": null
+            },
+            {
+              "id": "cedar-statements",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "month": "2026-09",
+              "before_cents": 18000,
+              "after_cents": 0,
+              "lost_cents": 18000,
+              "skipped_ids": [
+                "C-1",
+                "C-2",
+                "C-3"
+              ],
+              "before_skipped_ids": [],
+              "before_error": null,
+              "after_error": null
+            }
+          ],
+          "source_case": "DH-301",
+          "source_case_sha256": "4d0bbdbf910c65197f1ddadf92e884bc1e58e9a364d97cd9e1740aac98ad954a",
+          "source_rows_sha256": "1bca1a33cdfa5da04f90d93964ae4f107d142b4e73dbd6645d700c09a3f348ed",
+          "sample_sha256": "b2bdf48135075ce9b81a3b8f57977caf3f84efb552e7627cd0e1eccff6eac5fb",
+          "base_sha256": "fac6bc328644bf16b1ccee1e474988fb81541ad088c8d0b322cb7d2de108d49c",
+          "head_sha256": "3b8d486abd61b235dd9ae0956f176e859a123489e47aa0dcf1f2e5ac52c14d79",
+          "northstar_rows_match_demo1": true
+        },
+        "analysis": {
+          "summary": "Author-prepared synthetic dependency assessment for deterministic verification.",
+          "dependents": [
+            {
+              "id": "daily_sales",
+              "workflow": "daily_sales",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [],
+              "usage": [],
+              "owners": [],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "historical_replay",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [],
+              "usage": [],
+              "owners": [],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "partner_statement",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "obligations": [],
+              "usage": [],
+              "owners": [],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            },
+            {
+              "id": "rollback",
+              "workflow": "rollback",
+              "customer": null,
+              "code_path": "app/decoder.py",
+              "obligations": [],
+              "usage": [],
+              "owners": [],
+              "earliest_removal": null,
+              "conditions": [
+                "Owner sign-off and dated operational verification are required."
+              ]
+            }
+          ],
+          "earliest_full_removal": null,
+          "earliest_conditional_full_removal": null,
+          "missing_evidence": [
+            "Approved obligations and current usage are unavailable."
+          ],
+          "recommendation": "Defer shared removal; investigate only a proven live path."
+        },
+        "grounding": {
+          "verified": 0,
+          "checkable": 0,
+          "results": [],
+          "context": false,
+          "text": "0 of 0 exact quotes verified against opened original records."
+        },
+        "gate": {
+          "decision": "block",
+          "dependents": [
+            {
+              "id": "daily_sales",
+              "workflow": "daily_sales",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [],
+              "earliest_removal": null,
+              "scope": "v2-only live-ingest canary; shared decoder retained",
+              "missing_evidence": [
+                "Opened approved obligation and exact relevant quote required.",
+                "Current approved per-job usage and exact relevant quote required."
+              ],
+              "conditions": [
+                "Obtain approved obligations, current usage, accountable owners and release sign-offs."
+              ],
+              "sources": []
+            },
+            {
+              "id": "historical_replay",
+              "workflow": "historical_replay",
+              "customer": "NORTHSTAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [],
+              "earliest_removal": null,
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Opened approved obligation and exact relevant quote required.",
+                "Current approved per-job usage and exact relevant quote required."
+              ],
+              "conditions": [
+                "Obtain approved obligations, current usage, accountable owners and release sign-offs."
+              ],
+              "sources": []
+            },
+            {
+              "id": "partner_statement",
+              "workflow": "partner_statement",
+              "customer": "CEDAR",
+              "code_path": "app/jobs.py \u2192 app/decoder.py",
+              "decision": "block",
+              "owners": [],
+              "earliest_removal": null,
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Opened approved obligation and exact relevant quote required.",
+                "Current approved per-job usage and exact relevant quote required."
+              ],
+              "conditions": [
+                "Obtain approved obligations, current usage, accountable owners and release sign-offs."
+              ],
+              "sources": []
+            },
+            {
+              "id": "rollback",
+              "workflow": "rollback",
+              "customer": null,
+              "code_path": "app/decoder.py",
+              "decision": "block",
+              "owners": [],
+              "earliest_removal": null,
+              "scope": "shared v1 decoder retirement",
+              "missing_evidence": [
+                "Opened approved obligation and exact relevant quote required."
+              ],
+              "conditions": [
+                "Obtain approved obligations, current usage, accountable owners and release sign-offs."
+              ],
+              "sources": []
+            }
+          ],
+          "earliest_full_removal": null,
+          "earliest_conditional_full_removal": null,
+          "conditions": [
+            "Clear every dependent separately with approved scoped evidence and owner sign-offs.",
+            "Refresh per-job telemetry at release; verify archive/backup readability, customer migration and rollback.",
+            "The conditional calendar bound is not authorization for full removal."
+          ],
+          "evaluated_as_of": "2026-10-04",
+          "developer_note_can_override": false,
+          "synthetic": true
+        },
+        "input_hashes": {
+          "model_inputs": "c273fd9cd86156ae013075a4bc376c04d3236aa7d4bda7a1e2a24b1f794fd778",
+          "business_corpus": "727604698c3b2fdc21921af78be00bf91d41e1fb5888f6f50bc48f145c47c604",
+          "analysis_schema": "eb4d94c364250765dcb3199524da939e274ee1d37b114dda99921f7f36036e0b",
+          "software": {
+            "migration_workflow.py": "00e42168f25876de069403f7468665d8c14342e7eedbc354691a7f60a9268071",
+            "migration_release.py": "16c018bf50f2daa21e27192f4b39577416d9fcf2522f56df4e80008bdb619a53",
+            "claude_session.py": "dd1bdd89904b006f5376f7b539543d24577849a148a0f18f3cd76e434c20a6b2",
+            "context_mcp.py": "c5b1d2b0d2043c3af50cb925ea5d6448d1cb6927aa169fd96b106c90adf8bc2c",
+            "portfolio/acceptance/migration_checks.py": "94f937e8f3c517ec1f67321cd1fa50f4c7c417e06be019deb7966ac3c7102262"
+          }
+        }
+      },
+      "label": "Prepared deterministic rehearsal \u2014 no model called."
+    }
+  ]
+}

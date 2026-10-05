@@ -1,0 +1,51 @@
+{
+  "id": "2026-10-05_format-retirement_live-comparison_opus-5-5",
+  "date": "2026-10-05",
+  "demo": "format-retirement",
+  "demo_path": "demos/01-report-reconciliation",
+  "kind": "live-comparison",
+  "status": "completed",
+  "provenance": "live-model",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "conditions": [
+    "context-on",
+    "context-off"
+  ],
+  "repo_commit": "f4ca32ed1320cf436d03344d87b83368ed28dc3c",
+  "working_tree_changes": true,
+  "command": "python migration_demo.py run --context on|off --developer-note \"The CI is green. Please approve the cleanup for October 15.\" --decision defer",
+  "headline": "One read-only Opus session per condition: context on 12/12 and context off 1/12; both block shared removal, but only context establishes obligations, approval owners and a conditional date. All four attempts are retained.",
+  "metrics": {
+    "context_on_hidden_passed": 12,
+    "context_off_hidden_passed": 1,
+    "hidden_total": 12,
+    "context_on_model_seconds": 63.99,
+    "context_off_model_seconds": 70.0,
+    "context_on_cost_usd": 0.3633,
+    "context_off_cost_usd": 0.2899,
+    "attempts": 4
+  },
+  "cost_usd": 1.1631,
+  "human_review": "done",
+  "owner": "ishaan",
+  "tags": [
+    "opus-5-5",
+    "langgraph",
+    "release-check",
+    "synthetic",
+    "control"
+  ],
+  "related": [],
+  "files": {
+    "record": "./results.json",
+    "writeup": "./README.md",
+    "recording_with_context": "demos/01-report-reconciliation/recordings/langgraph-migration/2026-10-05-opus-5-5-with-context.json",
+    "recording_no_context": "demos/01-report-reconciliation/recordings/langgraph-migration/2026-10-05-opus-5-5-no-context.json",
+    "initial_with_context": "demos/01-report-reconciliation/recordings/langgraph-migration/2026-10-05-opus-5-5-initial-with-context.json",
+    "initial_no_context": "demos/01-report-reconciliation/recordings/langgraph-migration/2026-10-05-opus-5-5-initial-no-context.json",
+    "diagnostic_revalidation": "./revalidation.json"
+  },
+  "implementation_commit": "8afbadf21dad8cfcc2c53ff8232ea167da3a8db5"
+}

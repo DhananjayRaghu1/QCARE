@@ -1,0 +1,28 @@
+{
+  "id": "2026-10-05_format-retirement_controls",
+  "date": "2026-10-05",
+  "demo": "format-retirement",
+  "demo_path": "demos/01-report-reconciliation",
+  "kind": "controls",
+  "status": "completed",
+  "provenance": "deterministic",
+  "models": [],
+  "conditions": [
+    "prepared-context-on",
+    "prepared-context-off"
+  ],
+  "repo_commit": "f4ca32ed1320cf436d03344d87b83368ed28dc3c",
+  "working_tree_changes": true,
+  "command": "python migration_demo.py verify",
+  "headline": "Actual synthetic CI and job execution plus a prepared assessment exercise the graph: 12/12 with prepared sources and 2/12 without; no model called.",
+  "human_review": "done",
+  "metrics": {
+    "model_requests": 0,
+    "passed": true
+  },
+  "files": {
+    "record": "./results.json",
+    "writeup": "./README.md"
+  },
+  "implementation_commit": "8afbadf21dad8cfcc2c53ff8232ea167da3a8db5"
+}
