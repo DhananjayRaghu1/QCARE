@@ -51,11 +51,9 @@ function skeleton(){
   return `<span class="eyebrow">ENGINEERING WORKFLOW · LIVE CLAUDE SESSIONS</span>
 <h2>From a Jira ticket to a reviewed pull request, with you in the loop</h2>
 <p>Claude reads the business records, writes the change and has it reviewed. Rules in code decide when it is done, and you make every decision. Nothing is merged or deployed.</p>
-<div id="wfDiagram"></div>
 <ol class="wf-strip" id="wfStrip"></ol>
 <details class="wf-engineer"><summary>For engineers: the compiled LangGraph, tools and limits <span class="small">(at most <span id="wfMaxRounds">3</span> build rounds)</span></summary><div id="wfGraphDetail"></div></details>
 <div class="grid two wf-inputs"><article id="wfTicket"></article><article id="wfStart"></article></div>
-<div id="wfCompare"></div>
 <div id="wfStatus" class="wf-status hidden" role="status" aria-live="polite"></div>
 <div id="wfPending"></div>
 <div id="wfTimeline" class="wf-timeline"></div>
@@ -64,7 +62,7 @@ function skeleton(){
 
 function renderGraphDetail(){
   const g = wf.graph;
-  const tools = {intake:'No model. Code fetches the ticket and (with context on) its linked issue, clones the repository onto a new branch.', analyze:'Read, Glob, Grep + Jira and Confluence lookups (read-only MCP, context on only). A re-check after your input returns only what changed.', ask_developer:'No model. LangGraph interrupt() waits for you; the recommended option or “I don’t know” applies in code.', implement:'Read, Glob, Edit, Write; shell limited to python3, ls, git status/diff/log/show/add/commit/push, and gh pr create/view/list only when a PR was requested.', review:'Read, Glob, Grep; shell limited to python3, ls and read-only git, in a disposable copy with no remote. Judges every requirement.', check_requirements:'No model. Rules in code: tests pass, every requirement met, no high or medium finding, branch pushed, PR rules.', prepare_summary:'No model. Builds the summary and runs the demo-only grading.', developer_review:'No model. LangGraph interrupt() waits for you.', finalize:'No model. Marks the draft PR ready for review if there is one. Never merges.'};
+  const tools = {intake:'No model. Code fetches the ticket and its linked issue, clones the repository onto a new branch.', analyze:'Read, Glob, Grep + Jira and Confluence lookups (read-only MCP). A re-check after your input returns only what changed.', ask_developer:'No model. LangGraph interrupt() waits for you; the recommended option or “I don’t know” applies in code.', implement:'Read, Glob, Edit, Write; shell limited to python3, ls, git status/diff/log/show/add/commit/push, and gh pr create/view/list only when a PR was requested.', review:'Read, Glob, Grep; shell limited to python3, ls and read-only git, in a disposable copy with no remote. Judges every requirement.', check_requirements:'No model. Rules in code: tests pass, every requirement met, no high or medium finding, branch pushed, PR rules.', prepare_summary:'No model. Builds the summary and runs the demo-only grading.', developer_review:'No model. LangGraph interrupt() waits for you.', finalize:'No model. Marks the draft PR ready for review if there is one. Never merges.'};
   $('#wfGraphDetail').innerHTML = `<p class="small">Orchestrated with LangGraph and drawn from the compiled graph (<code>engineering_workflow.build_graph()</code>). Every Claude step uses <b>${esc(g.model)}</b>, a JSON schema for its output, a per-step budget and timeout, and a $${g.budget_cap} cap for the whole workflow.</p>
 <div class="table-wrap"><table class="wf-table"><thead><tr><th>Step</th><th>Tools</th><th>Limit</th></tr></thead><tbody>${g.nodes.map(n => `<tr><td><b>${esc(n.title)}</b><br><code>${esc(n.id)}</code></td><td>${esc(tools[n.id] || '')}</td><td>${g.limits[n.id] ? `$${g.limits[n.id].budget_usd} · ${g.limits[n.id].timeout_seconds}s` : '—'}</td></tr>`).join('')}</tbody></table></div>
 <p class="small">Edges: ${g.edges.filter(e => !e.source.startsWith('__') && !e.target.startsWith('__')).map(e => `${esc(e.source)} → ${esc(e.target)}${e.conditional ? ' (conditional)' : ''}`).join(' · ')}</p>
@@ -73,7 +71,7 @@ function renderGraphDetail(){
 
 function recordingLabel(r){
   const h = r.headline || {};
-  return `${r.context === false ? 'Without context' : 'With context'} · ${r.developer_note ? '“' + r.developer_note + '”' : 'no note'}${h.pr ? ' · PR' : ''} · ${new Date(r.recorded_at).toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})}`;
+  return `${r.developer_note ? '“' + r.developer_note + '”' : 'no note'}${h.pr ? ' · PR' : ''} · ${new Date(r.recorded_at).toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})}`;
 }
 function renderInputs(){
   const t = wf.graph.ticket, rows = JSON.parse(demo.files['sample.json']);
@@ -83,9 +81,6 @@ function renderInputs(){
 <p class="small"><b>Links:</b> ${t.links.map(link => esc(link.type) + ' ' + srcChip(link.id)).join(', ')} · <b>Attachment:</b> sample.json (${rows.length} transactions)<br><b>Repository:</b> ${wf.graph.sandbox_repo ? `<a href="https://github.com/${esc(wf.graph.sandbox_repo)}" target="_blank" rel="noopener">${esc(wf.graph.sandbox_repo)}</a> (private sandbox)` : 'local sandbox remote'}; a new branch per run.</p>`;
   const recordings = [...wf.recordings].sort((a, b) => String(b.recorded_at).localeCompare(String(a.recorded_at)));
   $('#wfStart').innerHTML = `<span class="eyebrow">INPUT 2 · YOU</span>
-<fieldset class="wf-context"><legend>Business context</legend>
-<label><input type="radio" name="wfContext" value="on" checked><span><b>On</b> · Jira links and Confluence lookups</span></label>
-<label><input type="radio" name="wfContext" value="off"><span><b>Off: the control</b> · ticket and repository only</span></label></fieldset>
 <label class="wf-label" for="wfNote">Developer note (optional). Treated as guidance, not business approval.</label>
 <textarea id="wfNote" maxlength="2000" placeholder="For example: Use UTC to keep it simple. Open a draft PR when it’s ready."></textarea>
 <div class="actions"><button id="wfRun">Run workflow →</button><button id="wfStop" class="secondary hidden">Stop</button></div>
@@ -96,31 +91,6 @@ ${recordings.length ? `<div class="wf-replay"><select id="wfRecording" aria-labe
   $('#wfStop').onclick = stopWorkflow;
   if($('#wfReplay')) $('#wfReplay').onclick = () => startReplay($('#wfRecording').value);
   linkIds($('#wfTicket'));
-}
-
-function compareColumn(mode){
-  const live = wf.live[mode];
-  if(live) return {h:live, source:'this session’s live run'};
-  const recording = [...wf.recordings].filter(r => (r.context !== false) === (mode === 'on') && r.headline)
-    .sort((a, b) => String(b.recorded_at).localeCompare(String(a.recorded_at)))[0];
-  return recording ? {h:recording.headline, source:'recorded ' + new Date(recording.recorded_at).toLocaleDateString()} : null;
-}
-function renderCompare(){
-  const on = compareColumn('on'), off = compareColumn('off');
-  if(!on && !off){ $('#wfCompare').innerHTML = ''; return; }
-  const cell = (column, render) => column ? render(column.h) : '<span class="small">not run yet</span>';
-  const rows = [
-    ['Decisions it asked you for', h => String(h.decisions)],
-    ['Requirements (quotes verified)', h => `${h.requirements} (${h.quotes_verified}/${h.quotes_checkable})`],
-    ['Assumptions it recorded', h => String(h.assumptions)],
-    ['Its own tests', h => h.tests_total == null ? '—' : `${h.tests_passed}/${h.tests_total} passing`],
-    ['Build rounds', h => String(h.rounds ?? '—')],
-    ['Hidden acceptance checks (demo grading)', h => h.hidden_total ? `<b class="${h.hidden_passed === h.hidden_total ? 'passed' : 'error'}">${h.hidden_passed}/${h.hidden_total}</b>` : '—'],
-    ['Model time · cost', h => `${secs(h.model_seconds)} · ${money(h.cost_usd)}`]];
-  $('#wfCompare').innerHTML = `<section class="wf-compare"><span class="eyebrow">SAME WORKFLOW, SAME MODEL · ONLY THE BUSINESS CONTEXT DIFFERS</span>
-<div class="table-wrap"><table class="wf-table"><thead><tr><th></th><th>With context</th><th>Without context (control)</th></tr></thead><tbody>${rows.map(([label, render]) => `<tr><td>${esc(label)}</td><td>${cell(on, render)}</td><td>${cell(off, render)}</td></tr>`).join('')}
-<tr><td class="small">Source</td><td class="small">${on ? esc(on.source) : ''}</td><td class="small">${off ? esc(off.source) : ''}</td></tr></tbody></table></div>
-<p class="small">Two separate runs on a synthetic fixture: an illustration, not a benchmark. Both tick their own tests; the hidden checks encode the approved business rules.</p></section>`;
 }
 
 function viewModel(events){
@@ -342,8 +312,7 @@ function tldr(summary, opts){
     : summary.outcome === 'needs_decision' ? `Stopped for a rule owner: ${clipText(escalated?.evidence || 'a requirement can only be settled by its owner')}`
     : `Not accepted after ${plural(summary.rounds_used, 'round')}: it needs your direction.`;
   const second = `${met}/${trace.length} requirements met · ${t.total - t.failed}/${t.total} tests passing · ${summary.citations.verified}/${summary.citations.checkable} source quotes verified`;
-  const third = summary.context === false ? 'Control run: no business documents, so the requirements came from the ticket and code alone.'
-    : summary.decisions?.length ? 'You decided: ' + summary.decisions.map(d => clipText(String(d).split(' → ').pop(), 110)).join('; ')
+  const third = summary.decisions?.length ? 'You decided: ' + summary.decisions.map(d => clipText(String(d).split(' → ').pop(), 110)).join('; ')
     : summary.risks?.length ? 'Check before merging: ' + clipText(summary.risks[0])
     : 'No decisions were needed.';
   return `<div class="wf-tldr"><span class="eyebrow">TL;DR</span><ul><li><b>${esc(first)}</b></li><li>${esc(second)}</li><li>${esc(third)}</li></ul></div>`;
@@ -355,7 +324,7 @@ function summaryPanel(summary, opts){
   const git = opts.finalGit || summary.git;
   const decide = opts.live ? `<div class="wf-decide"><h4>Your decision</h4><div class="actions"><button id="wfApprove">${summary.git?.pr ? 'Approve: mark the PR ready for review' : 'Approve'}</button><button class="secondary" id="wfShowRevise">Send it back…</button></div><div id="wfReviseBox" class="hidden"><label class="wf-label">What should change?<textarea id="wfRevise" maxlength="2000" placeholder="For example: Also test a refund that settles in a different month from the sale"></textarea></label><button class="secondary" id="wfSendBack">Send back with instructions →</button></div></div>` : '';
   const grading = opts.grading ? `<details data-key="sum-grading"><summary>Demo grading: hidden acceptance checks</summary><p class="small">${esc(opts.grading.label)}</p><p class="wf-ground ${opts.grading.passed ? 'good' : 'bad'}">${opts.grading.passed ? '✓' : '✗'} ${opts.grading.hidden_passed} of ${opts.grading.hidden_total} hidden acceptance checks passed${opts.grading.repository_passed ? ', and all repository tests passed' : ', but repository tests failed'}.</p></details>` : '';
-  const where = git ? `<p class="wf-ground good">${summary.context === false ? badge('control: no business context', 'warn') + ' ' : ''}${git.branch_url ? `<a href="${esc(git.branch_url)}" target="_blank" rel="noopener"><code>${esc(git.branch)}</code></a>` : `<code>${esc(git.branch)}</code> (local sandbox)`}${git.pr ? ` · <a href="${esc(git.pr.url)}" target="_blank" rel="noopener">${git.pr.isDraft ? 'Draft ' : ''}PR #${git.pr.number}</a>` : git.pr_requested ? ' · PR requested but not open' : ' · no PR requested'}</p>` : '';
+  const where = git ? `<p class="wf-ground good">${git.branch_url ? `<a href="${esc(git.branch_url)}" target="_blank" rel="noopener"><code>${esc(git.branch)}</code></a>` : `<code>${esc(git.branch)}</code> (local sandbox)`}${git.pr ? ` · <a href="${esc(git.pr.url)}" target="_blank" rel="noopener">${git.pr.isDraft ? 'Draft ' : ''}PR #${git.pr.number}</a>` : git.pr_requested ? ' · PR requested but not open' : ' · no PR requested'}</p>` : '';
   const escalations = summary.review.findings.filter(f => f.needs_owner_decision && f.severity !== 'low').map(f => `<p class="notice"><b>Decision needed (${esc(f.id)}):</b> ${esc(f.evidence)}<br><small>${esc(f.suggested_fix)}</small></p>`).join('');
   return `<section class="wf-summary"><span class="eyebrow">RESULT</span>
 ${tldr(summary, opts)}
@@ -438,7 +407,6 @@ function renderAll(){
   const busy = wf.starting || running || status === 'waiting_for_developer' || (replay && !replay.done);
   $('#wfRun').disabled = busy;
   $('#wfNote').disabled = busy;
-  document.querySelectorAll('input[name=wfContext]').forEach(input => input.disabled = busy);
   if($('#wfReplay')) $('#wfReplay').disabled = Boolean(busy);
   $('#wfStop').classList.toggle('hidden', !(running || status === 'waiting_for_developer'));
 }
@@ -461,7 +429,6 @@ async function poll(){
     if(id !== wf.run) return;
     wf.events.push(...value.events);
     Object.assign(wf, {cursor:value.cursor, status:value.status, pending:value.pending, result:value.result, meta:value});
-    if(value.result?.headline && value.status === 'completed') { wf.live[value.result.headline.context === false ? 'off' : 'on'] = value.result.headline; renderCompare(); }
     $('#wfError').textContent = '';
     renderAll();
     if(value.status === 'running' || value.status === 'stopping') schedule(850);
@@ -473,8 +440,7 @@ async function poll(){
 async function startWorkflow(){
   reset(); wf.starting = true; renderAll();
   try{
-    const context = document.querySelector('input[name=wfContext]:checked')?.value !== 'off';
-    const value = await api('/api/workflows', {case_id:'DH-401', developer_note:$('#wfNote').value.trim(), business_context:context});
+    const value = await api('/api/workflows', {case_id:'DH-401', developer_note:$('#wfNote').value.trim(), business_context:true});
     wf.run = value.id; wf.status = 'running';
     schedule(0);
   }catch(error){ $('#wfError').textContent = error.message; }
@@ -535,11 +501,10 @@ async function mountWorkflow(){
   if(!root) return;
   root.innerHTML = skeleton();
   try{
-    [wf.graph, wf.recordings] = await Promise.all([api('/api/workflows/graph'), api('/api/workflows/recordings').then(value => value.recordings)]);
+    [wf.graph, wf.recordings] = await Promise.all([api('/api/workflows/graph'), api('/api/workflows/recordings').then(value => value.recordings.filter(r => r.context !== false))]);
   }catch(error){ root.insertAdjacentHTML('beforeend', `<p class="error">Could not load the workflow: ${esc(error.message)}</p>`); return; }
   $('#wfMaxRounds').textContent = wf.graph.max_rounds;
-  renderGraphDetail(); renderInputs(); renderStrip(null); renderCompare();
-  if(window.renderWorkflowDiagram) window.renderWorkflowDiagram($('#wfDiagram'), 'export');
+  renderGraphDetail(); renderInputs(); renderStrip(null);
   root.addEventListener('toggle', event => { if(event.target.matches?.('details[data-lazy]')) fillLazy(event.target); }, true);
   const latest = (config.workflows || []).filter(flow => !flow.case_id || flow.case_id === 'DH-401').at(-1);
   if(latest){ wf.run = latest.id; wf.status = latest.status; schedule(0); }

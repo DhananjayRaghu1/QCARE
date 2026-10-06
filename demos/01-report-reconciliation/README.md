@@ -177,7 +177,7 @@ The prepared reference is not model-generated. It passes all 12 independent chec
 
 ### The engineering workflow (LangGraph)
 
-The Demo 2 page leads with a live workflow that takes DH-401 from ticket to a reviewed pull request, with a person in the loop. A **Business context: On / Off** switch runs the same workflow as its own control. The older single-session Repo-only/Docs comparison stays in the code but is no longer shown on the page.
+The Demo 2 page leads with a live workflow that takes DH-401 from ticket to a reviewed pull request, with a person in the loop. The older single-session Repo-only/Docs comparison stays in the code but is no longer shown on the page.
 
 ```text
 intake → analyze ─┬─ blocking conflict ─→ ask_developer ─┬─ recommended or "I don't know" ─→ implement
@@ -190,7 +190,8 @@ developer_review ─┬─ approve ─→ finalize (draft PR marked ready)
 ```
 
 - **One fresh Claude Code session per model step** (`claude_session.py`): analyze, implement and review. Each uses your login, `claude-opus-5-5` by default (`demo.py live --workflow-model` overrides it), only the tools its role needs, a JSON schema for its output, a per-step budget and timeout, and an $8 cap for the whole workflow. The flags are the raw modes' restricted flags, minus `--safe-mode`, which would also disable MCP.
-- **Context on vs off.** With context on, code follows the ticket's link to DH-411, and the analyst, engineer and reviewer get read-only Jira/Confluence tools. With it off (the control), they see only the ticket text, the developer's note and the repository. Everything else is identical: model, loop, review, rules, git and grading. The comparison card at the top of the results shows the latest run of each.
+- **Business context.** Code follows the ticket's link to DH-411, and the analyst, engineer and reviewer get read-only Jira/Confluence tools. The workflow still accepts `business_context: false` through the API, and the recorded no-context run stays in `recordings/` and `results/`, but the page no longer offers it.
+- **Diagram.** The [Demo 2 architecture page](http://127.0.0.1:8768/architecture/export) shows the workflow as a Mermaid diagram (served locally from `vendor/`).
 - **Retrieval** (`context_mcp.py`). Read-only MCP tools (`jira_search`, `jira_get_issue`, `confluence_search`, `confluence_get_page`) over all 21 synthetic records from the three demos, so the analyst must filter by scope, status and dates. Results carry owner, status, scope, effective dates, version, SHA256 and retrieval time. Demo 1's hand-authored calculator rules are stripped. No vector index; at this size, search then fetch is enough.
 - **Requirements.** About 8–12 grouped requirements, each with a word-for-word quote and an acceptance test that follows only from those words. The workflow verifies every quote against a record whose hash shows it was actually opened.
 - **Decisions.** The workflow pauses before coding when a conflict needs a person. Choosing the recommended option, or "I don't know; use your best judgment" (recorded as an assumption), is applied in code with no extra model call. Another option, a note, or a send-back after review gets a short delta re-check that returns only what changed. Overriding an approved rule is recorded as needing the owner's sign-off. After two answers it stops asking and builds on recorded assumptions.

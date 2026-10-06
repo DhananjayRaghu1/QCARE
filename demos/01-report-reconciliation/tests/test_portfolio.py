@@ -113,8 +113,12 @@ def test_workflow_diagrams_are_served_locally_under_the_same_policy():
         with urlopen(base+'/diagrams.js') as r:
             text=r.read().decode()
             assert 'export' in text and 'migration' in text and "securityLevel:'strict'" in text
+        for name in ('export','migration'):
+            with urlopen(base+'/architecture/'+name) as r:
+                page=r.read().decode()
+                assert f'data-diagram="{name}"' in page
+                assert page.index('/vendor/mermaid.min.js')<page.index('/diagrams.js')
         with urlopen(base+'/demos/export') as r:
-            page=r.read().decode()
-            assert page.index('/vendor/mermaid.min.js')<page.index('/diagrams.js')<page.index('/workflow.js')
+            assert 'mermaid' not in r.read().decode()
     finally:
         server.shutdown();server.server_close()

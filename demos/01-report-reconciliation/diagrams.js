@@ -9,7 +9,7 @@ const CLASSES = `
   linkStyle default stroke:#8d9c84,stroke-width:1.5px`;
 const DIAGRAMS = {
   export: {
-    caption: 'One pass usually takes about 2–3 minutes of model time. Build, review and the rules check repeat for at most 3 rounds.',
+    caption: 'Grey steps are code, blue steps are separate Claude sessions, gold steps wait for you. Build, review and the rules check repeat for at most 3 rounds.',
     steps: ['Jira ticket and your note', 'Claude gathers context and finds conflicts', 'You decide any conflict before code is written', 'Claude writes the code and tests on its own branch', 'A separate Claude session reviews it', 'Rules in code check it; failures go back to the build', 'You approve or send it back', 'The draft PR is marked ready for your team’s review'],
     source: `flowchart LR
   T["Jira ticket<br/>+ your note"]:::code --> A["Gather context<br/>& find conflicts"]:::ai
@@ -58,4 +58,7 @@ async function renderWorkflowDiagram(root, key){
   }
 }
 window.renderWorkflowDiagram = renderWorkflowDiagram;
+// Architecture pages mark the slot with data-diagram="export" or "migration".
+const mount = () => document.querySelectorAll('[data-diagram]').forEach(el => renderWorkflowDiagram(el, el.dataset.diagram));
+document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', mount) : mount();
 })();

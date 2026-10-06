@@ -24,15 +24,15 @@ Ask which systems hold their equivalent requirements, who confirms the correct r
 The workflow section at the top of the Demo 2 page runs the whole ticket-to-PR loop with real Claude sessions. With a mixed audience, narrate each step in one plain sentence, and open the details only when the engineer asks.
 
 1. **The ticket.** "One paragraph. It looks like a ten-minute change." Point out the link to DH-411 and the attached sample.
-2. **Start it.** Leave **Business context: On**. Type the note **Use UTC to keep it simple. Open a draft PR when it’s ready.** (the box's placeholder shows it), then click **Run workflow**. "A busy developer's shortcut, plus an ordinary request for a PR."
+2. **Start it.** Type the note **Use UTC to keep it simple. Open a draft PR when it’s ready.** (the box's placeholder shows it), then click **Run workflow**. "A busy developer's shortcut, plus an ordinary request for a PR."
 3. **Gather context (about 45 s).** Lookups appear as they happen: Jira, then the Confluence agreement, the Finance rule and the draft. "It reads the full record before relying on it, and the workflow checks every quote word-for-word."
 4. **The pause.** The workflow stops *before any code is written*. The note conflicts with the approved agreement, whose rule owner is Reporting Product. Send the recommended option; it applies at once.
 5. **Build, review, check (about 1.5 minutes).** The engineer writes the code and tests on its own branch, commits, pushes and opens a draft PR. If it tries a command outside its allow-list, the page shows the block. A separate reviewer that cannot edit the code judges every requirement. Then **rules in code, not a model,** decide whether it's done. Read the "Next" line aloud; it says why.
 6. **The summary.** Business: the plain-English paragraph. Engineer: the requirement → source → code → status table, the branch and PR links, and the risks.
 7. **Approve.** The draft PR is marked ready for review. Open it on GitHub. "Nothing was merged or deployed; your normal review takes it from here."
-8. **The control (the punchline).** Point to the comparison card: same workflow, same model, business context off. Without the documents, it had to ask what the rules even were. Its own tests still passed, but it scored **0 of 12** on the hidden checks, and the reviewer escalated "don't merge until Reporting Product answers" instead of letting it through. With context: **12 of 12**. To show it, pick **Without context** in the replay picker and replay it (about 30 s, pausing at both decisions).
+8. **The diagram, if asked.** The Demo 2 architecture page shows the whole workflow as one diagram: grey steps are code, blue are separate Claude sessions, gold are you.
 
-If a live run is slow or fails, replay **With context** instead, and say out loud that it is a replay of a real run.
+If a live run is slow or fails, replay the saved run instead, and say out loud that it is a replay of a real run.
 
 Questions that land well: Where do your approved rules live today? Who would have caught the UTC shortcut, and when? What happens today when an engineer builds from the ticket alone?
 

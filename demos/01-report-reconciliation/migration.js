@@ -31,7 +31,6 @@ function skeleton(){
   return `<span class="eyebrow">RELEASE CHECK · SYNTHETIC CLEANUP PR</span>
 <h2>Green CI can still hide a broken customer promise</h2>
 <p>A teammate’s cleanup removes old-format support from shared code, and CI passes. This check replays recent jobs, has Claude find who depends on the code and what they were promised, and lets rules in code allow or block the release. You decide what happens next.</p>
-<div id="mgDiagram"></div>
 <p class="small">All jobs, customers and records are synthetic. Nothing is posted to GitHub and no message is sent.</p>
 <ol id="mgStrip" class="wf-strip mg-strip"></ol>
 <details class="wf-engineer"><summary>For engineers: graph, tools and limits</summary><div id="mgGraph"></div></details>
@@ -310,7 +309,6 @@ async function mountMigration(){
   try{[m.graph,m.recordings]=await Promise.all([api('/api/migrations/graph'),api('/api/migrations/recordings').then(v=>v.recordings)]);}
   catch(error){root.insertAdjacentHTML('beforeend','<p class="error">Could not load the release check: '+esc(error.message)+'</p>');return;}
   graphDetail();inputs();compare();render();
-  if(window.renderWorkflowDiagram) window.renderWorkflowDiagram($('#mgDiagram'),'migration');
   $('#mgActivity').addEventListener('toggle',activity);
   const latest=(config.workflows || []).filter(flow=>flow.case_id==='DH-501').at(-1);
   if(latest){m.id=latest.id;m.status=latest.status;schedule(0);}
