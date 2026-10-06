@@ -7,8 +7,8 @@ Local, synthetic demos for discovering where code, business documents, Jira hist
 | Demo | Why business context matters | Output |
 | --- | --- | --- |
 | [Investigate a report](http://127.0.0.1:8768/demos/report) | The code and customer disagree; contracts establish the intended interpretation | Justified diagnosis and next action |
-| [Build a customer export](http://127.0.0.1:8768/demos/export) | A short request omits timezone, fee, refund and compatibility rules | Reviewable patch with independent acceptance results |
-| [Assess a format migration](http://127.0.0.1:8768/demos/migration) | Code callers alone do not reveal customer contracts, recovery obligations or current usage | Dependency matrix, owners and rollout gates |
+| [Build a customer export](http://127.0.0.1:8768/demos/export) | A short request omits timezone, fee, refund and compatibility rules | A live LangGraph workflow: verified requirements, a pause for the developer's decision, a reviewed patch and independent acceptance results |
+| [Check a cleanup before release](http://127.0.0.1:8768/demos/migration) | A green cleanup PR silently drops old-format rows; code cannot establish the customer and recovery promises it must preserve | Synthetic job replays, sourced dependencies, per-dependent release gates and drafts for the developer's decision |
 
 ```sh
 cd demos/01-report-reconciliation
@@ -18,7 +18,9 @@ uv run python demo.py live
 
 Open [the demo hub](http://127.0.0.1:8768/). Each demo has an original request, source documents, working sample code, an optional prepared example, live comparison controls and a production workflow/architecture page. The meeting UI keeps only DH-301 from the original ticket set; the other reporting cases remain regression fixtures.
 
-The raw modes use the same prompt and repository; Docs + Jira adds prose source snapshots. The feature demo captures edits in a temporary workspace and checks the resulting implementation after the model finishes. Other investigations are read-only. The reporting demo also retains its separately labeled guided MCP/calculator mode. Live calls use the existing Claude Code login; clicking prepared examples does not call a model.
+The reporting raw modes use the same prompt and repository; Docs + Jira adds prose source snapshots. The feature demo captures edits in a temporary workspace and checks the resulting implementation after the model finishes. Demo 3 uses the same release-check workflow with business context on or off: its model session is read-only, while code runs synthetic job replays, applies release gates and prepares local review/sign-off/decision-record drafts. The reporting demo also retains its separately labeled guided MCP/calculator mode. Live calls use the existing Claude Code login; clicking prepared examples does not call a model.
+
+Demo 3 starts from a shared-decoder cleanup: the original request, worked example and seed tests remain available. The release check adds a prepared candidate patch whose narrowed job filters silently omit v1 rows and whose deleted replay test makes its remaining CI green. See the [release-check guide](demos/01-report-reconciliation/docs/migration-release-check.md) for the comparison, evidence boundaries and conditional retirement date. No sandbox PR is created or commented on by this workflow; drafts stay local.
 
 Architecture pages describe a **proposed production design**, including authorized retrieval from Git, Jira and Confluence, combining evidence by scope and version, independent verification, and human approval. Those enterprise connectors are not deployed in this prototype.
 
@@ -35,6 +37,10 @@ The new problem makes business context materially change the answer. A reproduci
 A subsequent [actual Codex comparison](demos/01-report-reconciliation/docs/codex-comparison.md) ran the same case with and without prose business documents. Repo-only took **50.5 seconds**, found $1,250 as a possibility, and appropriately asked for the missing rule. With documents took **95.2 seconds**, established $1,250 and proposed code that passed **11 independent checks plus 5 baseline tests**. The benefit was resolving uncertainty and completing a justified proposal; there was no demonstrated speedup. The original Claude preflight record documents an earlier authentication block. The live UI checks current authentication for each attempt.
 
 Read the [verification record](demos/01-report-reconciliation/docs/verification.md), [implementation scope](demos/01-report-reconciliation/README.md), and [evaluation protocol](demos/01-report-reconciliation/docs/evaluation-protocol.md). A future pilot should measure time to an accepted decision, errors, handoffs, human review and setup/maintenance costs on real representative cases.
+
+## Results
+
+Every recorded run across all demos, including live model comparisons, baselines, rehearsals and control checks, is registered in [results/INDEX.md](results/INDEX.md). [results/README.md](results/README.md) explains naming and how to add a run. The first live comparison for Demo 1 ran on Claude Opus 5.5 after this revision: [results/runs/2026-10-04_report-reconciliation_live-comparison_opus-5-5](results/runs/2026-10-04_report-reconciliation_live-comparison_opus-5-5/README.md).
 
 ## Earlier controller demos, preserved
 

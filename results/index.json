@@ -1,0 +1,380 @@
+[
+  {
+    "id": "2026-10-05_report-reconciliation_live-comparison_opus-5-5",
+    "date": "2026-10-05",
+    "demo": "report-reconciliation",
+    "kind": "live-comparison",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "conditions": [
+      "raw_repo",
+      "raw_docs"
+    ],
+    "headline": "DH-301 single-session runs on Opus 5.5: repo-only found the A-2 double negation but proposed the abs() fix that reproduces the customer's wrong $1,150; docs + Jira established $1,250 from the ATLAS contracts. ~21 s each.",
+    "metrics": {
+      "repo_only_seconds": 21.0,
+      "repo_only_cost_usd": 0.08,
+      "docs_seconds": 21.6,
+      "docs_cost_usd": 0.1
+    },
+    "cost_usd": 0.18,
+    "human_review": "pending",
+    "tags": [
+      "opus-5-5",
+      "meeting-fallback"
+    ],
+    "path": "runs/2026-10-05_report-reconciliation_live-comparison_opus-5-5"
+  },
+  {
+    "id": "2026-10-05_format-retirement_live-comparison_opus-5-5",
+    "date": "2026-10-05",
+    "demo": "format-retirement",
+    "kind": "live-comparison",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "conditions": [
+      "context-on",
+      "context-off"
+    ],
+    "headline": "One read-only Opus session per condition: context on 12/12 and context off 1/12; both block shared removal, but only context establishes obligations, approval owners and a conditional date. All four attempts are retained.",
+    "metrics": {
+      "context_on_hidden_passed": 12,
+      "context_off_hidden_passed": 1,
+      "hidden_total": 12,
+      "context_on_model_seconds": 63.99,
+      "context_off_model_seconds": 70.0,
+      "context_on_cost_usd": 0.3633,
+      "context_off_cost_usd": 0.2899,
+      "attempts": 4
+    },
+    "cost_usd": 1.1631,
+    "human_review": "done",
+    "tags": [
+      "opus-5-5",
+      "langgraph",
+      "release-check",
+      "synthetic",
+      "control"
+    ],
+    "path": "runs/2026-10-05_format-retirement_live-comparison_opus-5-5"
+  },
+  {
+    "id": "2026-10-05_format-retirement_controls",
+    "date": "2026-10-05",
+    "demo": "format-retirement",
+    "kind": "controls",
+    "status": "completed",
+    "provenance": "deterministic",
+    "models": [],
+    "conditions": [
+      "prepared-context-on",
+      "prepared-context-off"
+    ],
+    "headline": "Actual synthetic CI and job execution plus a prepared assessment exercise the graph: 12/12 with prepared sources and 2/12 without; no model called.",
+    "metrics": {
+      "model_requests": 0,
+      "passed": true
+    },
+    "cost_usd": null,
+    "human_review": "done",
+    "tags": null,
+    "path": "runs/2026-10-05_format-retirement_controls"
+  },
+  {
+    "id": "2026-10-05_customer-export_rehearsal_opus-5-5-2",
+    "date": "2026-10-05",
+    "demo": "customer-export",
+    "kind": "rehearsal",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "conditions": [
+      "langgraph-workflow",
+      "github-sandbox"
+    ],
+    "headline": "Live workflow pushed a branch and opened draft PR #1 in the private sandbox because the developer note asked for one; the allow-list blocked one gh attempt and the agent retried; 12/12 hidden checks; approval marked the PR ready, nothing merged. $1.31.",
+    "metrics": {
+      "model_seconds": 222.0,
+      "cost_usd": 1.31,
+      "hidden_checks_passed": 12,
+      "blocked_commands": 1,
+      "pr_number": 1
+    },
+    "cost_usd": 1.31,
+    "human_review": "pending",
+    "tags": [
+      "opus-5-5",
+      "langgraph",
+      "meeting-fallback",
+      "pull-request"
+    ],
+    "path": "runs/2026-10-05_customer-export_rehearsal_opus-5-5-2"
+  },
+  {
+    "id": "2026-10-05_customer-export_rehearsal_opus-5-5",
+    "date": "2026-10-05",
+    "demo": "customer-export",
+    "kind": "rehearsal",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "conditions": [
+      "langgraph-workflow"
+    ],
+    "headline": "Two live LangGraph workflow runs on DH-401: both passed 12/12 hidden acceptance checks; the 'Use UTC' note was stopped before any code and settled by a developer decision; a developer send-back was re-checked and built. $1.20 and $1.94.",
+    "metrics": {
+      "runs": 2,
+      "hidden_checks_passed_runs": 2,
+      "utc_note_model_seconds": 210.0,
+      "utc_note_cost_usd": 1.2,
+      "send_back_model_seconds": 283.2,
+      "send_back_cost_usd": 1.94,
+      "quotes_verified": "19/19 and 20/20"
+    },
+    "cost_usd": 3.2,
+    "human_review": "pending",
+    "tags": [
+      "opus-5-5",
+      "langgraph",
+      "meeting-fallback"
+    ],
+    "path": "runs/2026-10-05_customer-export_rehearsal_opus-5-5"
+  },
+  {
+    "id": "2026-10-05_customer-export_live-comparison_opus-5-5",
+    "date": "2026-10-05",
+    "demo": "customer-export",
+    "kind": "live-comparison",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "conditions": [
+      "context-on",
+      "context-off"
+    ],
+    "headline": "Same LangGraph workflow and model, business context on vs off: with context 12/12 hidden checks after one decision; without it the agent asked what the rules were, passed its own tests, scored 0/12, and the reviewer escalated instead of letting it merge.",
+    "metrics": {
+      "context_on_hidden_passed": 12,
+      "context_off_hidden_passed": 0,
+      "hidden_total": 12,
+      "context_on_model_seconds": 151.5,
+      "context_on_cost_usd": 0.75,
+      "context_off_model_seconds": 138.4,
+      "context_off_cost_usd": 0.6,
+      "attempts": 4
+    },
+    "cost_usd": 4.69,
+    "human_review": "pending",
+    "tags": [
+      "opus-5-5",
+      "langgraph",
+      "control",
+      "meeting-fallback"
+    ],
+    "path": "runs/2026-10-05_customer-export_live-comparison_opus-5-5"
+  },
+  {
+    "id": "2026-10-04_report-reconciliation_preflight_blocked",
+    "date": "2026-10-04",
+    "demo": "report-reconciliation",
+    "kind": "preflight",
+    "status": "blocked",
+    "provenance": "live-model",
+    "models": [],
+    "conditions": [
+      "provided",
+      "retrieval",
+      "workflow"
+    ],
+    "headline": "Live comparison planned (30 trials) but blocked: Claude Code 2.1.186 not authenticated; zero model requests.",
+    "metrics": {
+      "planned_trials": 30,
+      "model_requests": 0
+    },
+    "cost_usd": null,
+    "human_review": "not-applicable",
+    "tags": null,
+    "path": "runs/2026-10-04_report-reconciliation_preflight_blocked"
+  },
+  {
+    "id": "2026-10-04_report-reconciliation_live-comparison_opus-5-5",
+    "date": "2026-10-04",
+    "demo": "report-reconciliation",
+    "kind": "live-comparison",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "conditions": [
+      "provided",
+      "retrieval",
+      "workflow"
+    ],
+    "headline": "30/30 correct decisions, totals and rows; conditions indistinguishable on this fixture; all 3 strict failures are citation scoring, not wrong answers.",
+    "metrics": {
+      "trials": 30,
+      "substantively_correct": 30,
+      "provided_accepted": 10,
+      "retrieval_accepted": 9,
+      "workflow_accepted": 8,
+      "provided_median_s": 7.77,
+      "retrieval_median_s": 11.86,
+      "workflow_median_s": 9.47,
+      "provided_avg_cost_usd": 0.059,
+      "retrieval_avg_cost_usd": 0.091,
+      "workflow_avg_cost_usd": 0.069,
+      "retrieval_avg_tool_calls": 6.3,
+      "workflow_avg_tool_calls": 3.2
+    },
+    "cost_usd": 2.19,
+    "human_review": "pending",
+    "tags": [
+      "opus-5-5",
+      "first-live-run"
+    ],
+    "path": "runs/2026-10-04_report-reconciliation_live-comparison_opus-5-5"
+  },
+  {
+    "id": "2026-10-04_report-reconciliation_controls",
+    "date": "2026-10-04",
+    "demo": "report-reconciliation",
+    "kind": "controls",
+    "status": "completed",
+    "provenance": "deterministic",
+    "models": [],
+    "conditions": [
+      "deployed_arithmetic",
+      "force_returns_negative",
+      "policy_workflow"
+    ],
+    "headline": "Approved-rule workflow 10/10 cases; current code 4/7 totals and -abs() fix 3/7 totals, 0/3 stops; DH-301 regression fails/fails/passes.",
+    "metrics": {
+      "policy_workflow_complete": 10,
+      "deployed_known_totals": 4,
+      "naive_known_totals": 3,
+      "known_total_count": 7,
+      "stop_count": 3
+    },
+    "cost_usd": null,
+    "human_review": "not-applicable",
+    "tags": [
+      "fixture-check"
+    ],
+    "path": "runs/2026-10-04_report-reconciliation_controls"
+  },
+  {
+    "id": "2026-10-04_controller-capacity-policy_rehearsal_sonnet-5-5",
+    "date": "2026-10-04",
+    "demo": "controller-capacity-policy",
+    "kind": "rehearsal",
+    "status": "completed",
+    "provenance": "live-model",
+    "models": [
+      "claude-sonnet-5-5"
+    ],
+    "conditions": [
+      "tools"
+    ],
+    "headline": "Two full ticket-to-fix rehearsals (investigation, failing regression, agent patch, verification) with MCP policy tools.",
+    "metrics": {
+      "rehearsals": 2
+    },
+    "cost_usd": null,
+    "human_review": "pending",
+    "tags": [
+      "meeting-fallback"
+    ],
+    "path": "runs/2026-10-04_controller-capacity-policy_rehearsal_sonnet-5-5"
+  },
+  {
+    "id": "2026-10-04_controller-capacity-policy_live-comparison_sonnet-5-5",
+    "date": "2026-10-04",
+    "demo": "controller-capacity-policy",
+    "kind": "live-comparison",
+    "status": "partial",
+    "provenance": "live-model",
+    "models": [
+      "claude-sonnet-5-5"
+    ],
+    "conditions": [
+      "repo",
+      "provided",
+      "tools"
+    ],
+    "headline": "6 development attempts on AG-1423: with policy (provided or MCP) all found the 30-zone mismatch; repo-only correctly reported insufficient evidence. Not a controlled benchmark.",
+    "metrics": {
+      "attempts": 6,
+      "repo_attempts": 3,
+      "repo_partial": 2,
+      "provided_success": 1,
+      "tools_success": 2
+    },
+    "cost_usd": null,
+    "human_review": "pending",
+    "tags": [
+      "development-observations"
+    ],
+    "path": "runs/2026-10-04_controller-capacity-policy_live-comparison_sonnet-5-5"
+  },
+  {
+    "id": "2026-10-04_controller-capacity-policy_controls",
+    "date": "2026-10-04",
+    "demo": "controller-capacity-policy",
+    "kind": "controls",
+    "status": "completed",
+    "provenance": "deterministic",
+    "models": [],
+    "conditions": [
+      "reference",
+      "unsafe_all_pro_50"
+    ],
+    "headline": "Independent policy checks: reference 34/34; unsafe all-Pro-50 passes all 23 visible tests but fails 2/34 (DEV-102 on firmware 3.1.x).",
+    "metrics": {
+      "reference_passed": 34,
+      "unsafe_passed": 32,
+      "policy_cases": 34,
+      "visible_tests": 23
+    },
+    "cost_usd": null,
+    "human_review": "not-applicable",
+    "tags": null,
+    "path": "runs/2026-10-04_controller-capacity-policy_controls"
+  },
+  {
+    "id": "2026-10-04_controller-capacity-basic_historical-comparison_sonnet-5-5",
+    "date": "2026-10-04",
+    "demo": "controller-capacity-basic",
+    "kind": "historical-comparison",
+    "status": "completed",
+    "provenance": "historical",
+    "models": [
+      "claude-sonnet-5-5"
+    ],
+    "conditions": [
+      "augmented",
+      "repo-only"
+    ],
+    "headline": "Repo-only found the same capability bug in 34 s vs 73 s augmented; extra context added ownership/history, not speed. Two runs only.",
+    "metrics": {
+      "augmented_model_s": 72.63,
+      "repo_only_model_s": 34.08
+    },
+    "cost_usd": null,
+    "human_review": "done",
+    "tags": null,
+    "path": "runs/2026-10-04_controller-capacity-basic_historical-comparison_sonnet-5-5"
+  }
+]

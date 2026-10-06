@@ -10,27 +10,46 @@ The records and customers are synthetic. Prepared examples are authored referenc
 
 ## Demo 1: Investigate the wrong report (3–4 minutes)
 
-Open the original DH-301 request prominently shown on the reporting page. The app says $1,550; the customer says $1,150. Open the two ATLAS format contracts and inspect the negative return and positive return reversal. The approved total is $1,250. A plausible fix that matches the spreadsheet is still wrong.
+Start the server with `uv run python demo.py live --sandbox-repo Ishaan1402/datahoney-export-sandbox`. Single-session runs use Opus 5.5 (`--model`), and the last saved Repo-only and Docs + Jira runs reload, so results are on the page before you click anything.
 
-Use the raw repo and raw docs modes to discuss what each can justify. A repo-only clarification can be the right answer. Historical guided runs with diagnosis hints are flagged and must not be used as fair comparisons. The optional worked example is deterministic, prepared software.
+1. **The ticket.** The app says $1,550; the customer says $1,150. "Who is right?"
+2. **Repo only.** Open the saved Repo-only result. It finds the double-negated return on A-2 and explains the $400 gap. Then it suggests the obvious fix, subtracting the absolute value, which reproduces the customer's $1,150. "Plausible, fast, and wrong."
+3. **Docs + Jira.** Open the saved Docs + Jira result. Both numbers are wrong; the approved answer is **$1,250**. Under the ATLAS v1 contract, a positive return (A-3) reverses an earlier refund. Open FEED-ATLAS-1 from the evidence cards to show the sentence.
+4. **Optional.** The worked example shows the same $1,250 row by row. It is prepared software, not a model run. Run either mode live if there is time; each takes about 20 seconds.
 
 Ask which systems hold their equivalent requirements, who confirms the correct rule, and where work is handed between teams.
 
-## Demo 2: Build the correct export (3–4 minutes)
+## Demo 2: Build the right feature with the engineering workflow (about 5 minutes)
 
-Start with the original feature request. Explain invoices versus settled payments, then open the approved customer agreement and Finance rule. A UTC October 1 settlement can belong to September in New York; refunds do not return processing fees; existing customers keep their old exports. A later draft must not silently override the approved scope.
+The workflow section at the top of the Demo 2 page runs the whole ticket-to-PR loop with real Claude sessions. With a mixed audience, narrate each step in one plain sentence, and open the details only when the engineer asks.
 
-Show the prepared September CSV, implementation patch and 12 independent acceptance checks plus two baseline tests. Clearly label this as the prepared reference. A live implementation run may produce its own patch and post-run checks in a temporary workspace. It does not modify the repository or deploy anything. Compare the outcome, missing questions, requirements coverage and review effort, not only elapsed time.
+1. **The ticket.** "One paragraph. It looks like a ten-minute change." Point out the link to DH-411 and the attached sample.
+2. **Start it.** Type the note **Use UTC to keep it simple. Open a draft PR when it’s ready.** (the box's placeholder shows it), then click **Run workflow**. "A busy developer's shortcut, plus an ordinary request for a PR."
+3. **Gather context (about 45 s).** Lookups appear as they happen: Jira, then the Confluence agreement, the Finance rule and the draft. "It reads the full record before relying on it, and the workflow checks every quote word-for-word."
+4. **The pause.** The workflow stops *before any code is written*. The note conflicts with the approved agreement, whose rule owner is Reporting Product. Send the recommended option; it applies at once.
+5. **Build, review, check (about 1.5 minutes).** The engineer writes the code and tests on its own branch, commits, pushes and opens a draft PR. If it tries a command outside its allow-list, the page shows the block. A separate reviewer that cannot edit the code judges every requirement. Then **rules in code, not a model,** decide whether it's done. Read the "Next" line aloud; it says why.
+6. **The summary.** Business: the plain-English paragraph. Engineer: the requirement → source → code → status table, the branch and PR links, and the risks.
+7. **Approve.** The draft PR is marked ready for review. Open it on GitHub. "Nothing was merged or deployed; your normal review takes it from here."
+8. **The diagram, if asked.** The Demo 2 architecture page shows the whole workflow as one diagram: grey steps are code, blue are separate Claude sessions, gold are you.
 
-Ask how requirements become acceptance tests today, which omissions cause rework, and who approves compatibility changes.
+If a live run is slow or fails, replay the saved run instead, and say out loud that it is a replay of a real run.
 
-## Demo 3: Assess retirement risk (optional, 3–4 minutes)
+Questions that land well: Where do your approved rules live today? Who would have caught the UTC shortcut, and when? What happens today when an engineer builds from the ticket alone?
 
-Show the three code consumers of the shared ATLAS decoder. Then read the completed daily-sales Jira ticket, the replay obligation and the Cedar agreement. The ticket only covers one path. Historical replay and partner deliveries remain dependencies. The operational usage snapshot is dated and must be refreshed.
+## Demo 3: Release-check a shared-code cleanup (about 4 minutes)
 
-The prepared example runs the tests with current support and after removing v1: replay breaks. The dependency matrix supplies owners and gates; it does not claim to be a live production inventory.
+This is a release check on a teammate's prepared cleanup PR. It connects well to a team with customer-specific imports and reports: code shows the call paths; agreements and operations establish the promises those paths must keep. All customers, jobs, contracts and operational records here are synthetic.
 
-Ask how they discover cross-team dependencies, verify actual usage, obtain customer approval and test recovery before removal.
+1. **The PR.** Open the prepared cleanup diff. It removes v1 support, changes the jobs to accept only v2 and deletes the replay regression. Its remaining CI is green. This is a local fixture, not a real sandbox PR.
+2. **The missed failure.** Show the before/after job replay. NORTHSTAR's September goes from **$1,250 to $400**, and CEDAR statements go from **$180 to $0**. “The job silently skips the old rows. There is no exception to alert us.” These totals come from executing the sample jobs, not from the model's arithmetic.
+3. **The evidence.** Leave **Business context: On**, then click **Run release check →**, or replay a saved actual run if one exists. One read-only Opus session maps live ingest, historical replay, Cedar delivery and rollback. Open an exact quote, its owner and observation date. Distinguish the old October 1 usage snapshot from the decision's current synthetic usage evidence.
+4. **The gate.** Point to the allow/block result for each dependent. A developer note asking to proceed cannot clear a contract or missing recovery proof. The October 15 proposal is not cleared. **December 30 is only a conditional lower bound**: the synthetic last archived v1 export is September 30, and its 90-day replay obligation covers December 29 inclusive. Cedar's separate delivery promise runs through November 30. The absolute date is unknown until migration, retention/conversion, backups, rollback and fresh usage are verified.
+5. **Your decision.** At **The gate is fixed; choose the next action**, choose **Defer full removal**, **Prepare a scoped canary** or **Request owner sign-off**. Click **Record decision and draft next actions →** and open **Download unsent drafts**. Show the PR review comment, sign-off requests and decision-record update. They are drafts; nothing is sent, no PR is created or commented on, and blocked gates stay blocked.
+6. **The control.** Run or replay **Business context: Off** with the same model, candidate and replay rows. It still sees the losses and blocks, but can only ask for missing evidence. It cannot source customer obligations, approval owners or a retirement date. The twelve hidden checks score the completed output separately from the gate. Read only the actual saved scores; do not use an expected score as a measured result.
+
+The prepared worked example and offline `migration_demo.py verify` check are useful fallbacks, but label them as prepared software. A replay is a recording of a run; it is not a new model call. The [release-check guide](migration-release-check.md) records these boundaries.
+
+Ask how they discover which customers depend on shared code, confirm current usage, find approval owners and prove archived data and rollback will still work. The useful comparison is whether the extra context supplies a defensible next action, not whether it produces more blockers or takes less time.
 
 ## Open the relevant production architecture page
 

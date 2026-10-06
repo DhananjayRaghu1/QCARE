@@ -1,6 +1,6 @@
 # Ticket-onramping demo — agreed implementation plan
 
-Updated October 4, 2026. This is the current plan for Ishaan's demo on Wednesday, October 7. It replaces the earlier rollout-eligibility and PR-review proposal. The onramping runner, revised application, evidence validation and saved-packet viewer are implemented. Historical live augmented and repository-only runs both completed on October 4. The repository-only run was faster; see [the comparison](historical-comparison.md). This is the preserved basic variant; the policy-aware variant is now the main meeting demo.
+Updated October 4, 2026. This is the current plan for the demo on Wednesday, October 7. It replaces the earlier rollout-eligibility and PR-review proposal. The onramping runner, revised application, evidence validation and saved-packet viewer are implemented. Historical live augmented and repository-only runs both completed on October 4. The repository-only run was faster; see [the comparison](historical-comparison.md). This is the preserved basic variant; the policy-aware variant is now the main meeting demo.
 
 ## Goal and presentation
 
@@ -108,7 +108,7 @@ After successful live verification, say this example was tested end to end. Do n
 5. Complete live/repository-only checks, secondary questions and failure drills.
 6. Save a verified replay and rewrite the main runbook around onramping.
 
-Ishaan's demo should be independently runnable before meeting his friend on Monday. Use that meeting to align how the friend's work continues from the context packet. Freeze after Tuesday rehearsals; Wednesday starts with a smoke check.
+The demo should be independently runnable before the Monday working session. Use that session to align how the engineering work continues from the context packet. Freeze after Tuesday rehearsals; Wednesday starts with a smoke check.
 
 Completion means one command produces a verified packet from actual tool evidence, citations are inspectable, failure states are honest, source files stay unchanged and the five-minute demonstration has been rehearsed. The local deliverable and deterministic sample are ready. A successful actual Claude run and repository-only comparison are still required to meet the live completion criterion.
 

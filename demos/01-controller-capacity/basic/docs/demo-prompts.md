@@ -56,7 +56,7 @@ Ask about ownership or the execution path to show reuse. Ask an unsupported ques
 
 Compare repository-only and augmented packets on correct starting locations, supported ownership, historical context, useful next steps, unknowns, elapsed time and human checking effort. The repository-only agent may find the same defect. Additional context must be correct and useful to count as an improvement.
 
-Ishaan explains retrieval, MCP and evidence. Your friend explains how a developer would take the packet into reproduction, implementation, tests and review. A separate patch demonstration is optional and outside this onramping runner.
+One presenter explains retrieval, MCP and evidence. The other explains how a developer would take the packet into reproduction, implementation, tests and review. A separate patch demonstration is optional and outside this onramping runner.
 
 Provenance language:
 

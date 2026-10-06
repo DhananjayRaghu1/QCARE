@@ -1,0 +1,27 @@
+{
+  "id": "2026-10-04_controller-capacity-basic_historical-comparison_sonnet-5-5",
+  "date": "2026-10-04",
+  "demo": "controller-capacity-basic",
+  "kind": "historical-comparison",
+  "demo_path": "demos/01-controller-capacity/basic",
+  "status": "completed",
+  "provenance": "historical",
+  "models": [
+    "claude-sonnet-5-5"
+  ],
+  "conditions": [
+    "augmented",
+    "repo-only"
+  ],
+  "repo_commit": "178d71b",
+  "headline": "Repo-only found the same capability bug in 34 s vs 73 s augmented; extra context added ownership/history, not speed. Two runs only.",
+  "metrics": {
+    "augmented_model_s": 72.63,
+    "repo_only_model_s": 34.08
+  },
+  "human_review": "done",
+  "owner": "ishaan",
+  "files": {
+    "writeup": "demos/01-controller-capacity/basic/docs/historical-comparison.md"
+  }
+}

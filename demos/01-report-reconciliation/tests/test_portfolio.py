@@ -100,3 +100,25 @@ def test_new_routes_three_demos_architecture_sources_and_only_first_ticket():
         assert not server.runs
     finally:
         server.shutdown();server.server_close()
+
+
+def test_workflow_diagrams_are_served_locally_under_the_same_policy():
+    server=LiveServer(0);threading.Thread(target=server.serve_forever,daemon=True).start()
+    base=f'http://127.0.0.1:{server.server_port}'
+    try:
+        with urlopen(base+'/vendor/mermaid.min.js') as r:
+            assert r.headers['Content-Type'].startswith('text/javascript')
+            assert "script-src 'self' 'unsafe-inline';" in r.headers['Content-Security-Policy']
+            assert len(r.read())>1_000_000
+        with urlopen(base+'/diagrams.js') as r:
+            text=r.read().decode()
+            assert 'export' in text and 'migration' in text and "securityLevel:'strict'" in text
+        for name in ('export','migration'):
+            with urlopen(base+'/architecture/'+name) as r:
+                page=r.read().decode()
+                assert f'data-diagram="{name}"' in page
+                assert page.index('/vendor/mermaid.min.js')<page.index('/diagrams.js')
+        with urlopen(base+'/demos/export') as r:
+            assert 'mermaid' not in r.read().decode()
+    finally:
+        server.shutdown();server.server_close()

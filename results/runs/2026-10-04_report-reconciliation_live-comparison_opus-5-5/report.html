@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opus 5.5 Reconciliation Run</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: single reading column like an audit memo; wide tables scroll in their own frames. */
+:root{
+  --paper:#f5f7f6; --sheet:#ffffff; --ink:#18222c; --muted:#5a6772; --rule:#d8dfe2;
+  --accent:#1d5a80; --accent-soft:#e3eef5;
+  --ok:#1e7a4c; --ok-soft:#e2f2e9; --warn:#9a6200; --warn-soft:#fbf0d9; --bad:#a3302a; --bad-soft:#f8e3e1;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11171c; --sheet:#182128; --ink:#e4eaee; --muted:#9aa7b1; --rule:#2c3943;
+  --accent:#7cb8e0; --accent-soft:#1c3346;
+  --ok:#6fcf9b; --ok-soft:#183427; --warn:#e8b55a; --warn-soft:#3a2d14; --bad:#f08a82; --bad-soft:#3c1d1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11171c; --sheet:#182128; --ink:#e4eaee; --muted:#9aa7b1; --rule:#2c3943;
+  --accent:#7cb8e0; --accent-soft:#1c3346;
+  --ok:#6fcf9b; --ok-soft:#183427; --warn:#e8b55a; --warn-soft:#3a2d14; --bad:#f08a82; --bad-soft:#3c1d1b; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font:15.5px/1.6 var(--body);padding-inline:16px;padding-block:40px 64px}
+main{max-width:860px;margin:0 auto;display:grid;gap:44px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(28px,5vw,40px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:600}
+h3{font-size:18px;font-weight:600}
+p{margin:0;max-width:68ch}
+section{display:grid;gap:16px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font:13px/1.4 var(--mono);color:var(--muted)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+code{background:var(--accent-soft);padding:1px 5px;border-radius:3px}
+.num{font-variant-numeric:tabular-nums}
+.verdict{background:var(--sheet);border:1px solid var(--rule);border-left:4px solid var(--accent);padding:20px 22px;display:grid;gap:12px}
+.verdict p{font-size:16.5px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.kpi{background:var(--sheet);padding:14px 16px;display:grid;gap:2px}
+.kpi b{font:600 26px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+.frame{overflow-x:auto;border:1px solid var(--rule);background:var(--sheet)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 12px/1.3 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--paper)}
+td.r,th.r{text-align:right}
+tr:last-child td{border-bottom:0}
+.chip{display:inline-block;font:500 12px/1 var(--mono);padding:4px 7px;border-radius:3px;white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted);align-items:center}
+.bars{display:grid;gap:18px;background:var(--sheet);border:1px solid var(--rule);padding:18px 20px}
+.bargroup{display:grid;gap:6px}
+.bargroup h3{font-size:15px}
+.bar{display:grid;grid-template-columns:84px 1fr 72px;gap:10px;align-items:center;font-size:13px}
+.bar .track{height:14px;background:var(--paper);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent)}
+.bar .v{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.bar .lbl{color:var(--muted);font-family:var(--mono)}
+.finding{display:grid;gap:8px;padding-top:16px;border-top:1px solid var(--rule)}
+.finding .tag{justify-self:start}
+ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;max-width:68ch}
+.actions td:first-child{white-space:nowrap}
+.foot{font-size:13px;color:var(--muted);display:grid;gap:8px}
+@media (max-width:520px){.bar{grid-template-columns:70px 1fr 60px}th,td{padding:8px 9px}}
+</style>
+
+</head><body>
+<main>
+  <header style="display:grid;gap:14px">
+    <div class="eyebrow">dataHoneyAuto · Demo 1 · live model comparison</div>
+    <h1>The reconciliation demo, run live on Opus 5.5</h1>
+    <div class="meta">
+      <span>4 Oct 2026</span><span>main @ 7248864 (PR #2)</span><span>branch ishaan/opus-live-comparison @ f3426aa</span><span>Claude Code 2.1.289</span>
+    </div>
+  </header>
+
+  <section class="verdict">
+    <div class="eyebrow">Bottom line</div>
+    <p>The previous push stopped at "live comparison blocked by authentication." I ran the full frozen 30-trial plan on <code>claude-opus-5-5</code>. <strong>Every one of the 30 answers had the correct decision, total and problem rows</strong>, including all three cases where the right answer is to stop.</p>
+    <p>The comparison therefore can't separate its three conditions: putting all documents in the prompt was the fastest, cheapest and only perfect condition. The three recorded failures come from how citations are scored, not from wrong answers. The demo shows that the business story holds up. It does not yet show that retrieval or the workflow tool improves accuracy.</p>
+  </section>
+
+  <section>
+    <div class="kpis">
+      <div class="kpi"><b class="num">30 / 30</b><span>correct decision, total and rows</span></div>
+      <div class="kpi"><b class="num">27 / 30</b><span>passed the strict acceptance check</span></div>
+      <div class="kpi"><b class="num">$2.19</b><span>total spend, 30 fresh sessions</span></div>
+      <div class="kpi"><b class="num">7.7–11.9 s</b><span>median per-case time by condition</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What DJ pushed</h2>
+    <p>PR #2 makes report reconciliation the main demo. A customer disputes a monthly total ($1,550 shown vs $1,150 expected). The approved rules show both are wrong and the defensible figure is $1,250. Ten synthetic cases cover code defects, config defects, expected behavior, and three cases where the right answer is to stop. The PR includes a deterministic rules engine, read-only MCP tools, a 30-trial benchmark harness, and an offline HTML walkthrough.</p>
+    <p>Everything offline reproduced on this machine: <span class="mono">40/40</span> tests, the rules workflow at <span class="mono">10/10</span>, and the regression fails on the seed code, fails on the <code>-abs()</code> fix, and passes on the reference. The live Claude comparison had never run. The docs say it was blocked because Claude Code was not authenticated.</p>
+  </section>
+
+  <section>
+    <h2>Results by condition</h2>
+    <p>Same 10 cases and same model (verified from the traces) in every condition. Condition order rotated per case. Each trial ran once, with no retries.</p>
+    <div class="frame">
+      <table class="num">
+        <thead><tr><th>Condition</th><th>What the model gets</th><th class="r">Correct answer</th><th class="r">Strict pass</th><th class="r">Median time</th><th class="r">Avg cost</th><th class="r">Avg tool calls</th></tr></thead>
+        <tbody>
+          <tr><td><b>provided</b></td><td>All 10 docs pasted into the prompt</td><td class="r">10/10</td><td class="r">10/10</td><td class="r">7.8 s</td><td class="r">$0.059</td><td class="r">0</td></tr>
+          <tr><td><b>retrieval</b></td><td>Search + fetch tools, no calculator</td><td class="r">10/10</td><td class="r">9/10</td><td class="r">11.9 s</td><td class="r">$0.091</td><td class="r">6.3</td></tr>
+          <tr><td><b>workflow</b></td><td>Same tools + deterministic <code>reconcile_report</code></td><td class="r">10/10</td><td class="r">8/10</td><td class="r">9.5 s</td><td class="r">$0.069</td><td class="r">3.2</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bars" role="img" aria-label="Median seconds, average cost and tool calls per condition">
+      <div class="bargroup">
+        <h3>Median seconds per case</h3>
+        <div class="bar"><span class="lbl">provided</span><div class="track"><div class="fill" style="width:65.5%"></div></div><span class="v">7.8</span></div>
+        <div class="bar"><span class="lbl">retrieval</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">11.9</span></div>
+        <div class="bar"><span class="lbl">workflow</span><div class="track"><div class="fill" style="width:79.8%"></div></div><span class="v">9.5</span></div>
+      </div>
+      <div class="bargroup">
+        <h3>Average cost per case (USD)</h3>
+        <div class="bar"><span class="lbl">provided</span><div class="track"><div class="fill" style="width:64.7%"></div></div><span class="v">0.059</span></div>
+        <div class="bar"><span class="lbl">retrieval</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">0.091</span></div>
+        <div class="bar"><span class="lbl">workflow</span><div class="track"><div class="fill" style="width:75.7%"></div></div><span class="v">0.069</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Every trial</h2>
+    <div class="legend">
+      <span><span class="chip ok">pass</span> fully accepted</span>
+      <span><span class="chip warn">cite</span> correct answer, cited a source it never fetched in full</span>
+      <span>Number = seconds</span>
+    </div>
+    <div class="frame">
+      <table class="num">
+        <thead><tr><th>Case</th><th>Correct outcome</th><th>provided</th><th>retrieval</th><th>workflow</th></tr></thead>
+        <tbody>
+          <tr><td>DH-301</td><td>Code defect · $1,250</td><td><span class="chip ok">pass 13.6</span></td><td><span class="chip ok">pass 13.4</span></td><td><span class="chip ok">pass 9.7</span></td></tr>
+          <tr><td>DH-302</td><td>Expected · $600</td><td><span class="chip ok">pass 6.9</span></td><td><span class="chip ok">pass 13.0</span></td><td><span class="chip warn">cite 8.6</span></td></tr>
+          <tr><td>DH-303</td><td>Expected · $800 (Jira pending)</td><td><span class="chip ok">pass 8.7</span></td><td><span class="chip ok">pass 10.0</span></td><td><span class="chip ok">pass 8.9</span></td></tr>
+          <tr><td>DH-304</td><td>Stop · missing contract</td><td><span class="chip ok">pass 11.7</span></td><td><span class="chip warn">cite 18.1</span></td><td><span class="chip ok">pass 11.9</span></td></tr>
+          <tr><td>DH-305</td><td>Stop · conflicting policy</td><td><span class="chip ok">pass 7.7</span></td><td><span class="chip ok">pass 16.7</span></td><td><span class="chip ok">pass 8.3</span></td></tr>
+          <tr><td>DH-306</td><td>Expected · $400</td><td><span class="chip ok">pass 11.5</span></td><td><span class="chip ok">pass 11.0</span></td><td><span class="chip ok">pass 19.6</span></td></tr>
+          <tr><td>DH-307</td><td>Config defect · $600</td><td><span class="chip ok">pass 7.4</span></td><td><span class="chip ok">pass 11.5</span></td><td><span class="chip warn">cite 10.5</span></td></tr>
+          <tr><td>DH-308</td><td>Stop · invalid row</td><td><span class="chip ok">pass 6.9</span></td><td><span class="chip ok">pass 11.1</span></td><td><span class="chip ok">pass 8.4</span></td></tr>
+          <tr><td>DH-309</td><td>Code defect · $1,000</td><td><span class="chip ok">pass 7.3</span></td><td><span class="chip ok">pass 12.2</span></td><td><span class="chip ok">pass 11.3</span></td></tr>
+          <tr><td>DH-310</td><td>Code defect · errors cancel</td><td><span class="chip ok">pass 7.9</span></td><td><span class="chip ok">pass 11.5</span></td><td><span class="chip ok">pass 9.2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>What this tells us</h2>
+
+    <div class="finding">
+      <span class="chip bad tag">Benchmark</span>
+      <h3>The test is too easy to compare the conditions</h3>
+      <p>With ten short documents, Opus 5.5 gets every case right however the evidence reaches it. That includes the traps: the <code>-abs()</code> fix, the pending Jira request (DH-303, passed in all three conditions), and the cancelling errors in DH-310. The evaluation protocol predicted this ("direct context may be faster than retrieval"), and now it's measured. The current fixture can show that a model reaches the right business decision. It cannot show that retrieval or the workflow tool beats pasting the documents into the prompt.</p>
+    </div>
+
+    <div class="finding">
+      <span class="chip warn tag">Scoring</span>
+      <h3>The strict check penalizes the tool conditions for the same habit</h3>
+      <p>In <code>provided</code>, every document counts as "observed," so extra citations are free. Opus added sources nobody needed in all 10 provided runs (DH-188 in 9 of them). In <code>retrieval</code> and <code>workflow</code>, citing anything not fetched in full fails the trial. All three failures were extra, non-required sources that the model cited to say "this doesn't apply" (DH-204, REPORT-STD-SEP, FEED-ATLAS-1/2, REPORT-STD-OCT). No required source was missing in any trial. The 10 / 9 / 8 ranking comes from this rule, not from a difference in capability.</p>
+    </div>
+
+    <div class="finding">
+      <span class="chip ok tag">Operational</span>
+      <h3>The workflow tool's measurable value is efficiency and auditability</h3>
+      <p>Compared with retrieval alone, the deterministic tool halved the tool calls (3.2 vs 6.3), cut cost by about 24% and cut median time by about 20%, with identical correctness. Every workflow answer also carries row-level arithmetic and hashed source snapshots from code, not from the model. That holds up in a meeting. "More accurate" does not, on this evidence.</p>
+    </div>
+
+    <div class="finding">
+      <span class="chip bad tag">Bug, fixed on branch</span>
+      <h3>The runner would have silently tested Sonnet</h3>
+      <p>The runner passed the <code>model</code> from <code>~/.claude/settings.json</code> straight to <code>claude --print</code>. Here that value is <code>opusplan</code>, which runs Sonnet outside plan mode, so "default" runs would not have been Opus. It also overrides <code>ANTHROPIC_MODEL</code>. I added <code>--model</code> to <code>preflight</code>, <code>agent</code> and <code>benchmark</code>. All 40 tests pass, and the traces confirm <code>claude-opus-5-5</code> in all 30 trials.</p>
+    </div>
+
+    <div class="finding">
+      <span class="chip ok tag">Adapter</span>
+      <h3>The live harness works as designed</h3>
+      <p>On its first real run against an authenticated provider, the harness behaved as designed: no timeouts, no denied tools, no schema failures, frozen hashes held for all 30 trials, and every attempt was saved to disk before the next one started. The quality of the explanations looks good on a spot check. For example, DH-304's stop names the draft contract and routes to Data Integrations. Formal human review is still pending.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Next actions</h2>
+    <div class="frame">
+      <table class="actions">
+        <thead><tr><th>Priority</th><th>Action</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip bad">Now</span></td><td>Push <code>ishaan/opus-live-comparison</code> and open a PR. It contains the <code>--model</code> fix and <code>results/runs/2026-10-04_report-reconciliation_live-comparison_opus-5-5/</code> (packets, timings, costs, no raw traces).</td><td>Ishaan</td></tr>
+          <tr><td><span class="chip bad">Now</span></td><td>Remove the "blocked / no model run" wording from the root README, demo README, verification.md and meeting-guide.md (step 8–10 still says "we have not run a fresh authenticated model comparison"). Replace it with the scoped result: 30/30 correct decisions on Opus 5.5, with conditions indistinguishable on this fixture.</td><td>DJ</td></tr>
+          <tr><td><span class="chip warn">Before next run</span></td><td>Score correctness and citation hygiene separately. Apply source precision the same way in every condition: either penalize irrelevant citations in <code>provided</code> too, or check only that required sources were fetched.</td><td>DJ</td></tr>
+          <tr><td><span class="chip warn">Before next run</span></td><td>Make the benchmark hard enough to separate the conditions. Grow the corpus past what pasting stays comfortable for (superseded versions, near-duplicate addenda, dozens of Jira tickets). Add cases that combine an effective-date boundary with mixed schemas, and use at least 3 repeats.</td><td>DJ + Ishaan</td></tr>
+          <tr><td><span class="chip warn">Cheap, high signal</span></td><td>Re-run the same 30 trials on Sonnet 5.5 and Haiku 4.5 (about $1–2). If the workflow tool lets a smaller model match Opus while plain retrieval doesn't, that's a concrete cost story the Opus run can't show.</td><td>Ishaan</td></tr>
+          <tr><td><span class="chip ok">Soon</span></td><td>Resolve the two README conflicts on <code>dev-ishaan</code> and merge the repo-only baseline. It's currently the only experiment where missing context changed the outcome (the model shipped PRO=50 from an incomplete note). That's the "why context matters" evidence this demo lacks.</td><td>Ishaan</td></tr>
+          <tr><td><span class="chip ok">Soon</span></td><td>Human-review the 30 explanations and next actions. Every record still says <code>human_review: pending</code>.</td><td>Either</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>For the meeting</h2>
+    <ul class="plain">
+      <li>Lead with DH-301 as DJ planned. "Both numbers are wrong" still lands, and Opus reached $1,250 in all three conditions.</li>
+      <li>Say: "Once the right evidence is assembled, a current model reaches the defensible decision, including when to stop, in about 10 seconds for under 10 cents." That points to evidence assembly as the bottleneck worth piloting.</li>
+      <li>Don't claim the workflow tool or retrieval improves accuracy. Present the tool as the reproducible, auditable path with half the tool calls.</li>
+      <li>Keep the guardrail: model wall time isn't employee time, and none of this is a productivity estimate.</li>
+    </ul>
+  </section>
+
+  <footer class="foot">
+    <p>Scope: ten hand-authored synthetic cases, one repetition per case and condition, a single model. Differences of one or two trials in ten are within noise. Raw traces stay in the git-ignored <span class="mono">artifacts/opus55-comparison-1/</span>. Command run: <span class="mono">demo.py benchmark --name opus55-comparison-1 --repeats 1 --timeout 180 --budget 0.50 --model claude-opus-5-5</span>.</p>
+  </footer>
+</main>
+</body></html>

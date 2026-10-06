@@ -1,12 +1,12 @@
 # Three business-context demos
 
-The [site home](http://127.0.0.1:8768/) contains three separate workflows. Each has an original request, linked sources, inspectable code, a prepared example, live repo-only and docs-plus-Jira modes, and a dedicated proposed production architecture page.
+The [site home](http://127.0.0.1:8768/) contains three separate workflows. Each has an original request, linked sources, inspectable code, a prepared example and a dedicated proposed production architecture page. Demo 1 has raw repo-only and docs-plus-Jira investigations; Demos 2 and 3 lead with workflows whose business context can be switched on or off.
 
 | Demo | Result | Workflow and architecture |
 | --- | --- | --- |
 | [Investigate a report](http://127.0.0.1:8768/demos/report) | DH-301 only: justify $1,250 rather than either starting total | [Production design](http://127.0.0.1:8768/architecture/report) |
-| [Implement a customer export](http://127.0.0.1:8768/demos/export) | Patch, CSV behavior and independent acceptance checks | [Production design](http://127.0.0.1:8768/architecture/export) |
-| [Assess a migration](http://127.0.0.1:8768/demos/migration) | Dependencies, customer obligations, owners and release gates | [Production design](http://127.0.0.1:8768/architecture/migration) |
+| [Implement a customer export](http://127.0.0.1:8768/demos/export) | LangGraph workflow (ticket → context → conflicts → build → review → check ↺ → developer), patch and independent acceptance checks | [Production design](http://127.0.0.1:8768/architecture/export) |
+| [Check a cleanup before release](http://127.0.0.1:8768/demos/migration) | Green candidate CI, synthetic replay losses, sourced dependencies, per-dependent gates and local action drafts | [Production design](http://127.0.0.1:8768/architecture/migration) |
 
 The live ticket selector has been removed; DH-302 through DH-310 remain developer regression fixtures only. Their historical records are preserved. Production pages describe real-system retrieval, permission boundaries, evidence combination, verification and human review; they do not claim those connectors are deployed.
 
@@ -175,14 +175,60 @@ Both live modes can edit `app/exporter.py` and add test files in an isolated tem
 
 The prepared reference is not model-generated. It passes all 12 independent checks and both baseline tests; the original exporter passes its baseline tests but fails the new acceptance requirements. No new paid model runs were made to claim a docs-versus-repo outcome for this demo.
 
-## Demo 3: Change impact across code and business obligations
+### The engineering workflow (LangGraph)
 
-`portfolio/migration/` contains a shared ATLAS decoder, three consuming jobs, two baseline tests and a retirement request. Six sources cover delivery scope, replay obligations, a customer agreement, dated operational usage and rollout/rollback requirements. The prepared recommendation defers shared v1 removal: Cedar still requires v1 and archived data needs replay support. A done daily-sales Jira ticket does not clear those dependencies; the October 1 usage snapshot must be refreshed.
+The Demo 2 page leads with a live workflow that takes DH-401 from ticket to a reviewed pull request, with a person in the loop. The older single-session Repo-only/Docs comparison stays in the code but is no longer shown on the page.
 
-The worked example executes the actual repository checks twice: current support passes; a prepared removal of v1 fails the historical replay check. Its source-linked dependency matrix is author-prepared, not inferred from real production telemetry. Both live modes perform read-only assessments; no automated narrative correctness score is claimed.
+```text
+intake → analyze ─┬─ blocking conflict ─→ ask_developer ─┬─ recommended or "I don't know" ─→ implement
+                  │                                     └─ other option or a note ─→ analyze (short re-check)
+                  └─ ready ─→ implement → review → check_requirements ─┬─ revise (≤ 3 rounds) ─→ implement
+                                                                        ├─ needs the rule owner ─→ developer_review
+                                                                        └─ accept, or round limit ─→ developer_review
+developer_review ─┬─ approve ─→ finalize (draft PR marked ready)
+                  └─ instructions ─→ analyze (short re-check) ─→ implement
+```
+
+- **One fresh Claude Code session per model step** (`claude_session.py`): analyze, implement and review. Each uses your login, `claude-opus-5-5` by default (`demo.py live --workflow-model` overrides it), only the tools its role needs, a JSON schema for its output, a per-step budget and timeout, and an $8 cap for the whole workflow. The flags are the raw modes' restricted flags, minus `--safe-mode`, which would also disable MCP.
+- **Business context.** Code follows the ticket's link to DH-411, and the analyst, engineer and reviewer get read-only Jira/Confluence tools. The workflow still accepts `business_context: false` through the API, and the recorded no-context run stays in `recordings/` and `results/`, but the page no longer offers it.
+- **Diagram.** The [Demo 2 architecture page](http://127.0.0.1:8768/architecture/export) shows the workflow as a Mermaid diagram (served locally from `vendor/`).
+- **Retrieval** (`context_mcp.py`). Read-only MCP tools (`jira_search`, `jira_get_issue`, `confluence_search`, `confluence_get_page`) over all 21 synthetic records from the three demos, so the analyst must filter by scope, status and dates. Results carry owner, status, scope, effective dates, version, SHA256 and retrieval time. Demo 1's hand-authored calculator rules are stripped. No vector index; at this size, search then fetch is enough.
+- **Requirements.** About 8–12 grouped requirements, each with a word-for-word quote and an acceptance test that follows only from those words. The workflow verifies every quote against a record whose hash shows it was actually opened.
+- **Decisions.** The workflow pauses before coding when a conflict needs a person. Choosing the recommended option, or "I don't know; use your best judgment" (recorded as an assumption), is applied in code with no extra model call. Another option, a note, or a send-back after review gets a short delta re-check that returns only what changed. Overriding an approved rule is recorded as needing the owner's sign-off. After two answers it stops asking and builds on recorded assumptions.
+- **The acceptance gate is code, not a model** (`guard_reasons`). The independent reviewer judges every requirement as met, unmet or unclear, with evidence. The gate accepts only when the tests the workflow ran pass, every requirement is met, there is no high or medium finding, the tested commit is pushed, nothing is uncommitted, `main` is unchanged, and a PR exists only if one was asked for and is still a draft. If the reviewer marks a finding as one only the rule owner can settle, the gate escalates it to you instead of looping the engineer.
+- **The answer key never enters the loop.** The 12 hidden acceptance checks run only for a separately labeled "Demo grading" panel and the comparison card. No prompt or routing decision sees them.
+- **Branches and pull requests.** The engineer works in a clone of a sandbox repository on its own branch (`dh-401/workflow-<id>`, or `dh-401/control-<id>`). It commits, pushes, and opens a **draft** PR only when the ticket, a linked record or the developer note asks for one. Its shell is an allow-list (python3, ls, read-only git, `git add/commit/push`, and `gh pr create/view/list` only when a PR was requested); anything else is refused and shown on the page as a blocked action. The reviewer gets a copy with no remote. Approving marks the draft PR ready for review. Nothing is ever merged.
+- **Sandbox setup.** By default the workflow pushes to a local bare repository under `artifacts/sandbox/`. To push real branches and PRs, create a private GitHub sandbox once with `uv run python demo.py sandbox-init --repo <you>/datahoney-export-sandbox` (needs `gh auth login`), then start with `uv run python demo.py live --sandbox-repo <you>/datahoney-export-sandbox`. Each clone authenticates through your `gh` login with a repository-local credential helper; global git settings are unchanged.
+- **Records and replays.** `artifacts/live/workflows/<id>/` keeps events, the result, and each step's prompt, trace, stderr and output, plus `final.patch`. To save a run for the page's replay picker, use `uv run python demo.py record-workflow <id>`; it accepts a completed run or one stopped at the final review. The committed recordings are one run with context and one without, both on Opus 5.5.
+
+## Demo 3: Release-check a teammate's cleanup
+
+A change in common code can conflict with customer and recovery promises the repository cannot establish. The original retirement request, prepared worked example and two seed tests remain available under `portfolio/migration/`. Only the two sentences that directly state the retirement verdict were removed from the business records; the underlying facts, scope and obligations remain.
+
+The release check reviews a **prepared local candidate PR**, not a real GitHub PR. Its patch removes v1 decoding, narrows the jobs' accepted versions and deletes the replay test that would catch the loss. The remaining repository tests pass. Replaying the same synthetic job rows before and after the patch shows the failure CI misses: **NORTHSTAR September falls from $1,250 to $400; CEDAR statements fall from $180 to $0**. Rows are skipped by the job filter, so the decoder never raises an error.
+
+The LangGraph workflow reuses Demo 2's Claude session, checkpoint and recording infrastructure. One read-only Opus session traces the dependencies and opens evidence through the existing synthetic-source tools. With business context on, its map must tie the live job, historical replay, Cedar delivery and rollback dependencies to exact quotes, current versus stale usage, accountable owners, required sign-offs and a conditional earliest retirement date. Code then returns an **allow or block for each dependent**, using explicitly authored policy adapters for this synthetic scenario. The model does not create or approve executable business policy. A developer note is recorded as a request; it cannot override a missing source, approval, replay proof or rollback requirement.
+
+The workflow pauses for your decision: defer removal, pursue a scoped canary, or request sign-off. It then prepares a PR review comment, sign-off requests and a decision-record update as local drafts. Selecting an option does not grant customer approval or clear blocked dependencies. Nothing is sent, no sandbox PR is created or commented on, and shared support is not removed.
+
+With context off, the same workflow sees the candidate patch, code callers and code owners, CI and synthetic replay results. It can still identify those losses and block for missing evidence. It cannot establish sourced customer obligations, approval owners or retirement dates from those inputs. Twelve hidden checks grade the completed outputs in a separate comparison panel; they are unavailable to the model, prompts and release gate. Do not present a prepared fixture result as a live Opus score.
+
+```sh
+# Offline code/fixture verification; no model call.
+uv run python migration_demo.py verify
+
+# One read-only model session, then a pause for the developer's decision.
+uv run python migration_demo.py run --context on
+uv run python migration_demo.py run --context off
+
+# Preserve a completed workflow for browser replay.
+uv run python migration_demo.py record <workflow-id> --name <recording-name>
+```
+
+**December 30, 2026 is a conditional lower bound, not a promised removal date.** The synthetic replay fixture's latest archived v1 export is September 30; its 90-day original-format replay obligation covers December 29 inclusive, making December 30 the first possible day after that window. Cedar's separate delivery promise runs through November 30. Full removal remains unknown until customer migration, retention expiry or verified conversion, backup readability, rollback readiness and fresh usage are established. Read the [release-check guide](docs/migration-release-check.md) for the workflow, comparison rules and evidence limits. Saved live recordings and their actual scores, when available, belong in the [results index](../../results/INDEX.md).
 
 ## Production integration versus local execution
 
 The architecture pages explain a proposed production flow: request and user scope → authorized Git/Jira/Confluence/operations retrieval → full evidence with versions and dates → explicit claims or requirements → independent checks → human approval. An optional permission-aware index helps discovery; it is not necessary to put the entire repository in a vector database.
 
-Locally, the two raw modes receive file snapshots. Only the reporting demo’s separately labeled guided mode uses the existing real local MCP server and prepared calculator. The new demos do not claim live Jira or Confluence connectivity. Source pages and prepared examples incur no model calls.
+Locally, the reporting raw modes receive file snapshots. Its separately labeled guided mode uses the local evidence MCP server and prepared calculator. The export and migration workflows use read-only MCP tools over synthetic source snapshots; they do not connect to live Jira, Confluence or operational telemetry. Source pages and prepared examples incur no model calls.

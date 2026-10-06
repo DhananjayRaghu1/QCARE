@@ -1,0 +1,44 @@
+{
+  "id": "2026-10-05_customer-export_rehearsal_opus-5-5-2",
+  "date": "2026-10-05",
+  "demo": "customer-export",
+  "demo_path": "demos/01-report-reconciliation",
+  "kind": "rehearsal",
+  "status": "completed",
+  "provenance": "live-model",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "conditions": [
+    "langgraph-workflow",
+    "github-sandbox"
+  ],
+  "repo_commit": "71b25ec",
+  "command": "uv run python demo.py live --sandbox-repo Ishaan1402/datahoney-export-sandbox, then Demo 2 > Run workflow",
+  "headline": "Live workflow pushed a branch and opened draft PR #1 in the private sandbox because the developer note asked for one; the allow-list blocked one gh attempt and the agent retried; 12/12 hidden checks; approval marked the PR ready, nothing merged. $1.31.",
+  "metrics": {
+    "model_seconds": 222.0,
+    "cost_usd": 1.31,
+    "hidden_checks_passed": 12,
+    "blocked_commands": 1,
+    "pr_number": 1
+  },
+  "cost_usd": 1.31,
+  "human_review": "pending",
+  "owner": "ishaan",
+  "tags": [
+    "opus-5-5",
+    "langgraph",
+    "meeting-fallback",
+    "pull-request"
+  ],
+  "related": [
+    "2026-10-05_customer-export_rehearsal_opus-5-5"
+  ],
+  "files": {
+    "record": "./results.json"
+  },
+  "links": {
+    "pull_request": "https://github.com/Ishaan1402/datahoney-export-sandbox/pull/1"
+  }
+}

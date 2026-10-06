@@ -15,7 +15,7 @@ The supplied [LinkedIn profile](https://www.linkedin.com/company/data-honey/) id
 | 24–34 min | Map the technique onto their actual wait, missing information or rework. |
 | 34–40 min | Write one pilot with an owner, baseline, acceptance criteria and failure behavior. |
 
-For a shorter meeting, shorten the introduction and comparison. For a longer meeting, inspect a second anonymized real example. Ishaan drives onramping; your friend takes notes and explains how an engineer would continue from the packet into reproduction, coding, tests and review. Align that handoff on Monday.
+For a shorter meeting, shorten the introduction and comparison. For a longer meeting, inspect a second anonymized real example. One presenter drives onramping; the other takes notes and explains how an engineer would continue from the packet into reproduction, coding, tests and review. Align that handoff on Monday.
 
 Opening:
 

@@ -14,7 +14,7 @@
   {
     "id": "DH-510",
     "title": "Daily-sales migration delivery",
-    "body": "Done on 2026-10-02: daily_sales now accepts v2 for NORTHSTAR live ingest. Scope excludes historical_replay and partner_statement. The rollout ticket does not authorize deleting the v1 decoder. Data Integrations owns live ingest confirmation.",
+    "body": "Done on 2026-10-02: daily_sales now accepts v2 for NORTHSTAR live ingest. Scope excludes historical_replay and partner_statement. Data Integrations owns live ingest confirmation.",
     "system": "jira",
     "status": "done",
     "owner": "Data Integrations",
@@ -26,7 +26,7 @@
   {
     "id": "OPS-REPLAY",
     "title": "Replay and recovery obligations",
-    "body": "Data Operations must support replay of the previous 90 days of original ATLAS exports. Archives for July through September 2026 include schema v1. Backups must remain readable during migration. No verified v1-to-v2 archive conversion has been completed. A shared v1 decoder removal would affect historical_replay even if no new v1 files arrive.",
+    "body": "Data Operations must support replay of the previous 90 days of original ATLAS exports. Archives for July through September 2026 include schema v1. Backups must remain readable during migration. No verified v1-to-v2 archive conversion has been completed. A shared v1 decoder removal would affect historical_replay even if no new v1 files arrive. The latest original NORTHSTAR v1 export is dated 2026-09-30. For the 90-day replay window, the original export day is day 0 and exports aged 90 days remain in scope through the end of that day. No conversion or replay acceptance evidence has been approved as of 2026-10-04.",
     "system": "confluence",
     "status": "approved",
     "owner": "Data Operations",
@@ -62,7 +62,7 @@
   {
     "id": "RUNBOOK-ROLLBACK",
     "title": "Decoder retirement rollout and rollback",
-    "body": "Before any removal: obtain customer approvals, prove archived v1 data remains replayable, refresh per-job traffic evidence, test signed v1 reversals (+5000 must remain +5000) against v2 return magnitudes (5000 becomes -5000), and rehearse rollback. Canary only a migrated live path; retain the shared legacy decoder until all dependents are cleared. Reporting Engineering owns rollout; Data Operations owns replay and rollback evidence.",
+    "body": "Before any removal: obtain customer approvals, prove archived v1 data remains replayable, refresh per-job traffic evidence, test signed v1 reversals (+5000 must remain +5000) against v2 return magnitudes (5000 becomes -5000), and rehearse rollback. Reporting Engineering owns rollout; Data Operations owns replay and rollback evidence. As of 2026-10-04, no decoder retirement rollback rehearsal result has been approved. Reporting Engineering and Data Operations must jointly sign the retained-decoder rollback evidence before the shared decoder is retired.",
     "system": "confluence",
     "status": "approved",
     "owner": "Reporting Engineering",
@@ -70,5 +70,17 @@
     "effective_to": null,
     "version": "1",
     "scope": "ATLAS v1 retirement"
+  },
+  {
+    "id": "OPS-USAGE-1004",
+    "title": "Operational usage and live-ingest confirmation from October 4",
+    "body": "Snapshot taken 2026-10-04: NORTHSTAR daily_sales processed 1,240 v2 files and 0 v1 files in the last complete 24 hours; CEDAR partner_statement processed 18 v1 files and 0 v2 files; NORTHSTAR historical_replay processed 3 v1 batches. Data Integrations confirmed the NORTHSTAR v2-only live-ingest canary for the proposed 2026-10-15 window; this confirmation covers daily_sales only. Data Operations verified the snapshot. Refresh per-job usage within one day of the release decision. No archive conversion, partner amendment or decoder retirement rollback rehearsal is evidenced by these counts.",
+    "system": "operations",
+    "status": "approved",
+    "owner": "Data Operations",
+    "effective_from": "2026-10-04",
+    "effective_to": null,
+    "version": "1",
+    "scope": "ATLAS workflows"
   }
 ]

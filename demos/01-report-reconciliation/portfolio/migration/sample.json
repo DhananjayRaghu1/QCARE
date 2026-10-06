@@ -1,0 +1,86 @@
+{
+  "synthetic": true,
+  "label": "Synthetic recent-job replay fixtures; no production traffic",
+  "source_case": "DH-301",
+  "jobs": [
+    {
+      "id": "northstar-september",
+      "workflow": "historical_replay",
+      "customer": "NORTHSTAR",
+      "month": "2026-09",
+      "rows": [
+        {
+          "id": "A-1",
+          "amount_cents": 100000,
+          "kind": "SALE",
+          "feed": "ATLAS",
+          "schema_version": "1",
+          "invoice_on": "2026-09-15",
+          "posted_on": "2026-09-15"
+        },
+        {
+          "id": "A-2",
+          "amount_cents": -20000,
+          "kind": "RETURN",
+          "feed": "ATLAS",
+          "schema_version": "1",
+          "invoice_on": "2026-09-15",
+          "posted_on": "2026-09-15"
+        },
+        {
+          "id": "A-3",
+          "amount_cents": 5000,
+          "kind": "RETURN",
+          "feed": "ATLAS",
+          "schema_version": "1",
+          "invoice_on": "2026-09-15",
+          "posted_on": "2026-09-15"
+        },
+        {
+          "id": "A-4",
+          "amount_cents": 50000,
+          "kind": "SALE",
+          "feed": "ATLAS",
+          "schema_version": "2",
+          "invoice_on": "2026-09-15",
+          "posted_on": "2026-09-15"
+        },
+        {
+          "id": "A-5",
+          "amount_cents": 10000,
+          "kind": "RETURN",
+          "feed": "ATLAS",
+          "schema_version": "2",
+          "invoice_on": "2026-09-15",
+          "posted_on": "2026-09-15"
+        }
+      ]
+    },
+    {
+      "id": "cedar-statements",
+      "workflow": "partner_statement",
+      "customer": "CEDAR",
+      "month": "2026-09",
+      "rows": [
+        {
+          "id": "C-1",
+          "schema_version": "1",
+          "kind": "SALE",
+          "amount_cents": 20000
+        },
+        {
+          "id": "C-2",
+          "schema_version": "1",
+          "kind": "RETURN",
+          "amount_cents": -5000
+        },
+        {
+          "id": "C-3",
+          "schema_version": "1",
+          "kind": "RETURN",
+          "amount_cents": 3000
+        }
+      ]
+    }
+  ]
+}
