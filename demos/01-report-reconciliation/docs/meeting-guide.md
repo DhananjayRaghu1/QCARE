@@ -24,7 +24,7 @@ Ask which systems hold their equivalent requirements, who confirms the correct r
 The workflow section at the top of the Demo 2 page runs the whole ticket-to-PR loop with real Claude sessions. With a mixed audience, narrate each step in one plain sentence, and open the details only when the engineer asks.
 
 1. **The ticket.** "One paragraph. It looks like a ten-minute change." Point out the link to DH-411 and the attached sample.
-2. **Start it.** Leave **Business context: On**. Click the chips **Use UTC to keep it simple.** and **Open a draft PR when it’s ready.**, then **Run workflow**. "A busy developer's shortcut, plus an ordinary request for a PR."
+2. **Start it.** Leave **Business context: On**. Type the note **Use UTC to keep it simple. Open a draft PR when it’s ready.** (the box's placeholder shows it), then click **Run workflow**. "A busy developer's shortcut, plus an ordinary request for a PR."
 3. **Gather context (about 45 s).** Lookups appear as they happen: Jira, then the Confluence agreement, the Finance rule and the draft. "It reads the full record before relying on it, and the workflow checks every quote word-for-word."
 4. **The pause.** The workflow stops *before any code is written*. The note conflicts with the approved agreement, whose rule owner is Reporting Product. Send the recommended option; it applies at once.
 5. **Build, review, check (about 1.5 minutes).** The engineer writes the code and tests on its own branch, commits, pushes and opens a draft PR. If it tries a command outside its allow-list, the page shows the block. A separate reviewer that cannot edit the code judges every requirement. Then **rules in code, not a model,** decide whether it's done. Read the "Next" line aloud; it says why.
@@ -36,9 +36,9 @@ If a live run is slow or fails, replay **With context** instead, and say out lou
 
 Questions that land well: Where do your approved rules live today? Who would have caught the UTC shortcut, and when? What happens today when an engineer builds from the ticket alone?
 
-## Demo 3: Release-check DJ's cleanup (about 4 minutes)
+## Demo 3: Release-check a shared-code cleanup (about 4 minutes)
 
-Credit **Dhananjay (DJ) Raghu**: this is his shared-code cleanup idea, expanded into a release check on a teammate's prepared PR. His original request, tests and worked example are preserved. It connects well to a team with customer-specific imports and reports: code shows the call paths; agreements and operations establish the promises those paths must keep. All customers, jobs, contracts and operational records here are synthetic.
+This is a release check on a teammate's prepared cleanup PR. It connects well to a team with customer-specific imports and reports: code shows the call paths; agreements and operations establish the promises those paths must keep. All customers, jobs, contracts and operational records here are synthetic.
 
 1. **The PR.** Open the prepared cleanup diff. It removes v1 support, changes the jobs to accept only v2 and deletes the replay regression. Its remaining CI is green. This is a local fixture, not a real sandbox PR.
 2. **The missed failure.** Show the before/after job replay. NORTHSTAR's September goes from **$1,250 to $400**, and CEDAR statements go from **$180 to $0**. “The job silently skips the old rows. There is no exception to alert us.” These totals come from executing the sample jobs, not from the model's arithmetic.

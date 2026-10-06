@@ -1,4 +1,4 @@
-"""Demo 3 release check, extending DJ (Dhananjay Raghu)'s migration scenario.
+"""Demo 3 release check for a shared-code cleanup.
 
 One read-only model session extracts evidence. Software replays the synthetic jobs,
 verifies citations and gates each dependent. A human chooses the next action; all
@@ -116,7 +116,7 @@ def intake(state: State, runtime: Runtime[Settings]):
     files = {str(path.relative_to(workspace)): path.read_text() for path in workspace.rglob("*") if path.is_file()}
     ticket = context_mcp.get_record(CASE_ID, "jira")
     ci, diff = release.candidate_ci(), release.candidate_diff()
-    emit("ci", ci=ci, diff=diff, text="Prepared cleanup PR CI is green. The baseline regression was deleted in the PR; DJ's original fixture is preserved.")
+    emit("ci", ci=ci, diff=diff, text="Prepared cleanup PR CI is green. The baseline regression was deleted in the PR; the original fixture is preserved.")
     emit("note", text="Business context is " + ("ON: read-only synthetic source lookups are available." if runtime.context.context else
          "OFF: code, the original request and synthetic replays only. No Jira or Confluence lookups."))
     emit("step_finished", status="completed")

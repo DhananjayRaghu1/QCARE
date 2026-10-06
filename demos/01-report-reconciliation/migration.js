@@ -1,5 +1,5 @@
 'use strict';
-// Demo 3 release check. DJ's shared-code cleanup idea, using Demo 2's workflow conventions.
+// Demo 3 release check on a shared-code cleanup, using Demo 2's workflow conventions.
 // Only mountMigration is exported; portfolio.js supplies the shared helpers at call time.
 (() => {
 const m = {graph:null, recordings:[], id:null, status:'idle', events:[], cursor:0, pending:null, result:null,
@@ -30,13 +30,14 @@ function source(id){
 function skeleton(){
   return `<span class="eyebrow">RELEASE CHECK · SYNTHETIC CLEANUP PR</span>
 <h2>Green CI can still hide a broken customer promise</h2>
-<p>DJ proposed simplifying a shared decoder. This workflow checks a teammate’s cleanup against recent jobs and the obligations behind every caller. One Opus session reads the evidence. Code applies the release gate, then pauses for your decision and drafts the next actions.</p>
-<p class="small">All jobs, customers, PR changes and business records below are synthetic. This demo creates no GitHub PR and sends no comments or sign-off requests.</p>
+<p>A teammate’s cleanup removes old-format support from shared code, and CI passes. This check replays recent jobs, has Claude find who depends on the code and what they were promised, and lets rules in code allow or block the release. You decide what happens next.</p>
+<div id="mgDiagram"></div>
+<p class="small">All jobs, customers and records are synthetic. Nothing is posted to GitHub and no message is sent.</p>
 <ol id="mgStrip" class="wf-strip mg-strip"></ol>
 <details class="wf-engineer"><summary>For engineers: graph, tools and limits</summary><div id="mgGraph"></div></details>
 <div class="grid two wf-inputs"><article id="mgTicket"></article><article id="mgStart"></article></div>
 <div id="mgCompare"></div><div id="mgStatus" class="wf-status hidden" role="status" aria-live="polite"></div>
-<div id="mgPending"></div><div id="mgFindings" class="wf-timeline"></div><div id="mgSummary"></div>
+<div id="mgTldr"></div><div id="mgPending"></div><div id="mgFindings" class="wf-timeline"></div><div id="mgSummary"></div>
 <details id="mgActivity"><summary>Complete activity and evidence</summary><div id="mgEvents" class="trace"></div></details>`;
 }
 function graphDetail(){
@@ -52,20 +53,16 @@ function recordingLabel(r){
 function inputs(){
   const ticket = m.graph.ticket || {};
   $('#mgTicket').innerHTML = `<span class="eyebrow">INPUT 1 · TEAMMATE’S CLEANUP PR</span><h3>${source(ticket.id || 'DH-501')} ${esc(ticket.title || 'Retire the shared ATLAS v1 decoder')}</h3>
-<p>The original request, worked example and repository files above remain available for inspection. <a href="#request">Read DJ’s request</a>.</p>
-<p class="small">Same PR diff, remaining CI tests and recent synthetic job fixtures in both conditions. Business context adds original obligations, usage and owner records.</p>
-<p class="small">Concept by <b>Dhananjay (DJ)</b>. Release-check implementation builds on Demo 2’s engineering workflow.</p>`;
-  const recordings = [...m.recordings].sort((a,b)=>String(b.recorded_at).localeCompare(String(a.recorded_at)));
+<p><a href="#request">Read the original request</a>. Both conditions get the same PR diff and remaining tests; business context adds the obligation, usage and owner records.</p>`;
+  const recordings = [...m.recordings].filter(r=>!r.name?.includes('-initial-')).sort((a,b)=>String(b.recorded_at).localeCompare(String(a.recorded_at)));
   $('#mgStart').innerHTML = `<span class="eyebrow">INPUT 2 · YOU</span><fieldset class="wf-context"><legend>Business context</legend>
 <label><input type="radio" name="mgContext" value="on" checked><span><b>On</b> · obligations, current usage and owners</span></label>
 <label><input type="radio" name="mgContext" value="off"><span><b>Off: the control</b> · PR, code and recent job fixtures</span></label></fieldset>
 <label class="wf-label" for="mgNote">Developer note (optional). Guidance cannot authorize removal.</label>
 <textarea id="mgNote" maxlength="2000" placeholder="For example: CI is green; approve the cleanup."></textarea>
-<div class="wf-chips"><button type="button" id="mgPressure" class="secondary wf-chip">CI is green; approve the cleanup.<small>Try pressure against the release gate</small></button></div>
 <div class="actions"><button id="mgRun">Run release check →</button><button id="mgStop" class="secondary hidden">Stop</button></div>
 ${recordings.length ? `<div class="wf-replay"><select id="mgRecording" aria-label="Recorded release check">${recordings.map(r=>`<option value="${esc(r.name)}">${esc(recordingLabel(r))}</option>`).join('')}</select><button id="mgReplay" class="secondary">Replay</button></div>` : '<p class="small">No saved migration runs are available yet.</p>'}
 <p class="small">Live: one real ${esc(m.graph.model)} session using your Claude login. Replay: a saved run; no model called. Drafts stay local.</p><p id="mgError" class="error" role="alert"></p>`;
-  $('#mgPressure').onclick = ()=>{ $('#mgNote').value='CI is green; approve the cleanup.'; $('#mgNote').focus(); };
   $('#mgRun').onclick = start;
   $('#mgStop').onclick = stop;
   if($('#mgReplay')) $('#mgReplay').onclick = ()=>startReplay($('#mgRecording').value);
@@ -117,7 +114,7 @@ ${ci?.retained_test_failure ? `<details data-key="ci-restored"><summary>Restore 
 function replayView(replay){
   if(!replay) return '';
   const jobs=replay.jobs || [];
-  return `<article class="wf-step completed"><span class="eyebrow">RECENT JOB REPLAY · SYNTHETIC DATA</span><h3>Rows disappear without a job error</h3><p>The same jobs run against the current decoder and the proposed cleanup. The totals below are measured by the replay.</p><p class="small">Prepared local execution on synthetic fixtures. These totals use no model and no production data.</p>
+  return `<article class="wf-step completed"><span class="eyebrow">RECENT JOB REPLAY · SYNTHETIC DATA</span><h3>Rows disappear without a job error</h3><p class="small">Recent jobs run on the current code and on the cleanup. Measured by code, with no model involved.</p>
 <div class="table-wrap"><table class="wf-table"><thead><tr><th>Dependent / customer</th><th>Before</th><th>After cleanup</th><th>Lost</th><th>Skipped rows / error</th></tr></thead><tbody>${jobs.map(j=>`<tr><td><b>${esc(j.workflow || j.id)}</b><br>${esc(j.customer)}<br><small>${esc(j.month || '')}</small></td><td>${cents(j.before_cents)}</td><td class="${j.before_cents!==j.after_cents?'error':''}"><b>${cents(j.after_cents)}</b></td><td>${cents(j.lost_cents ?? (j.before_cents-j.after_cents))}</td><td>${list(j.skipped_ids || j.skipped_row_ids).map(esc).join(', ') || 'none'}<br><small>${j.after_error ? 'Error: '+esc(j.after_error) : 'No job error'}</small></td></tr>`).join('')}</tbody></table></div>
 ${replay.northstar_rows_match_demo1 ? '<p class="small">NORTHSTAR uses the same September rows as <a href="/demos/report">Demo 1 · DH-301</a>.</p>' : ''}
 ${replay.synthetic===false ? '<p class="error">Replay is not marked synthetic; inspect the run record.</p>' : ''}</article>`;
@@ -144,11 +141,28 @@ ${lines(analysis.unknowns || analysis.missing_evidence).length?'<p class="notice
 function gateView(gate){
   if(!gate) return '';
   return `<article class="wf-step completed mg-gate"><span class="eyebrow">RELEASE GATE · DECIDED BY CODE</span><h3>${badge(gate.decision || 'block',gate.decision==='allow'?'good':'bad')} Full shared removal</h3>
-<p>A developer note cannot change this result. Every dependent is checked separately.</p>
-<div class="table-wrap"><table class="wf-table"><thead><tr><th>Dependent</th><th>Decision</th><th>Reason and remaining conditions</th><th>Owner / earliest removal</th></tr></thead><tbody>${list(gate.dependents).map(d=>`<tr><td><b>${esc(d.workflow || d.id)}</b><br>${esc(d.customer || '')}<br><code>${esc(d.code_path || '')}</code></td><td>${badge(d.decision,d.decision==='allow'?'good':'bad')}</td><td>${lines(d.reasons).map(esc).join('<br>')}${lines(d.conditions).length?'<p class="small">Conditions: '+lines(d.conditions).map(esc).join(' · ')+'</p>':''}${lines(d.missing_evidence).length?'<p class="notice">Missing: '+lines(d.missing_evidence).map(esc).join(' · ')+'</p>':''}${list(d.sources).map(source).join(' ')}</td><td>${lines(d.owners).map(esc).join(', ') || 'owner not established'}<br><small>${d.earliest_removal ? esc(d.earliest_removal)+' · conditional' : 'removal date not established'}</small></td></tr>`).join('')}</tbody></table></div>
+<p class="small">Each dependent is checked separately. A developer note cannot change this result.</p>
+<div class="table-wrap"><table class="wf-table"><thead><tr><th>Dependent</th><th>Decision</th><th>Reason and remaining conditions</th><th>Owner / earliest removal</th></tr></thead><tbody>${list(gate.dependents).map(d=>`<tr><td><b>${esc(d.workflow || d.id)}</b><br>${esc(d.customer || '')}<br><code>${esc(d.code_path || '')}</code></td><td>${badge(d.decision,d.decision==='allow'?'good':'bad')}</td><td>${lines(d.reasons).slice(0,2).map(esc).join('<br>')}${lines(d.reasons).length>2||lines(d.conditions).length||lines(d.missing_evidence).length?`<details data-key="gate-${esc(d.workflow || d.id)}-${esc(d.customer || '')}"><summary class="small">All reasons and conditions</summary>${lines(d.reasons).slice(2).map(r=>'<p class="small">'+esc(r)+'</p>').join('')}${lines(d.conditions).length?'<p class="small">Conditions: '+lines(d.conditions).map(esc).join(' · ')+'</p>':''}${lines(d.missing_evidence).length?'<p class="small">Missing: '+lines(d.missing_evidence).map(esc).join(' · ')+'</p>':''}</details>`:''}${list(d.sources).map(source).join(' ')}</td><td>${lines(d.owners).map(esc).join(', ') || 'owner not established'}<br><small>${d.earliest_removal ? esc(d.earliest_removal)+' · conditional' : 'removal date not established'}</small></td></tr>`).join('')}</tbody></table></div>
 <p><b>Unconditional full removal:</b> ${esc(gate.earliest_full_removal || 'not established — evidence or verification remains open.')}</p>
 ${gate.earliest_conditional_full_removal?`<p><b>Earliest conditional full removal:</b> ${esc(gate.earliest_conditional_full_removal)}. This is a lower bound, subject to every release condition being met.</p>`:''}
-${lines(gate.conditions).length?'<ul>'+lines(gate.conditions).map(c=>'<li>'+esc(c)+'</li>').join('')+'</ul>':''}</article>`;
+${lines(gate.conditions).length?'<details data-key="gate-conditions"><summary>Release conditions ('+lines(gate.conditions).length+')</summary><ul>'+lines(gate.conditions).map(c=>'<li>'+esc(c)+'</li>').join('')+'</ul></details>':''}</article>`;
+}
+function tldr(gate, replay, result){
+  // Built from the gate, the replay and the result in code, never written by a model.
+  if(!gate){ $('#mgTldr').innerHTML=''; return; }
+  const deps=list(gate.dependents), name=d=>[d.workflow || d.id, d.customer].filter(Boolean).join(' · ');
+  const blocked=deps.filter(d=>d.decision!=='allow'), allowed=deps.filter(d=>d.decision==='allow');
+  const first=gate.decision==='allow' ? 'ALLOW: the cleanup can ship; every dependent is cleared.'
+    : `BLOCK: the cleanup can’t ship as written. ${blocked.length} of ${deps.length} dependents are blocked (${blocked.map(name).join(', ')}).`;
+  const changed=list(replay?.jobs).filter(j=>j.before_cents!==j.after_cents);
+  const second=!replay ? 'No replay: the control has no access to recent job data, so the impact was not measured.'
+    : changed.length ? 'Replay: ' + changed.map(j=>`${j.customer} ${j.workflow} ${cents(j.before_cents)} → ${cents(j.after_cents)}`).join('; ') + ', with no error raised.'
+    : 'Replay: no job totals changed.';
+  const owners=[...new Set(blocked.flatMap(d=>lines(d.owners)))];
+  const when=gate.earliest_full_removal ? `Full removal: ${gate.earliest_full_removal}.` : gate.earliest_conditional_full_removal ? `Full removal: ${gate.earliest_conditional_full_removal} at the earliest, if every condition is met.` : 'Full removal date: not established.';
+  const third=[allowed.length ? 'Can go ahead now: '+allowed.map(name).join(', ')+'.' : '', when, owners.length ? 'Sign-off from '+owners.join(', ')+'.' : ''].filter(Boolean).join(' ');
+  const decision=result?.summary?.decision?.choice;
+  $('#mgTldr').innerHTML=`<div class="wf-tldr"><span class="eyebrow">TL;DR${result?.context===false || m.meta?.context===false || m.replay?.rec?.context===false ? ' · CONTROL RUN, NO BUSINESS CONTEXT' : ''}</span><ul><li><b>${esc(first)}</b></li><li>${esc(second)}</li><li>${esc(third)}</li>${decision ? `<li>Your decision: ${esc(OPTIONS.find(o=>o.id===decision)?.title || decision)}. The gate result does not change.</li>` : ''}</ul></div>`;
 }
 function content(){
   const steps=stepData(), summary=m.result?.summary || {};
@@ -160,7 +174,10 @@ function content(){
   const grounding=summary.grounding || event('grounding')?.grounding || steps.find(s=>s.node==='analyze')?.grounding;
   const gate=summary.gate || event('gate')?.gate || output('gate')?.gate || output('gate') || m.pending?.payload?.gate;
   const open=new Set([...$('#mgFindings').querySelectorAll('details[open]')].map(el=>el.dataset.key));
-  $('#mgFindings').innerHTML=ciView(summary.ci || event('ci')?.ci || intake.ci || m.graph.ci,m.result?.diff || summary.diff || event('ci')?.diff || intake.diff || m.graph.diff)+replayView(replay)+analysisView(analysis,grounding)+gateView(gate);
+  const started=steps.length>0 || Boolean(m.result);
+  tldr(started ? gate : null, started ? replay : null, m.result);
+  const details=started ? `<details class="wf-full" data-key="mg-full"><summary>Full details: CI, the analyst’s evidence and exact quotes</summary>${ciView(summary.ci || event('ci')?.ci || intake.ci || m.graph.ci,m.result?.diff || summary.diff || event('ci')?.diff || intake.diff || m.graph.diff)}${analysisView(analysis,grounding)}</details>` : '';
+  $('#mgFindings').innerHTML=(started ? replayView(replay) : '')+gateView(gate)+details;
   for(const el of $('#mgFindings').querySelectorAll('details')) if(open.has(el.dataset.key)) el.open=true;
   renderStrip(steps);
   if(m.status==='running' && !m.result){
@@ -186,7 +203,7 @@ ${m.replay?'<p>This pause is part of the saved run. Continue to see the recorded
 function draftsView(drafts){
   if(!drafts) return '';
   const requests=list(drafts.signoff_requests);
-  return `<h4>Drafts for your review · ${drafts.sent===false?'nothing sent':'inspect delivery status'}</h4>
+  return `<h4>Drafts for you to review (${drafts.sent===false?'nothing was sent':'check delivery status'})</h4>
 <details data-key="draft-review"><summary>PR review comment</summary><pre>${esc(drafts.pr_review_comment || '')}</pre></details>
 ${requests.map((r,i)=>`<details data-key="draft-signoff-${i}"><summary>Sign-off request · ${esc(textValue(r.owner) || 'owner unknown')}</summary><p><b>${esc(r.subject || '')}</b></p><pre>${esc(r.body || '')}</pre></details>`).join('')}
 <details data-key="draft-record"><summary>Decision record update</summary><pre>${esc(drafts.decision_record_update || '')}</pre></details>
@@ -202,9 +219,10 @@ ${r.error?'<p class="notice">'+esc(r.error)+'</p>':''}
 <div class="meta"><span>${esc(r.model || 'No model run · prepared example')}</span>${isPrepared()?'<span>No model call or model cost</span>':`<span>Model time ${duration(s.model_seconds)}</span><span>${r.spent_usd != null ? 'CLI-reported $'+Number(r.spent_usd).toFixed(3) : 'cost not reported'}</span>`}</div>
 ${decision.choice?'<p><b>Your decision:</b> '+esc(OPTIONS.find(o=>o.id===decision.choice)?.title || decision.choice)+(decision.message?' · '+esc(decision.message):'')+'</p>':''}
 ${draftsView(s.drafts)}
-<div class="actions"><button id="mgDownloadRun" class="secondary">Download complete run</button></div>
-${grading.hidden_total?`<div class="wf-grading"><h4>Hidden acceptance checks · ${esc(grading.hidden_passed)}/${esc(grading.hidden_total)}</h4><p>${esc(grading.label || 'Demo grading against synthetic obligations. These checks are not supplied to the analyst.')}</p><details data-key="grading"><summary>Inspect the ${esc(grading.hidden_total)} hidden checks</summary><ul>${list(grading.checks).map(c=>`<li>${badge(c.passed?'pass':'fail',c.passed?'good':'bad')} ${esc(c.label || c.name || c.id || c.check || textValue(c))}${c.detail?' — '+esc(c.detail):''}</li>`).join('')}</ul></details></div>`:''}
-<details data-key="complete-result"><summary>Complete saved result</summary><pre>${esc(JSON.stringify(r,null,2))}</pre></details></article>`;
+<details class="wf-full" data-key="mg-result-full"><summary>Full details: grading and the complete record</summary>
+${grading.hidden_total?`<div class="wf-grading"><h4>Hidden acceptance checks · ${esc(grading.hidden_passed)}/${esc(grading.hidden_total)}</h4><p class="small">${esc(grading.label || 'Demo grading against synthetic obligations. These checks are not supplied to the analyst.')}</p><ul>${list(grading.checks).map(c=>`<li>${badge(c.passed?'pass':'fail',c.passed?'good':'bad')} ${esc(c.label || c.name || c.id || c.check || textValue(c))}${c.detail?' — '+esc(c.detail):''}</li>`).join('')}</ul></div>`:''}
+<details data-key="complete-result"><summary>Complete saved result</summary><pre>${esc(JSON.stringify(r,null,2))}</pre></details>
+<div class="actions"><button id="mgDownloadRun" class="secondary">Download complete run</button></div></details></article>`;
   for(const el of $('#mgSummary').querySelectorAll('details')) if(open.has(el.dataset.key)) el.open=true;
   if($('#mgDownloadDrafts')) $('#mgDownloadDrafts').onclick=()=>download('DH-501-'+(r.id || 'saved')+'-unsent-drafts.json',JSON.stringify(s.drafts,null,2));
   if($('#mgDownloadRun')) $('#mgDownloadRun').onclick=()=>download('DH-501-'+(r.id || 'saved')+'.json',JSON.stringify({...r,events:m.events},null,2));
@@ -218,7 +236,6 @@ function controls(){
   const busy=m.starting || ['running','waiting_for_developer','stopping'].includes(m.status), replaying=m.replay && !m.replay.done;
   $('#mgRun').disabled=busy || replaying;
   $('#mgNote').disabled=busy || replaying;
-  $('#mgPressure').disabled=busy || replaying;
   document.querySelectorAll('input[name=mgContext]').forEach(el=>el.disabled=busy || replaying);
   if($('#mgReplay')) $('#mgReplay').disabled=busy || replaying;
   $('#mgStop').classList.toggle('hidden',(!m.id || !busy) && !replaying);
@@ -293,6 +310,7 @@ async function mountMigration(){
   try{[m.graph,m.recordings]=await Promise.all([api('/api/migrations/graph'),api('/api/migrations/recordings').then(v=>v.recordings)]);}
   catch(error){root.insertAdjacentHTML('beforeend','<p class="error">Could not load the release check: '+esc(error.message)+'</p>');return;}
   graphDetail();inputs();compare();render();
+  if(window.renderWorkflowDiagram) window.renderWorkflowDiagram($('#mgDiagram'),'migration');
   $('#mgActivity').addEventListener('toggle',activity);
   const latest=(config.workflows || []).filter(flow=>flow.case_id==='DH-501').at(-1);
   if(latest){m.id=latest.id;m.status=latest.status;schedule(0);}

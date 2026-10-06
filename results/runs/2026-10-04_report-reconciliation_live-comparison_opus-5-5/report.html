@@ -71,7 +71,7 @@ ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;max-width:68ch}
 <main>
   <header style="display:grid;gap:14px">
     <div class="eyebrow">dataHoneyAuto · Demo 1 · live model comparison</div>
-    <h1>DJ's reconciliation demo, run live on Opus 5.5</h1>
+    <h1>The reconciliation demo, run live on Opus 5.5</h1>
     <div class="meta">
       <span>4 Oct 2026</span><span>main @ 7248864 (PR #2)</span><span>branch ishaan/opus-live-comparison @ f3426aa</span><span>Claude Code 2.1.289</span>
     </div>
@@ -79,7 +79,7 @@ ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;max-width:68ch}
 
   <section class="verdict">
     <div class="eyebrow">Bottom line</div>
-    <p>DJ's push stopped at "live comparison blocked by authentication." I ran the full frozen 30-trial plan on <code>claude-opus-5-5</code>. <strong>Every one of the 30 answers had the correct decision, total and problem rows</strong>, including all three cases where the right answer is to stop.</p>
+    <p>The previous push stopped at "live comparison blocked by authentication." I ran the full frozen 30-trial plan on <code>claude-opus-5-5</code>. <strong>Every one of the 30 answers had the correct decision, total and problem rows</strong>, including all three cases where the right answer is to stop.</p>
     <p>The comparison therefore can't separate its three conditions: putting all documents in the prompt was the fastest, cheapest and only perfect condition. The three recorded failures come from how citations are scored, not from wrong answers. The demo shows that the business story holds up. It does not yet show that retrieval or the workflow tool improves accuracy.</p>
   </section>
 
@@ -95,7 +95,7 @@ ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;max-width:68ch}
   <section>
     <h2>What DJ pushed</h2>
     <p>PR #2 makes report reconciliation the main demo. A customer disputes a monthly total ($1,550 shown vs $1,150 expected). The approved rules show both are wrong and the defensible figure is $1,250. Ten synthetic cases cover code defects, config defects, expected behavior, and three cases where the right answer is to stop. The PR includes a deterministic rules engine, read-only MCP tools, a 30-trial benchmark harness, and an offline HTML walkthrough.</p>
-    <p>Everything offline reproduced on this machine: <span class="mono">40/40</span> tests, the rules workflow at <span class="mono">10/10</span>, and the regression fails on the seed code, fails on the <code>-abs()</code> fix, and passes on the reference. The live Claude comparison had never run. DJ's docs say it was blocked because Claude Code was not authenticated.</p>
+    <p>Everything offline reproduced on this machine: <span class="mono">40/40</span> tests, the rules workflow at <span class="mono">10/10</span>, and the regression fails on the seed code, fails on the <code>-abs()</code> fix, and passes on the reference. The live Claude comparison had never run. The docs say it was blocked because Claude Code was not authenticated.</p>
   </section>
 
   <section>
@@ -160,7 +160,7 @@ ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;max-width:68ch}
     <div class="finding">
       <span class="chip bad tag">Benchmark</span>
       <h3>The test is too easy to compare the conditions</h3>
-      <p>With ten short documents, Opus 5.5 gets every case right however the evidence reaches it. That includes the traps: the <code>-abs()</code> fix, the pending Jira request (DH-303, passed in all three conditions), and the cancelling errors in DH-310. DJ's protocol predicted this ("direct context may be faster than retrieval"), and now it's measured. The current fixture can show that a model reaches the right business decision. It cannot show that retrieval or the workflow tool beats pasting the documents into the prompt.</p>
+      <p>With ten short documents, Opus 5.5 gets every case right however the evidence reaches it. That includes the traps: the <code>-abs()</code> fix, the pending Jira request (DH-303, passed in all three conditions), and the cancelling errors in DH-310. The evaluation protocol predicted this ("direct context may be faster than retrieval"), and now it's measured. The current fixture can show that a model reaches the right business decision. It cannot show that retrieval or the workflow tool beats pasting the documents into the prompt.</p>
     </div>
 
     <div class="finding">
@@ -212,7 +212,7 @@ ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;max-width:68ch}
       <li>Lead with DH-301 as DJ planned. "Both numbers are wrong" still lands, and Opus reached $1,250 in all three conditions.</li>
       <li>Say: "Once the right evidence is assembled, a current model reaches the defensible decision, including when to stop, in about 10 seconds for under 10 cents." That points to evidence assembly as the bottleneck worth piloting.</li>
       <li>Don't claim the workflow tool or retrieval improves accuracy. Present the tool as the reproducible, auditable path with half the tool calls.</li>
-      <li>Keep DJ's guardrail: model wall time isn't employee time, and none of this is a productivity estimate.</li>
+      <li>Keep the guardrail: model wall time isn't employee time, and none of this is a productivity estimate.</li>
     </ul>
   </section>
 

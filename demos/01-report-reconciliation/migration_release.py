@@ -1,7 +1,6 @@
-"""Deterministic release evidence for DJ's shared-code cleanup proposal.
+"""Deterministic release evidence for the shared-code cleanup proposal.
 
-The cleanup idea, request, worked example and original tests are credited to
-Dhananjay (DJ). All job replays and business records here are synthetic. These
+All job replays and business records here are synthetic. These
 adapters enforce fetched evidence; they are never copied into the analyst's
 workspace and are separate from the independent hidden assessment.
 """

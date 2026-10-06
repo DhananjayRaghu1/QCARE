@@ -202,7 +202,7 @@ developer_review ─┬─ approve ─→ finalize (draft PR marked ready)
 
 ## Demo 3: Release-check a teammate's cleanup
 
-This extends **Dhananjay (DJ) Raghu's shared-decoder cleanup idea**: a change in common code can conflict with customer and recovery promises the repository cannot establish. His original retirement request, prepared worked example and two seed tests remain available under `portfolio/migration/`. Only the two sentences that directly state the retirement verdict were removed from the business records; the underlying facts, scope and obligations remain.
+A change in common code can conflict with customer and recovery promises the repository cannot establish. The original retirement request, prepared worked example and two seed tests remain available under `portfolio/migration/`. Only the two sentences that directly state the retirement verdict were removed from the business records; the underlying facts, scope and obligations remain.
 
 The release check reviews a **prepared local candidate PR**, not a real GitHub PR. Its patch removes v1 decoding, narrows the jobs' accepted versions and deletes the replay test that would catch the loss. The remaining repository tests pass. Replaying the same synthetic job rows before and after the patch shows the failure CI misses: **NORTHSTAR September falls from $1,250 to $400; CEDAR statements fall from $180 to $0**. Rows are skipped by the job filter, so the decoder never raises an error.
 

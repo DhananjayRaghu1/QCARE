@@ -8,7 +8,6 @@ const STRIP = ['intake','analyze','ask_developer','implement','review','check_re
 const PERSON = new Set(['ask_developer','developer_review']);
 const LOOP = new Set(['implement','review','check_requirements']);
 const HIDDEN_STEPS = new Set(['prepare_summary']);
-const CHIPS = [['Use UTC to keep it simple.','conflicts with an approved rule'],['Open a draft PR when it’s ready.','a PR only when asked'],['We ship Friday; keep the change minimal.','no conflict'],['Also add a currency column to the CSV.','scope question']];
 const SPEED = 8;
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const money = value => value == null ? '' : '$' + Number(value).toFixed(2);
@@ -50,11 +49,11 @@ function fillLazy(details){
 
 function skeleton(){
   return `<span class="eyebrow">ENGINEERING WORKFLOW · LIVE CLAUDE SESSIONS</span>
-<h2>From a Jira ticket to a reviewed pull request, with a person in the loop</h2>
-<p>Each step below is a fresh Claude session with only the tools its job needs. The workflow shows every lookup and hand-off, explains why it moves on, and stops to ask you whenever a person has to decide. Switch business context off to run the same workflow as a control. Nothing is merged or deployed.</p>
+<h2>From a Jira ticket to a reviewed pull request, with you in the loop</h2>
+<p>Claude reads the business records, writes the change and has it reviewed. Rules in code decide when it is done, and you make every decision. Nothing is merged or deployed.</p>
+<div id="wfDiagram"></div>
 <ol class="wf-strip" id="wfStrip"></ol>
-<p class="small wf-loop-note">↺ <b>Write the code → Independent review → Check against requirements</b> repeats until the change is accepted, for at most <span id="wfMaxRounds">3</span> rounds. The two gold steps are you.</p>
-<details class="wf-engineer"><summary>For engineers: the compiled LangGraph, tools and limits</summary><div id="wfGraphDetail"></div></details>
+<details class="wf-engineer"><summary>For engineers: the compiled LangGraph, tools and limits <span class="small">(at most <span id="wfMaxRounds">3</span> build rounds)</span></summary><div id="wfGraphDetail"></div></details>
 <div class="grid two wf-inputs"><article id="wfTicket"></article><article id="wfStart"></article></div>
 <div id="wfCompare"></div>
 <div id="wfStatus" class="wf-status hidden" role="status" aria-live="polite"></div>
@@ -88,13 +87,11 @@ function renderInputs(){
 <label><input type="radio" name="wfContext" value="on" checked><span><b>On</b> · Jira links and Confluence lookups</span></label>
 <label><input type="radio" name="wfContext" value="off"><span><b>Off: the control</b> · ticket and repository only</span></label></fieldset>
 <label class="wf-label" for="wfNote">Developer note (optional). Treated as guidance, not business approval.</label>
-<textarea id="wfNote" maxlength="2000" placeholder="For example: Use UTC to keep it simple."></textarea>
-<div class="wf-chips">${CHIPS.map(([text, hint]) => `<button type="button" class="secondary wf-chip" data-note="${esc(text)}">${esc(text)}<small>${esc(hint)}</small></button>`).join('')}</div>
+<textarea id="wfNote" maxlength="2000" placeholder="For example: Use UTC to keep it simple. Open a draft PR when it’s ready."></textarea>
 <div class="actions"><button id="wfRun">Run workflow →</button><button id="wfStop" class="secondary hidden">Stop</button></div>
 ${recordings.length ? `<div class="wf-replay"><select id="wfRecording" aria-label="Recorded run">${recordings.map(r => `<option value="${esc(r.name)}">${esc(recordingLabel(r))}</option>`).join('')}</select><button id="wfReplay" class="secondary">Replay</button></div>` : ''}
 <p class="small">Live: real Claude sessions using your login · ${esc(wf.graph.model)} · at most ${wf.graph.max_rounds} build rounds · $${wf.graph.budget_cap} cap. Replay: saved events from a real run, no model called.</p>
 <p id="wfError" class="error" role="alert"></p>`;
-  document.querySelectorAll('.wf-chip').forEach(button => button.onclick = () => { const note = $('#wfNote'); if(!note.value.includes(button.dataset.note)) note.value = (note.value.trim() + ' ' + button.dataset.note).trim(); note.focus(); });
   $('#wfRun').onclick = startWorkflow;
   $('#wfStop').onclick = stopWorkflow;
   if($('#wfReplay')) $('#wfReplay').onclick = () => startReplay($('#wfRecording').value);
@@ -285,6 +282,7 @@ function idleLine(s){
   const doing = {analyze:'Writing up the requirements and conflicts', implement:'Working on the code and tests', review:'Testing the change and judging each requirement'}[s.node] || 'Working';
   return `<p class="small wf-idle"><span class="wf-spinner">●</span> ${esc(doing)} · ${Math.round(now - s.last)}s since its last action</p>`;
 }
+const noteItem = n => `<li class="${n.tone === 'warning' ? 'warn' : n.tone === 'control' ? 'control' : ''}">${esc(n.text)}</li>`;
 function stepCard(s){
   const meta = [s.round ? 'Round ' + s.round : '', s.model || s.metric?.models?.[0] || '', secs(s.metric?.seconds), money(s.metric?.cost_usd)].filter(Boolean).join(' · ');
   const activity = s.lookups.length + s.tools.length + s.messages.length;
@@ -295,7 +293,7 @@ function stepCard(s){
     s.output && s.prompt ? lazy(`${s.id}-json`, 'Raw structured output (JSON)', `<pre>${esc(JSON.stringify(s.output, null, 2))}</pre>`) : ''].join('');
   return `<article class="wf-step ${esc(s.status)} ${PERSON.has(s.node) ? 'person' : ''}" id="step-${esc(s.id)}" data-step="${esc(s.id)}">
 <div class="wf-head"><span class="wf-step-no">${STRIP.indexOf(s.node) + 1}</span><div><h3>${esc(s.title)}</h3><p class="small">${esc(s.purpose)}</p></div><span class="wf-meta">${esc(meta)}${s.status === 'running' ? ' <span class="wf-spinner">working…</span>' : ''}</span></div>
-${s.notes.length ? `<ul class="wf-notes">${s.notes.map(n => `<li class="${n.tone === 'warning' ? 'warn' : n.tone === 'control' ? 'control' : ''}">${esc(n.text)}</li>`).join('')}</ul>` : ''}
+${s.notes.length ? `<ul class="wf-notes">${s.notes.slice(0, 3).map(noteItem).join('')}</ul>${s.notes.length > 3 ? lazy(`${s.id}-notes`, `${s.notes.length - 3} more notes`, `<ul class="wf-notes">${s.notes.slice(3).map(noteItem).join('')}</ul>`) : ''}` : ''}
 ${lookupList(s)}${deniedLine(s)}${s.status === 'running' ? toolList(s) + idleLine(s) : ''}
 ${found(s)}
 ${s.route ? `<p class="wf-route"><b>Next: ${esc(s.route.to_title)}.</b> ${esc(s.route.reason)}</p>` : ''}
@@ -332,32 +330,53 @@ function questionsPanel(payload, replay){
 <div class="actions">${replay ? '<button id="wfContinue">Continue replay ▸</button><span class="small">Replaying the recorded answer.</span>' : '<button id="wfAnswer">Send my decision →</button><span class="small">The recommended option or “I don’t know” applies straight away. Another option or a note gets a short re-check first.</span>'}</div></section>`;
 }
 
+const clipText = (text, n = 150) => { text = String(text || ''); return text.length > n ? text.slice(0, n - 1).trimEnd() + '…' : text; };
+function tldr(summary, opts){
+  // Built from the result fields in code, never written by a model.
+  const trace = summary.trace || [], met = trace.filter(r => r.status === 'met').length, t = summary.tests || {total:0, failed:0};
+  const git = opts.finalGit || summary.git || {};
+  const pr = git.pr ? `PR #${git.pr.number}` : null;
+  const escalated = (summary.review?.findings || []).find(f => f.needs_owner_decision && f.severity !== 'low');
+  const first = opts.final ? `Approved. ${pr ? pr + ' is ready for the team’s review' : 'The branch is pushed for the team’s review'}; nothing was merged.`
+    : summary.outcome === 'accepted' ? `Done: the agents accepted the change after ${plural(summary.rounds_used, 'round')}${pr ? `; draft ${pr} is waiting for your approval` : '; the branch is waiting for your approval'}.`
+    : summary.outcome === 'needs_decision' ? `Stopped for a rule owner: ${clipText(escalated?.evidence || 'a requirement can only be settled by its owner')}`
+    : `Not accepted after ${plural(summary.rounds_used, 'round')}: it needs your direction.`;
+  const second = `${met}/${trace.length} requirements met · ${t.total - t.failed}/${t.total} tests passing · ${summary.citations.verified}/${summary.citations.checkable} source quotes verified`;
+  const third = summary.context === false ? 'Control run: no business documents, so the requirements came from the ticket and code alone.'
+    : summary.decisions?.length ? 'You decided: ' + summary.decisions.map(d => clipText(String(d).split(' → ').pop(), 110)).join('; ')
+    : summary.risks?.length ? 'Check before merging: ' + clipText(summary.risks[0])
+    : 'No decisions were needed.';
+  return `<div class="wf-tldr"><span class="eyebrow">TL;DR</span><ul><li><b>${esc(first)}</b></li><li>${esc(second)}</li><li>${esc(third)}</li></ul></div>`;
+}
 function summaryPanel(summary, opts){
   const trace = summary.trace || [], met = trace.filter(r => r.status === 'met').length, t = summary.tests;
-  const kpis = [[`${met}/${trace.length}`, 'requirements met'], [`${t.total - t.failed}/${t.total}`, 'tests passing'], [`${summary.citations.verified}/${summary.citations.checkable}`, 'quotes verified'], [String(summary.rounds_used), summary.rounds_used === 1 ? 'build round' : 'build rounds'], [secs(summary.model_seconds), 'model time (excl. you)'], [money(summary.cost_usd), 'model cost']];
+  const kpis = [[`${met}/${trace.length}`, 'requirements met'], [`${t.total - t.failed}/${t.total}`, 'tests passing'], [String(summary.rounds_used), summary.rounds_used === 1 ? 'build round' : 'build rounds'], [secs(summary.model_seconds), 'model time'], [money(summary.cost_usd), 'model cost']];
   const rounds = summary.rounds.map(r => `<li><b>Round ${r.round}:</b> tests ${r.tests.total - r.tests.failed}/${r.tests.total} · review ${plural(r.findings.length, 'finding')}${r.findings.length ? ' (' + r.findings.map(f => f.severity).join(', ') + ')' : ''} → <b>${r.decision === 'accept' ? 'accepted' : 'sent back'}</b>${r.guard.length ? `<ul>${r.guard.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}</li>`).join('');
   const git = opts.finalGit || summary.git;
-  const approveHint = summary.git?.pr ? `Marks draft PR #${summary.git.pr.number} ready for review. Nothing is merged or deployed.` : 'The branch stays pushed for review. Nothing is merged or deployed.';
-  const decide = opts.live ? `<div class="wf-decide"><h4>Your decision</h4><div class="actions"><button id="wfApprove">${summary.git?.pr ? 'Approve: mark the PR ready for review' : 'Approve'}</button><span class="small">${esc(approveHint)}</span></div><label class="wf-label">Or send it back with instructions<textarea id="wfRevise" maxlength="2000" placeholder="For example: Also test a refund that settles in a different month from the sale"></textarea></label><button class="secondary" id="wfSendBack">Send back with instructions →</button><p class="small">Your instruction gets a short re-check against the requirements first, then it is built, reviewed and checked again.</p></div>` : '';
-  const grading = opts.grading ? `<div class="wf-grading"><span class="eyebrow">DEMO GRADING · NOT PART OF THE PRODUCT</span><p>${esc(opts.grading.label)}</p><details id="wfGrading"><summary>Reveal the result</summary><p class="wf-ground ${opts.grading.passed ? 'good' : 'bad'}">${opts.grading.passed ? '✓' : '✗'} ${opts.grading.hidden_passed} of ${opts.grading.hidden_total} hidden acceptance checks passed${opts.grading.repository_passed ? ', and all repository tests passed' : ', but repository tests failed'}.</p></details></div>` : '';
-  const where = git ? `<p class="wf-ground good">${summary.context === false ? badge('control: no business context', 'warn') + ' ' : ''}Where the change lives: ${git.branch_url ? `<a href="${esc(git.branch_url)}" target="_blank" rel="noopener"><code>${esc(git.branch)}</code></a>` : `<code>${esc(git.branch)}</code> (local sandbox)`}${git.pr ? ` · <a href="${esc(git.pr.url)}" target="_blank" rel="noopener">${git.pr.isDraft ? 'Draft ' : ''}PR #${git.pr.number}</a>` : git.pr_requested ? ' · PR requested but not open' : ' · no PR requested'} · ${plural((summary.git.commits || []).length, 'commit')}</p>` : '';
-  return `<section class="wf-summary"><span class="eyebrow">RESULT · FOR THE DEVELOPER</span>
-<h3>${summary.outcome === 'accepted' ? `The agents accepted the change after ${plural(summary.rounds_used, 'round')}` : summary.outcome === 'needs_decision' ? 'A requirement needs a decision before this can be accepted' : 'The agents need your help'}</h3>
-${summary.review.findings.filter(f => f.needs_owner_decision && f.severity !== 'low').map(f => `<p class="notice"><b>Decision needed (${esc(f.id)}):</b> ${esc(f.evidence)}<br><small>${esc(f.suggested_fix)}</small></p>`).join('')}
+  const decide = opts.live ? `<div class="wf-decide"><h4>Your decision</h4><div class="actions"><button id="wfApprove">${summary.git?.pr ? 'Approve: mark the PR ready for review' : 'Approve'}</button><button class="secondary" id="wfShowRevise">Send it back…</button></div><div id="wfReviseBox" class="hidden"><label class="wf-label">What should change?<textarea id="wfRevise" maxlength="2000" placeholder="For example: Also test a refund that settles in a different month from the sale"></textarea></label><button class="secondary" id="wfSendBack">Send back with instructions →</button></div></div>` : '';
+  const grading = opts.grading ? `<details data-key="sum-grading"><summary>Demo grading: hidden acceptance checks</summary><p class="small">${esc(opts.grading.label)}</p><p class="wf-ground ${opts.grading.passed ? 'good' : 'bad'}">${opts.grading.passed ? '✓' : '✗'} ${opts.grading.hidden_passed} of ${opts.grading.hidden_total} hidden acceptance checks passed${opts.grading.repository_passed ? ', and all repository tests passed' : ', but repository tests failed'}.</p></details>` : '';
+  const where = git ? `<p class="wf-ground good">${summary.context === false ? badge('control: no business context', 'warn') + ' ' : ''}${git.branch_url ? `<a href="${esc(git.branch_url)}" target="_blank" rel="noopener"><code>${esc(git.branch)}</code></a>` : `<code>${esc(git.branch)}</code> (local sandbox)`}${git.pr ? ` · <a href="${esc(git.pr.url)}" target="_blank" rel="noopener">${git.pr.isDraft ? 'Draft ' : ''}PR #${git.pr.number}</a>` : git.pr_requested ? ' · PR requested but not open' : ' · no PR requested'}</p>` : '';
+  const escalations = summary.review.findings.filter(f => f.needs_owner_decision && f.severity !== 'low').map(f => `<p class="notice"><b>Decision needed (${esc(f.id)}):</b> ${esc(f.evidence)}<br><small>${esc(f.suggested_fix)}</small></p>`).join('');
+  return `<section class="wf-summary"><span class="eyebrow">RESULT</span>
+${tldr(summary, opts)}
 <div class="wf-kpis">${kpis.map(([value, label]) => `<div><b>${esc(value)}</b><span>${esc(label)}</span></div>`).join('')}</div>
+${where}${escalations}
+<h4>Each requirement, where it came from, and whether it is met</h4><div class="table-wrap"><table class="wf-table"><thead><tr><th>Requirement</th><th>Source</th><th>Status</th></tr></thead><tbody>${trace.map(r => `<tr><td><b>${esc(r.id)}</b> ${esc(r.text)}</td><td>${srcChip(r.source_id)} ${citationBadge(r.citation)}</td><td><span class="wf-req ${esc(r.status)}" title="${esc(r.evidence)}">${esc(r.status)}</span></td></tr>`).join('')}</tbody></table></div>
+${decide}
+<details class="wf-full" data-key="sum-full"><summary>Full details</summary>
 <div class="grid two"><article><h4>In plain English</h4><p>${esc(summary.business)}</p></article><article><h4>For engineers</h4><ul>${summary.engineers.map(item => `<li>${esc(item)}</li>`).join('')}</ul></article></div>
-${where}
-<h4>Requirement → source → code → status</h4><div class="table-wrap"><table class="wf-table"><thead><tr><th>Requirement and its test</th><th>Source and exact words</th><th>Code change</th><th>Status and evidence</th></tr></thead><tbody>${trace.map(r => `<tr><td><b>${esc(r.id)}</b> ${esc(r.text)}<br><small>${esc(r.acceptance || '')}</small></td><td>${srcChip(r.source_id)} ${citationBadge(r.citation)}${r.quote ? `<br><q>${esc(r.quote)}</q>` : ''}</td><td>${r.changes.map(esc).join('<br>') || '—'}</td><td><span class="wf-req ${esc(r.status)}">${esc(r.status)}</span><br><small>${esc(r.evidence)}</small></td></tr>`).join('')}</tbody></table></div>
-${summary.overrides.length ? `<p class="notice"><b>Developer overrides that need sign-off:</b> ${summary.overrides.map(o => esc(o.summary) + ' — ' + esc(o.resolution)).join(' · ')}</p>` : ''}
-${summary.assumptions.length ? `<p class="notice"><b>Assumptions the engineer recorded:</b> ${summary.assumptions.map(esc).join(' · ')}</p>` : ''}
-<div class="grid two"><article><h4>Conflicts and decisions</h4><ul>${summary.conflicts.map(c => `<li>${badge(c.status === 'blocking' ? 'was blocking' : 'resolved', c.status === 'blocking' ? 'warn' : 'good')} ${esc(c.summary)} <small>${esc(c.resolution)}</small></li>`).join('')}${summary.decisions.map(d => `<li>${badge('your decision', 'person')} ${esc(d)}</li>`).join('')}</ul></article><article><h4>How it got here</h4><ol>${rounds}</ol></article></div>
-${summary.risks.length ? `<h4>Look at before merging</h4><ul>${summary.risks.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : ''}
+<details data-key="sum-trace"><summary>Exact source quotes, code changes and evidence</summary><div class="table-wrap"><table class="wf-table"><thead><tr><th>Requirement and its test</th><th>Source and exact words</th><th>Code change</th><th>Evidence</th></tr></thead><tbody>${trace.map(r => `<tr><td><b>${esc(r.id)}</b> ${esc(r.text)}<br><small>${esc(r.acceptance || '')}</small></td><td>${srcChip(r.source_id)}${r.quote ? `<br><q>${esc(r.quote)}</q>` : ''}</td><td>${r.changes.map(esc).join('<br>') || '—'}</td><td><small>${esc(r.evidence)}</small></td></tr>`).join('')}</tbody></table></div></details>
+${summary.overrides.length || summary.assumptions.length ? `<details data-key="sum-assume"><summary>Overrides and assumptions (${summary.overrides.length + summary.assumptions.length})</summary>${summary.overrides.length ? `<p class="notice"><b>Developer overrides that need sign-off:</b> ${summary.overrides.map(o => esc(o.summary) + ' — ' + esc(o.resolution)).join(' · ')}</p>` : ''}${summary.assumptions.length ? `<ul>${summary.assumptions.map(a => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}</details>` : ''}
+<details data-key="sum-conflicts"><summary>Conflicts, decisions and rounds</summary><div class="grid two"><article><h4>Conflicts and decisions</h4><ul>${summary.conflicts.map(c => `<li>${badge(c.status === 'blocking' ? 'was blocking' : 'resolved', c.status === 'blocking' ? 'warn' : 'good')} ${esc(c.summary)} <small>${esc(c.resolution)}</small></li>`).join('')}${summary.decisions.map(d => `<li>${badge('your decision', 'person')} ${esc(d)}</li>`).join('')}</ul></article><article><h4>How it got here</h4><ol>${rounds}</ol></article></div></details>
+${summary.risks.length ? `<details data-key="sum-risks"><summary>Look at before merging (${summary.risks.length})</summary><ul>${summary.risks.map(r => `<li>${esc(r)}</li>`).join('')}</ul></details>` : ''}
 <details data-key="sum-diff"><summary>The change: ${summary.files.map(esc).join(', ')}</summary><pre>${esc(summary.diff)}</pre><button class="secondary" id="wfPatch">Download patch</button></details>
 <details data-key="sum-tests"><summary>Tests run by the workflow (${t.total})</summary><ul class="wf-cases">${t.cases.map(c => `<li class="${c.status === 'passed' ? '' : 'bad'}">${c.status === 'passed' ? '✓' : '✗'} <code>${esc(c.name)}</code>${c.existing ? ' <small>existing</small>' : ''}</li>`).join('')}</ul></details>
 <details data-key="sum-review"><summary>Latest independent review (${plural(summary.review.findings.length, 'finding')})</summary><p>${esc(summary.review.summary)}</p>${findingList(summary.review.findings)}</details>
-<details data-key="sum-cost"><summary>Time and cost by step</summary><table class="wf-table"><thead><tr><th>Step</th><th>Runs</th><th>Model time</th><th>Cost</th></tr></thead><tbody>${summary.steps.map(s => `<tr><td>${esc(s.title)}</td><td>${s.runs}</td><td>${secs(s.seconds)}</td><td>${money(s.cost_usd)}</td></tr>`).join('')}</tbody></table><p class="small">Model: ${summary.models.map(esc).join(', ')}. CLI-reported cost. The requirements check is code and costs nothing. Time excludes your review.</p></details>
-${grading}${decide}${opts.final ? `<p class="wf-final">✓ Approved. ${git?.pr ? `<a href="${esc(git.pr.url)}" target="_blank" rel="noopener">PR #${git.pr.number}</a> is ${git.pr.isDraft ? 'still a draft' : 'ready for the team’s review'}.` : git?.branch ? `Branch <code>${esc(git.branch)}</code> is pushed for the team’s review.` : 'The patch is saved.'} Nothing was merged or deployed.</p>` : ''}
-<div class="actions">${opts.download ? '<button class="secondary" id="wfRecord">Download run record</button>' : ''}</div></section>`;
+<details data-key="sum-cost"><summary>Time and cost by step</summary><table class="wf-table"><thead><tr><th>Step</th><th>Runs</th><th>Model time</th><th>Cost</th></tr></thead><tbody>${summary.steps.map(s => `<tr><td>${esc(s.title)}</td><td>${s.runs}</td><td>${secs(s.seconds)}</td><td>${money(s.cost_usd)}</td></tr>`).join('')}</tbody></table><p class="small">Model: ${summary.models.map(esc).join(', ')}. CLI-reported cost; the rules check is code and costs nothing. Time excludes your review.</p></details>
+${grading}
+${opts.download ? '<div class="actions"><button class="secondary" id="wfRecord">Download run record</button></div>' : ''}
+</details>
+<p class="small">Nothing is merged or deployed by this workflow.</p></section>`;
 }
 
 function keepOpen(root){ return new Set([...root.querySelectorAll('details[data-key][open]')].map(d => d.dataset.key)); }
@@ -410,6 +429,7 @@ function renderAll(){
     linkIds(sumRoot);
     if($('#wfApprove')) $('#wfApprove').onclick = () => sendReview('approve');
     if($('#wfSendBack')) $('#wfSendBack').onclick = () => sendReview('revise');
+    if($('#wfShowRevise')) $('#wfShowRevise').onclick = () => { $('#wfReviseBox').classList.remove('hidden'); $('#wfRevise').focus(); };
     if($('#wfPatch')) $('#wfPatch').onclick = () => download('DH-401-workflow.patch', summary.diff);
     if($('#wfRecord')) $('#wfRecord').onclick = () => download('DH-401-workflow-' + wf.run + '.json', JSON.stringify({result:wf.result, events:wf.events}, null, 2));
     if(reviewWaiting && replay){ sumRoot.insertAdjacentHTML('beforeend', `<div class="actions"><button id="wfContinue2">Continue replay ▸</button><span class="small">Recorded answer: ${esc({approve:'approved', revise:'sent back'}[replay.rec.events.slice(replay.i).find(e => e.kind === 'resumed')?.response?.action] || 'stopped here, not approved')}</span></div>`); $('#wfContinue2').onclick = continueReplay; }
@@ -418,7 +438,7 @@ function renderAll(){
   const busy = wf.starting || running || status === 'waiting_for_developer' || (replay && !replay.done);
   $('#wfRun').disabled = busy;
   $('#wfNote').disabled = busy;
-  document.querySelectorAll('.wf-chip, input[name=wfContext]').forEach(input => input.disabled = busy);
+  document.querySelectorAll('input[name=wfContext]').forEach(input => input.disabled = busy);
   if($('#wfReplay')) $('#wfReplay').disabled = Boolean(busy);
   $('#wfStop').classList.toggle('hidden', !(running || status === 'waiting_for_developer'));
 }
@@ -519,6 +539,7 @@ async function mountWorkflow(){
   }catch(error){ root.insertAdjacentHTML('beforeend', `<p class="error">Could not load the workflow: ${esc(error.message)}</p>`); return; }
   $('#wfMaxRounds').textContent = wf.graph.max_rounds;
   renderGraphDetail(); renderInputs(); renderStrip(null); renderCompare();
+  if(window.renderWorkflowDiagram) window.renderWorkflowDiagram($('#wfDiagram'), 'export');
   root.addEventListener('toggle', event => { if(event.target.matches?.('details[data-lazy]')) fillLazy(event.target); }, true);
   const latest = (config.workflows || []).filter(flow => !flow.case_id || flow.case_id === 'DH-401').at(-1);
   if(latest){ wf.run = latest.id; wf.status = latest.status; schedule(0); }

@@ -141,7 +141,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(200, portfolio.reference_export())
         if url.path == "/api/examples/migration":
             return self.respond(200, portfolio.reference_migration())
-        if url.path in ("/portfolio.js", "/portfolio.css", "/workflow.js", "/workflow.css", "/migration.js", "/migration.css"):
+        if url.path in ("/portfolio.js", "/portfolio.css", "/workflow.js", "/workflow.css", "/migration.js", "/migration.css", "/diagrams.js", "/vendor/mermaid.min.js"):
             kind = "text/javascript" if url.path.endswith(".js") else "text/css"
             return self.respond(200, (ROOT / url.path[1:]).read_text(), kind + "; charset=utf-8")
         if url.path == "/api/workflows/graph":

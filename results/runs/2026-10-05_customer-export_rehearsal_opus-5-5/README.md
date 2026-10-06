@@ -1,6 +1,6 @@
 # Customer export: LangGraph workflow rehearsals (Opus 5.5)
 
-Two live runs of the new Demo 2 engineering workflow on DH-401 (the NORTHSTAR settlement export). Every step used `claude-opus-5-5` through Claude Code. Ishaan's session operated the page and made the developer decisions. These are rehearsals for the meeting, not a benchmark.
+Two live runs of the new Demo 2 engineering workflow on DH-401 (the NORTHSTAR settlement export). Every step used `claude-opus-5-5` through Claude Code. An operator ran the page and made the developer decisions. These are rehearsals for the meeting, not a benchmark.
 
 | Run | Developer input | Path | Model time | Cost | Hidden checks |
 | --- | --- | --- | --- | --- | --- |

@@ -39,7 +39,7 @@ Observe actual successful ticket fetches, queries, returned sources and native c
 
 Both modes receive the same ticket text and application. Company-knowledge tools are the comparison variable. The repository-only model may find the defect; that is a useful result. Compare correct context, ownership/history, starting locations, unknowns and verification effort. Do not define success as forcing a baseline failure.
 
-Meet your friend with the packet, not a new architecture proposal. Ishaan explains evidence/RAG/MCP. Your friend shows how an engineer would continue into reproduction, a bounded change, tests and review. Agree who drives and who takes notes. A separate fixing demo is optional; the onramping runner remains read-only.
+Start the working session with the packet, not a new architecture proposal. One presenter explains evidence/RAG/MCP. The other shows how an engineer would continue into reproduction, a bounded change, tests and review. Agree who drives and who takes notes. A separate fixing demo is optional; the onramping runner remains read-only.
 
 ## Tuesday, October 6: evaluate, drill failures and rehearse
 

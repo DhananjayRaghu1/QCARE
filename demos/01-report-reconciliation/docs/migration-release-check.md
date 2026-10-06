@@ -2,7 +2,7 @@
 
 The [actual Opus comparison](../../../results/runs/2026-10-05_format-retirement_live-comparison_opus-5-5/README.md) scored **12/12 with context and 1/12 without context**, with both blocking full removal. All four attempts and their costs are retained. [Deterministic verification](../../../results/runs/2026-10-05_format-retirement_controls/README.md) is recorded separately and calls no model.
 
-**Dhananjay (DJ) Raghu's idea is the starting point:** removing old support from shared code can conflict with promises the repository cannot establish. The release-check workflow makes that risk visible while preserving his original request, seed tests and prepared worked example.
+**The starting point:** removing old support from shared code can conflict with promises the repository cannot establish. The release-check workflow makes that risk visible while preserving the original request, seed tests and prepared worked example.
 
 Everything in this scenario is synthetic: customers, contracts, Jira records, operational usage and replay rows. The candidate PR is a prepared local patch. It is never opened or commented on in a GitHub sandbox. A fresh model session is live execution over those synthetic sources; it is not a live connection to a customer's systems.
 
